@@ -1,0 +1,106 @@
+This section will explain how Pascal++ IDE allows you to
+create your own language or modify an existing one.
+
+Prerequisite:
+
+Create a new project first or open any 
+existing project besides the default Pascal++ project.
+
+All options under "Language Editor" tab should now be 
+available. 
+
+The options are:
+
+Edit Lexical Analyser File
+--------------------------
+Opens the input file for flex (.*l) file in your project
+and allows the user to modify it.
+
+
+Edit Syntax Analyser File
+-------------------------
+Opens the input file for BISON (.*y) file in your project
+and allows the user to modify it.
+
+Use Flex Tool
+-------------
+Generate the syntax analyser from your *.l file
+using flex. An output file "lex.yy.c"
+will be generated.
+In case of an error, Flex output file will be
+displayed in the IDE.
+
+VERY IMPORTANT!!!
+
+In order for Pascal++ IDE to recognize and mark all the known
+words in the new language, flexFile.l should be edited
+the next way:
+
+.
+.
+.
+.
+.
+%%
+
+WORD1
+WORD2
+WORD3
+
+.
+.
+. 
+
+explanation:
+
+use the "%%" string and empty line after to begin, end with empty line
+before go on to the next part of the file (see default flexFile.l)
+every WORD in between will be recognized by the IDE as a known word
+and marked in blue.
+
+Use BISON Tool
+--------------
+Generate the parser from your *.y file
+using BISON. Two output files "bison_file_tab.c"
+and "bison_file_tab.h" will be generated
+In case of an error, BISON output file will be
+displayed in the IDE.
+
+Create Compiler
+---------------
+Compiles all the *.c files together and generates
+the compiler (*exe file)
+
+The user will be asked to choose all the relevant *.c
+files to be compiled. 
+It is very important to understand that while in
+general only lex.yy.c and *_tab.c file are crucial
+in order to generate a compiler, usually
+(like in Pascal++ default project), more *.c files
+are used.
+In case of an error during compilation.
+The output file will be displayed in
+the IDE. 
+
+Please notice that pascal++ original compiler generates
+some output files needed for IDE's proper running.
+
+the files are:
+
+out1.txt - machine code file
+outputPraser.txt - parser's output file
+symbol table.txt - generates the symbol table
+tree.txt - generates the tree of the program
+yyerror.txt - prints parser errors if exists
+lexError.txt - prints syntax analyser errors if exists
+
+We strongly recommend to understand all the *.c and
+*.h files of Pascal++ project in order to implement
+their content when writing a new compiler.
+
+If you want to use Pascal++ IDE fully, make sure
+your compiler will be generating all of the following files
+
+if *.exe file was created in the end of this process,
+under "Module1" tab, "Generate Machine Code"
+option will be now made available.

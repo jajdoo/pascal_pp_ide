@@ -1,0 +1,21 @@
+This section will explain how to generate Basic Blocks
+representation of the machine code that was generated
+in "Compile Your Code" section
+
+Prerequisite:
+
+Generation of machine code in was successful
+as described in "Compile Your Code" section
+
+Using this option will generate basic block representation
+of the machine code. After successfully completed
+the "View Basic Blocks" option under "Module2" will
+become available.
+
+to generate Basic Blocks file, choose Module2 -> Generate Basic Blocks.
+
+The output of this action should contain 2 files.
+the out2.ir file containing the basic blocks representation
+and a *.vcg file to be used in "Using VCG tool section".
+
+

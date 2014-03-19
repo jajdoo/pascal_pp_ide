@@ -1,0 +1,8 @@
+Info at line 3: adding symbol  z of type 264 to table variable
+Info at line 3: adding symbol  g of type 264 to table variable
+Info at line 3: adding symbol  b of type 264 to table variable
+Info at line 3: adding symbol  a of type 264 to table variable
+Info at line 3: adding symbol  d of type 264 to table variable
+Info at line 3: adding symbol  c of type 264 to table variable
+Info at line 3: adding symbol  y of type 264 to table variable
+Info at line 3: adding symbol  x of type 264 to table variable

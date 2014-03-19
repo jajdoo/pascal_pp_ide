@@ -1,0 +1,79 @@
+Welcome to Pascal++ compiler installation!
+
+This installation require a few critical prerequisite steps for the program to work 
+Please read this section carefully before installing and using the IDE.
+
+1. Prerequisite
+
+This IDE was created and designed to work under a Windows7 32bit environment,
+therefore we advice to use it on this type of environment as the VCG feature may not work
+on a 64bit environment.
+
+In order to create the compilers and generate machine code
+"GCC - GNU compiler collections" is used and can be found on the CD
+or in the next link:
+
+http://gcc.gnu.org/
+
+We strongly advice you to use the GCC folder located on the CD.
+
+Please notice that Pascal++ available in 32 and 64 bit version.
+Intall the GNU ToolChain from the right folder.
+
+
+2. Setting GNU ToolChain Collection Before installation
+
+Copy the GCC folder from the CD (or the one you downloaded from the GNU web site)
+to any path on your main disk.
+
+We recommend to place it in you main drive, for example c:\mingw64 for the 64bit version
+and c:\MinGW for the 32bit version.
+
+Please notice!!!
+
+32bit version GNU folder is "MinGW" in the 32bit folder.
+64bit version GNU folder is "mingw64" in the 64 bit folder.
+
+3. Adding GCC to windows path variables
+
+In order to use GCC from anywhere in windows we now need to add
+it to windows environment variables.
+
+Right mouse click on my computer and go to:
+Properties->Advanced System Settings->Environment Variables
+
+In the System Variables window (the lower one):
+find variable named "Path", select in and press edit
+add you GCC path to the end of the line.
+
+
+for example in 64bit version: ....;C:\mingw64\bin
+in 32bit version: ....;c:\MinGW\bin
+
+please don't forget the ';' before adding the variable.
+no need to use ';' after the last variable in line.
+
+Press OK.
+GCC has been added to windows environment variables.
+
+6. Installing Notepad++
+Several of this program's features are using Notepad++ editor.
+Please download Notepad++ at:
+
+http://notepad-plus-plus.org/
+
+and install it on your main drive, for example c:\Notepad++
+
+-----VERY IMPORTANT-----
+
+Notepad++ must be installed in c:\ in order for Pascal++
+to work
+
+-----VERY IMPORTANT-----
+
+5. Setting the main Pascal++ directory
+
+Copy the main Pascal++ directory to any location on your drive.
+THe recommended location is in the main drive. for example c:\Pascal++
+
+Use The .jar file inside the main folder to launch the application

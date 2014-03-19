@@ -1,0 +1,22 @@
+To use this section go to
+Optimization -> Open Optimization Menu
+
+Optimization wizard should now be open.
+If any optimization were added before, you will
+be able to see them in the optimization list.
+
+To add new optimization, push the "Add optimization"
+button and follow instructions.
+
+/**** IMPORTANT ****/
+
+The optimization wizard remembers the added
+optimization using theirs full path.
+if the optimization executable file was moved
+after you already added the optimization
+in the wizard, you will need to add it again.
+
+/**** IMPORTANT ****/
+
+Your optimization will now be added
+to the optimizations list.

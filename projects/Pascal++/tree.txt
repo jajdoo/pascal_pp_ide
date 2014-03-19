@@ -1,0 +1,1006 @@
+type=PROGRAM
+children=1
+my check == = = ==> test
+
+| Son1 of PROGRAM
+|
+---------------
+type=BEGIN
+children=1
+my check == = = ==> 
+
+| Son1 of BEGIN
+|
+---------------
+type=STATEMENT
+children=2
+my check == = = ==> 
+
+| Son1 of STATEMENT
+|
+---------------
+type=ASSIGN
+children=2
+my check == = = ==> 
+
+| Son1 of ASSIGN
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> z
+string=z
+
+| Son2 of ASSIGN
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> check
+
+| Son1 of ADD
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> g
+string=g
+
+| Son2 of ADD
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> check
+
+| Son1 of ADD
+|
+---------------
+type=MUL
+children=2
+my check == = = ==> check
+
+| Son1 of MUL
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=1
+
+| Son2 of MUL
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=10
+
+| Son2 of ADD
+|
+---------------
+type=MUL
+children=2
+my check == = = ==> check
+
+| Son1 of MUL
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=3
+
+| Son2 of MUL
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=1
+
+| Son2 of STATEMENT
+|
+---------------
+type=STATEMENT
+children=2
+my check == = = ==> 
+
+| Son1 of STATEMENT
+|
+---------------
+type=ASSIGN
+children=2
+my check == = = ==> 
+
+| Son1 of ASSIGN
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> check
+
+| Son1 of ADD
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> g
+string=g
+
+| Son2 of ADD
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> check
+
+| Son1 of ADD
+|
+---------------
+type=MUL
+children=2
+my check == = = ==> check
+
+| Son1 of MUL
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=1
+
+| Son2 of MUL
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=10
+
+| Son2 of ADD
+|
+---------------
+type=MUL
+children=2
+my check == = = ==> check
+
+| Son1 of MUL
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=3
+
+| Son2 of MUL
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=1
+
+| Son2 of ASSIGN
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> z
+string=z
+
+| Son2 of STATEMENT
+|
+---------------
+type=STATEMENT
+children=2
+my check == = = ==> 
+
+| Son1 of STATEMENT
+|
+---------------
+type=WHILE
+children=2
+my check == = = ==> 
+
+| Son1 of WHILE
+|
+---------------
+type=EQU
+children=2
+my check == = = ==> 
+
+| Son1 of EQU
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> c
+string=c
+
+| Son2 of EQU
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> d
+string=d
+
+| Son2 of WHILE
+|
+---------------
+type=STATEMENT
+children=2
+my check == = = ==> 
+
+| Son1 of STATEMENT
+|
+---------------
+type=ASSIGN
+children=2
+my check == = = ==> 
+
+| Son1 of ASSIGN
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> c
+string=c
+
+| Son2 of ASSIGN
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> 
+
+| Son1 of ADD
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> d
+string=d
+
+| Son2 of ADD
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> check
+
+| Son1 of ADD
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> g
+string=g
+
+| Son2 of ADD
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> check
+
+| Son1 of ADD
+|
+---------------
+type=MUL
+children=2
+my check == = = ==> check
+
+| Son1 of MUL
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=1
+
+| Son2 of MUL
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=10
+
+| Son2 of ADD
+|
+---------------
+type=MUL
+children=2
+my check == = = ==> check
+
+| Son1 of MUL
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=3
+
+| Son2 of MUL
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=1
+
+| Son2 of STATEMENT
+|
+---------------
+type=STATEMENT
+children=1
+my check == = = ==> 
+
+| Son1 of STATEMENT
+|
+---------------
+type=ASSIGN
+children=2
+my check == = = ==> 
+
+| Son1 of ASSIGN
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> d
+string=d
+
+| Son2 of ASSIGN
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> 
+
+| Son1 of ADD
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> d
+string=d
+
+| Son2 of ADD
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> a
+string=a
+
+| Son2 of STATEMENT
+|
+---------------
+type=STATEMENT
+children=1
+my check == = = ==> 
+
+| Son1 of STATEMENT
+|
+---------------
+type=IF
+children=3
+my check == = = ==> 
+
+| Son1 of IF
+|
+---------------
+type=LES
+children=2
+my check == = = ==> 
+
+| Son1 of LES
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> a
+string=a
+
+| Son2 of LES
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> b
+string=b
+
+| Son2 of IF
+|
+---------------
+type=STATEMENT
+children=2
+my check == = = ==> 
+
+| Son1 of STATEMENT
+|
+---------------
+type=WHILE
+children=2
+my check == = = ==> 
+
+| Son1 of WHILE
+|
+---------------
+type=LES
+children=2
+my check == = = ==> 
+
+| Son1 of LES
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> x
+string=x
+
+| Son2 of LES
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> y
+string=y
+
+| Son2 of WHILE
+|
+---------------
+type=STATEMENT
+children=2
+my check == = = ==> 
+
+| Son1 of STATEMENT
+|
+---------------
+type=ASSIGN
+children=2
+my check == = = ==> 
+
+| Son1 of ASSIGN
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> x
+string=x
+
+| Son2 of ASSIGN
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> 
+
+| Son1 of ADD
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> 
+
+| Son1 of ADD
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> x
+string=x
+
+| Son2 of ADD
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> y
+string=y
+
+| Son2 of ADD
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=2
+
+| Son2 of STATEMENT
+|
+---------------
+type=STATEMENT
+children=2
+my check == = = ==> 
+
+| Son1 of STATEMENT
+|
+---------------
+type=WHILE
+children=2
+my check == = = ==> 
+
+| Son1 of WHILE
+|
+---------------
+type=LES
+children=2
+my check == = = ==> 
+
+| Son1 of LES
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> x
+string=x
+
+| Son2 of LES
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> 
+
+| Son1 of ADD
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> y
+string=y
+
+| Son2 of ADD
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=5
+
+| Son2 of WHILE
+|
+---------------
+type=STATEMENT
+children=2
+my check == = = ==> 
+
+| Son1 of STATEMENT
+|
+---------------
+type=ASSIGN
+children=2
+my check == = = ==> 
+
+| Son1 of ASSIGN
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> x
+string=x
+
+| Son2 of ASSIGN
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> 
+
+| Son1 of ADD
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> 
+
+| Son1 of ADD
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> x
+string=x
+
+| Son2 of ADD
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> y
+string=y
+
+| Son2 of ADD
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=5
+
+| Son2 of STATEMENT
+|
+---------------
+type=STATEMENT
+children=1
+my check == = = ==> 
+
+| Son1 of STATEMENT
+|
+---------------
+type=ASSIGN
+children=2
+my check == = = ==> 
+
+| Son1 of ASSIGN
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> y
+string=y
+
+| Son2 of ASSIGN
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> 
+
+| Son1 of ADD
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> y
+string=y
+
+| Son2 of ADD
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=1
+
+| Son2 of STATEMENT
+|
+---------------
+type=STATEMENT
+children=2
+my check == = = ==> 
+
+| Son1 of STATEMENT
+|
+---------------
+type=ASSIGN
+children=2
+my check == = = ==> 
+
+| Son1 of ASSIGN
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> y
+string=y
+
+| Son2 of ASSIGN
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> 
+
+| Son1 of ADD
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> y
+string=y
+
+| Son2 of ADD
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=6
+
+| Son2 of STATEMENT
+|
+---------------
+type=STATEMENT
+children=1
+my check == = = ==> 
+
+| Son1 of STATEMENT
+|
+---------------
+type=ASSIGN
+children=2
+my check == = = ==> 
+
+| Son1 of ASSIGN
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> check
+
+| Son1 of ADD
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> g
+string=g
+
+| Son2 of ADD
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> check
+
+| Son1 of ADD
+|
+---------------
+type=MUL
+children=2
+my check == = = ==> check
+
+| Son1 of MUL
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> x
+string=x
+
+| Son2 of MUL
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=10
+
+| Son2 of ADD
+|
+---------------
+type=MUL
+children=2
+my check == = = ==> check
+
+| Son1 of MUL
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> y
+string=y
+
+| Son2 of MUL
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=1
+
+| Son2 of ASSIGN
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> z
+string=z
+
+| Son2 of STATEMENT
+|
+---------------
+type=STATEMENT
+children=1
+my check == = = ==> 
+
+| Son1 of STATEMENT
+|
+---------------
+type=ASSIGN
+children=2
+my check == = = ==> 
+
+| Son1 of ASSIGN
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> x
+string=x
+
+| Son2 of ASSIGN
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> 
+
+| Son1 of ADD
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> x
+string=x
+
+| Son2 of ADD
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=3
+
+| Son3 of IF
+|
+---------------
+type=STATEMENT
+children=1
+my check == = = ==> 
+
+| Son1 of STATEMENT
+|
+---------------
+type=WHILE
+children=2
+my check == = = ==> 
+
+| Son1 of WHILE
+|
+---------------
+type=LES
+children=2
+my check == = = ==> 
+
+| Son1 of LES
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> x
+string=x
+
+| Son2 of LES
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> 
+
+| Son1 of ADD
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> a
+string=a
+
+| Son2 of ADD
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> b
+string=b
+
+| Son2 of WHILE
+|
+---------------
+type=STATEMENT
+children=2
+my check == = = ==> 
+
+| Son1 of STATEMENT
+|
+---------------
+type=ASSIGN
+children=2
+my check == = = ==> 
+
+| Son1 of ASSIGN
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> x
+string=x
+
+| Son2 of ASSIGN
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> 
+
+| Son1 of ADD
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> 
+
+| Son1 of ADD
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> x
+string=x
+
+| Son2 of ADD
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> y
+string=y
+
+| Son2 of ADD
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=5
+
+| Son2 of STATEMENT
+|
+---------------
+type=STATEMENT
+children=1
+my check == = = ==> 
+
+| Son1 of STATEMENT
+|
+---------------
+type=ASSIGN
+children=2
+my check == = = ==> 
+
+| Son1 of ASSIGN
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> y
+string=y
+
+| Son2 of ASSIGN
+|
+---------------
+type=ADD
+children=2
+my check == = = ==> 
+
+| Son1 of ADD
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> y
+string=y
+
+| Son2 of ADD
+|
+---------------
+type=INTCONST
+children=0
+my check == = = ==> 
+int value=1
+

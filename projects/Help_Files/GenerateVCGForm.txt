@@ -1,0 +1,20 @@
+This section will explain how to generate VCG graph
+representation of the machine code using the .*vcg
+file that was generated in "Generate Basic blocks"
+section.
+
+Prerequisite:
+
+Generation of basic blocks file as described
+"Generate Basic blocks" section was successful
+
+Using this option will generate a VCG graph.
+To use this option:
+
+Module3 -> Generate VCG Form
+
+You can view any VCG form any time using the 
+Module3 -> View VCG Form option.
+
+The output of this action will be a graph
+representing you program flow

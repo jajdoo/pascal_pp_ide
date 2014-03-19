@@ -1,0 +1,26 @@
+This section will explain how to generate a machine code
+from your code file (*.p)
+
+Prerequisite:
+
+Please read "Creating New Language" section
+before reading this.
+
+If "Generate Machine Code" option is still disabled, please
+start from the beginning "Creating New Language" section
+and check for error messages.
+
+The two other options in Module1 will be disabled until
+"Generate Machine Code" are completed successfully.
+
+To compile your code select "Generate Machine Code" from
+"Module1" menu. 
+
+If successfully compiled, "View Machine Code" and
+"View Symbol Table" options will become available.
+
+If not, compilation output error will be displayed.
+
+In both cases, compilation output can be displayed
+with "View Compilation Output" option from "Module1".
+

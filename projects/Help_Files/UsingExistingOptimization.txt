@@ -1,0 +1,14 @@
+To use this section go to
+Optimization -> Open Optimization Menu
+
+Optimization wizard should now be open.
+If any optimization were added before, you will
+be able to see them in the optimization list.
+
+To run any of the optimizations in the list
+select the desired optimization and push the
+"Run optimization" button.
+
+Your optimization will now be launch.
+Please look at the existing optimization as an
+example when writing your own optimizations.

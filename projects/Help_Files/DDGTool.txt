@@ -1,0 +1,7 @@
+To use the DDG tool:
+
+DDG -> Open DDG Form
+
+In the DDG form menu, select your out2.ir file
+generated in the "Generate Basic Blocks" section
+and press "Build DDG"

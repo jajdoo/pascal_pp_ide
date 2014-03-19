@@ -1,0 +1,26 @@
+The default project is .../Pascal++/projects/Pascal++.
+
+This project is designed to use as an example to IDE's capabilities
+and therefore cannot be edited or changed. 
+
+In order to create your own project, please select the 
+"New Project" option from he File menu.
+
+After entering new project's name, a folder with the given name
+will appear under .../Pascal++/projects/
+All the necessary files for editing and creating you compiler
+are already there.
+
+The files that are automatically generated are the same
+files that are used in the default project only this time they
+can be edited.
+
+User may use them as an example, starting point or delete them
+and write new files instead.
+
+IMPORTANT!!!!
+
+Please make sure that when writing your own compiler
+the output files must have the same names as the original
+compiler output files (out1.txt, out2.ir... etc).
+More on that in "Creating Your Own language" section.
