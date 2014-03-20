@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompilationLoopIdentifications", "CompilationLoopIdentifications\CompilationLoopIdentifications.csproj", "{42327115-5F81-4680-A76D-7D8FFFA114D8}"
 EndProject
 Global
