@@ -190,31 +190,13 @@ public class TextEditor
 		StyleContext sc = new StyleContext();
 		Style style = sc.addStyle("yourStyle", null);
 		
-		Font font = new Font("Arial", Font.BOLD, 12);
+		Font font = new Font("Arial", Font.BOLD, 20);
 		
 		StyleConstants.setForeground(style, c);
 		StyleConstants.setFontFamily(style, font.getFamily());
-		//  StyleConstants.setBold(style, knownWord); // if language contains the word set to bold
-		if (knownWord)
-		{
-			StyleConstants.setFontSize(style, 14);
-			StyleConstants.setBold(style, true);
-		}
-		else
-		{
-			StyleConstants.setBold(style, false);
-			StyleConstants.setFontSize(style, 12);
-		}
-		if (newLineFlag)
-		{
-			jTextPane1.getDocument().insertString(jTextPane1.getCaretPosition(), msg, style);
-		}
-		else
-		{
-			jTextPane1.getDocument().insertString(jTextPane1.getCaretPosition(), msg, style);
-		}
-		StyleConstants.setBold(style, false);
-		StyleConstants.setFontSize(style, 14);
+		StyleConstants.setFontSize(style, 20);
+		
+		jTextPane1.getDocument().insertString(jTextPane1.getCaretPosition(), msg, style);
 	}
 	
 	//  public void CheckTextOnTheFly(JTextPane tp, LanguageEditor languageEditor){
@@ -573,6 +555,8 @@ public class TextEditor
 				{
 					//hilit.addHighlight(index, end, painter);
 					tp.setForeground(Color.blue);
+					Font font = new Font("Arial", Font.BOLD, 20);
+					tp.setFont(font);
 					System.out.println(index + "  " + end + " " + contentSize);
 					tp.getDocument().remove(index, searchString.length());
 					tp.getDocument().insertString(index, searchString, null);

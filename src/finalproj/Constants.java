@@ -8,4 +8,5 @@ package finalproj;
 public class Constants
 {
 	private String notepadPlusPlusPath;
+	private String graphvizBinPath;
 }

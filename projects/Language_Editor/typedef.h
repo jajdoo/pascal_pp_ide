@@ -31,6 +31,7 @@ typedef struct node {    /* abstract syntax tree record */
         char *name;  /* hold names of identfiers*/
         int children;
 		struct node *s1,*s2,*s3;  /* urguments */
+		int type;
 } *NODE;
 
 typedef enum{MFALSE,MTRUE} booly;
