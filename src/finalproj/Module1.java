@@ -78,7 +78,8 @@ public class Module1
 			{
 				out = new FileWriter(projectPath + "\\" + projectName + ".bat");
 				out.write("cd " + this.jarPath + "\\projects\\" + projectName + "\r\n"
-						+ projectName + ".exe " + fileName + " 2> Log_Module1.txt\r\n"
+//						+ projectName + ".exe " + fileName + " 2> Log_Module1.txt\r\n"
+						+"Pascall++.exe " + fileName + " 2> Log_Module1.txt\r\n"
 						+ "exit");
 				out.close();
 			}

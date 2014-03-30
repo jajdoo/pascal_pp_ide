@@ -7,8 +7,7 @@
 
 FILE  *treefile;
 extern FILE *yyin;			//  a pointer to the program file that should be compiled.
-extern int yyparse (void);  // do syntax checking and build the tree.
-
+//extern int yyparse (void);  // do syntax checking and build the tree.
 
 NODE getTree(char *progFile) 
 {
@@ -54,14 +53,14 @@ int main(int argc, char* argv[])
 	fclose(txt);
 	NODE theProgram;	
 	freopen("Error_Log.txt","w",stderr);
-	if (argc < 2)
+	/*if (argc < 2)
 	{
 		printf("Input filename is missing.\n");
 		return 0;
-	}
+	}*/
 
 	// Build the program tree
-	theProgram = getTree(argv[1]);
+	theProgram = getTree("C:\\Users\\Nir\\Desktop\\comp\\pascal_pp_ide\\projects\\Language_Editor\\compiler\\pascall++\\x64\\Debug\\1_OK_file.p");
 	
 	
 	// Output an IL file from the program tree
@@ -69,5 +68,6 @@ int main(int argc, char* argv[])
 	PrintCommandsToFile("out1.txt");	// Prints the output IL file
 	PrintTree();
 	PrintSymbolTable();
+	_getch();
 	return (0);
 }

@@ -1,11 +1,13 @@
 PROGRAM test
 {
 VAR INTEGER: z,x,y,c,d,a,b,g[10][10];
+VAR BOOLEAN: w;
 z=g[1][3];
 g[1][3]=z;
 WHILE ( c == d) DO
 		c = d + g[1][3];
 		d = d + a;
+		w = a;
 OD
 IF (a < b) THEN
 WHILE(x<y)

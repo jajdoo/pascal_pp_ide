@@ -84,7 +84,7 @@ block :LC declarations stat_seq RC                   {$$=makenode(BBEGIN,$3,NULL
        ;
 
 
-declarations:VAR varAss ;
+declarations:VAR varAss declarations | ;
 
 varAss: tyList ':' idList varAss		{} 
 	|

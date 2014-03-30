@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "typedef.h"
-#include "bison_file_tab.h" 
+#include "bison_file_tab.c" 
 
 extern int line_number; 
 
@@ -79,7 +79,7 @@ WHILE        {return(WHILE);    }
                strcpy(yylval.string,yytext); return(POINTER); }
 {INT}          { 
 				char buf[32];
-				itoa(INT_MAX, buf, 10);
+				_itoa(INT_MAX, buf, 10);
 					if (atoi(yytext)==INT_MAX)
 						if(strcmp(yytext,buf)> 0)
 						{	

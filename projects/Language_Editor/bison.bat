@@ -1,3 +1,2 @@
-bison.exe bison_file.y
-
+bison.exe bison_file.y -d
 @pause
