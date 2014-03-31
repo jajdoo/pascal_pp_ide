@@ -7,7 +7,7 @@ g[1][3]=z;
 WHILE ( c == d) DO
 		c = d + g[1][3];
 		d = d + a;
-		w = a;
+		w = TRUE;
 OD
 IF (a < b) THEN
 WHILE(x<y)

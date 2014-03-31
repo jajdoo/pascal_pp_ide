@@ -17,6 +17,7 @@
   <ItemGroup>
     <None Include="..\..\..\flexFile.l" />
     <None Include="..\..\..\bison_file.y" />
+    <None Include="..\..\..\bison.simple" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\bison_file_tab.c">

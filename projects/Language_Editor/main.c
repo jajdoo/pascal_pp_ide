@@ -8,6 +8,7 @@
 FILE  *treefile;
 extern FILE *yyin;			//  a pointer to the program file that should be compiled.
 //extern int yyparse (void);  // do syntax checking and build the tree.
+extern YYSTYPE yyval;
 
 NODE getTree(char *progFile) 
 {
@@ -27,7 +28,6 @@ NODE getTree(char *progFile)
 	// yyparse is yacc (pearl_tab.c) function that parse over the pearl program,
 	// check syntax and build the program tree.
 	yyparse();
-
 
 	// root was initialized in yyparse while it was building the tree.
 	// root is the pointer of the returning tree.

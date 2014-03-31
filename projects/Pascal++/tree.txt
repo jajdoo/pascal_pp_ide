@@ -401,10 +401,9 @@ string=w
 | Son2 of ASSIGN
 |
 ---------------
-type=IDE
+type=TRUE
 children=0
-my check == = = ==> a
-string=a
+my check == = = ==> 
 
 | Son2 of STATEMENT
 |

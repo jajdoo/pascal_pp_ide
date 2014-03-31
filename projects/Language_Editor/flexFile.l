@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "typedef.h"
-#include "bison_file_tab.c" 
+#include "bison_file_tab.h" 
 
 extern int line_number; 
 

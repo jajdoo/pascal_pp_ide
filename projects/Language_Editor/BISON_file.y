@@ -77,10 +77,12 @@ void PrintArray(arrList l,FILE *t, int ind);
 %start  program
 
 %%
-program: PROGRAM IDE  block             {$$=makenode(PROGRAM,$3,NULL,NULL,0,$2); root=$$;} 
+
+program:	PROGRAM IDE block				{$$=makenode(PROGRAM,$3,NULL,NULL,0,$2); root=$$;} 					
        ;
 
 block :LC declarations stat_seq RC                   {$$=makenode(BBEGIN,$3,NULL,NULL,0,NULL);} 
+		| LC RC										 {$$=makenode(BBEGIN,NULL,NULL,NULL,0,NULL);} 
        ;
 
 

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\bison.simple" />
     <None Include="..\..\..\bison_file.y" />
     <None Include="..\..\..\flexFile.l" />
   </ItemGroup>

@@ -380,6 +380,36 @@ string=a
 |
 ---------------
 type=STATEMENT
+children=2
+my check == = = ==> 
+
+| Son1 of STATEMENT
+|
+---------------
+type=ASSIGN
+children=2
+my check == = = ==> 
+
+| Son1 of ASSIGN
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> w
+string=w
+
+| Son2 of ASSIGN
+|
+---------------
+type=IDE
+children=0
+my check == = = ==> a
+string=a
+
+| Son2 of STATEMENT
+|
+---------------
+type=STATEMENT
 children=1
 my check == = = ==> 
 
@@ -395,31 +425,15 @@ my check == = = ==>
 ---------------
 type=IDE
 children=0
-my check == = = ==> a
-string=a
+my check == = = ==> w
+string=w
 
 | Son2 of ASSIGN
 |
 ---------------
-type=ADD
-children=2
+type=TRUE
+children=0
 my check == = = ==> 
-
-| Son1 of ADD
-|
----------------
-type=IDE
-children=0
-my check == = = ==> a
-string=a
-
-| Son2 of ADD
-|
----------------
-type=IDE
-children=0
-my check == = = ==> w
-string=w
 
 | Son2 of STATEMENT
 |
