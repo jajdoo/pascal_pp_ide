@@ -438,6 +438,7 @@ char *print_op(int op)
 		break;
 	default:
 	      fprintf(txt,"Error at line %d: Unknown Token is line %d\n", line_number);
+		  return ("UNKNOWN");
 	}     
 	fclose(txt);
 }
@@ -743,13 +744,13 @@ int push(int n)
 	
 	FILE *txt;
 	txt = fopen("outputParser.txt","a");
-			
+	
 	if ( (n == ADD) || (n == MMIN) || (n == MUL) || (n == DIV) || n == AND || n == OR || n == NOT || n == ASSIGN)
 	{
 		temp1 = pop();
 		temp2 = pop();
 		flag = 1;
-		
+
 		switch (temp1) 
 		{	 
 			case INTEGER:
@@ -776,12 +777,13 @@ int push(int n)
 			
 			case FLOAT:
 			{
-				if (temp2 == FLOAT || temp2 == INTCONST)
+				if (temp2 == FLOAT || temp2 == INTCONST )
 				{
 					push(FLOAT);
 					break;
 				}
 				error = 1;
+				printf("error2 = %d\n",error);
 				break;
 			}
 			
@@ -798,12 +800,13 @@ int push(int n)
 			
 			case REALCONST:
 			{
+				
 				if (temp2 == REAL)
 				{
 					push(REAL);
 					break;
 				}
-				if (temp2 == REALCONST || temp2 == INTCONST)
+				if (temp2 == REALCONST || temp2 == INTCONST || temp2 == FLOAT)
 				{
 					push(REALCONST);
 					break;
@@ -823,11 +826,13 @@ int push(int n)
 			}
 		}				
 	}
+
 	if (flag == 1 && error == 1)
 	{
 		strcpy(t1, print_op(temp1));
 		strcpy(t2,print_op(n));
 		strcpy(t3 ,print_op(temp2));
+		printf("\nError at line %d:  %s  %s %s\n", line_number, t3, t2, t1);
 		fprintf(txt, "\nError at line %d:  %s  %s %s\n", line_number, t3, t2, t1);
 	}
 	if (flag == 0)

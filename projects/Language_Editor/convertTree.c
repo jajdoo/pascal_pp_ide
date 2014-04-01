@@ -476,7 +476,18 @@ int TreeToIL(NODE n)
 			return TwoOperandsCommand(n, MUL);
 
 		case DIV:
-
+			//=================================================
+			if ( n->s2->op==INTCONST )
+			{
+				if (n->s2->num_val.val == 0)
+					printf("\nDIVIDE BY ZERO int !");
+			}
+			else if (n->s2->op == REALCONST)
+			{
+				if (n->s2->num_val.rval == 0.0f)
+					printf("\nDIVIDE BY ZERO! real");
+			}
+			//=================================================
 			return TwoOperandsCommand(n, DIV);
 			
 		case MOD:

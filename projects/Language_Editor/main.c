@@ -33,7 +33,7 @@ NODE getTree(char *progFile)
 	// root is the pointer of the returning tree.
 	if (root==NULL) 
         exit(-1);
-  
+
 	return(root);
 }
 
@@ -51,18 +51,18 @@ int main(int argc, char* argv[])
 	txt=fopen("outputParser.txt","w");
 	fprintf(txt,"");
 	fclose(txt);
-	NODE theProgram;	
-	freopen("Error_Log.txt","w",stderr);
-	/*if (argc < 2)
+	NODE theProgram;
+	freopen("Error_Log.txt", "w", stderr);
+
+	if (argc < 2)
 	{
 		printf("Input filename is missing.\n");
 		return 0;
-	}*/
+	}
 
 	// Build the program tree
-	theProgram = getTree("C:\\Users\\Nir\\Desktop\\comp\\pascal_pp_ide\\projects\\Language_Editor\\compiler\\pascall++\\x64\\Debug\\1_OK_file.p");
-	
-	
+	theProgram = getTree(argv[1]);
+
 	// Output an IL file from the program tree
 	TreeToIL(root);						// Converts the program tree to an intermediate-language representation
 	PrintCommandsToFile("out1.txt");	// Prints the output IL file

@@ -923,7 +923,7 @@ YY_RULE_SETUP
 case 31:
 YY_RULE_SETUP
 #line 68 "flexfile.l"
-{ return(PROGRAM);  }
+{return(PROGRAM);  }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
@@ -982,133 +982,134 @@ YY_RULE_SETUP
 							/*exit(-1);*/
 						}					
 					yylval.integer = atoi(yytext);
-					if (yylval.integer)  return(INTCONST); 
+					return(INTCONST);
+					//if (yylval.integer)  return(INTCONST); 
 			   }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 94 "flexfile.l"
+#line 95 "flexfile.l"
 { yylval.integer = strtol(yytext + 2, NULL, 16); return(INTCONST); }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 95 "flexfile.l"
+#line 96 "flexfile.l"
 { yylval.integer = strtol(yytext , NULL, 8); return(INTCONST); }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 96 "flexfile.l"
+#line 97 "flexfile.l"
 { yylval.real = atof(yytext); return(REALCONST); }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 97 "flexfile.l"
+#line 98 "flexfile.l"
 { yylval.string = (char*) malloc(strlen(yytext)+1);
                 strcpy(yylval.string,yytext); return(STRING); }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 99 "flexfile.l"
+#line 100 "flexfile.l"
 { line_number += count_newline(yytext); }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 100 "flexfile.l"
+#line 101 "flexfile.l"
 { return(ADD); }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 101 "flexfile.l"
+#line 102 "flexfile.l"
 { return(MMIN); }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 102 "flexfile.l"
+#line 103 "flexfile.l"
 { return(MUL); }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 103 "flexfile.l"
+#line 104 "flexfile.l"
 { return(DIV); }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 104 "flexfile.l"
+#line 105 "flexfile.l"
 { return(MOD); }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 105 "flexfile.l"
+#line 106 "flexfile.l"
 { return(LES); }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 106 "flexfile.l"
+#line 107 "flexfile.l"
 { return(LEQ); }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 107 "flexfile.l"
+#line 108 "flexfile.l"
 { return(EQU); }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 108 "flexfile.l"
+#line 109 "flexfile.l"
 { return(NEQ); }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 109 "flexfile.l"
+#line 110 "flexfile.l"
 { return(GRE); }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 110 "flexfile.l"
+#line 111 "flexfile.l"
 { return(GEQ); }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 111 "flexfile.l"
+#line 112 "flexfile.l"
 { return(AND); }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 112 "flexfile.l"
+#line 113 "flexfile.l"
 { return(OR); }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 113 "flexfile.l"
+#line 114 "flexfile.l"
 { return(ASSIGN); } 
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 114 "flexfile.l"
+#line 115 "flexfile.l"
 { return(LC); } 
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 115 "flexfile.l"
+#line 116 "flexfile.l"
 { return(RC); } 
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 116 "flexfile.l"
+#line 117 "flexfile.l"
 { return(yytext[0]); }
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 117 "flexfile.l"
+#line 118 "flexfile.l"
 { line_number++; }
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 118 "flexfile.l"
+#line 119 "flexfile.l"
 
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 119 "flexfile.l"
+#line 120 "flexfile.l"
 { 
 				txt=fopen("lexError.txt","a");
 	            fprintf(txt,"unexpected char '%c'!\n",yytext[0]);
@@ -1118,10 +1119,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 125 "flexfile.l"
+#line 126 "flexfile.l"
 ECHO;
 	YY_BREAK
-#line 1125 "lex.yy.c"
+#line 1126 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1981,7 +1982,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 125 "flexfile.l"
+#line 126 "flexfile.l"
 
 
 int count_newline(char *text)

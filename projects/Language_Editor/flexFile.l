@@ -89,7 +89,8 @@ WHILE        {return(WHILE);    }
 							/*exit(-1);*/
 						}					
 					yylval.integer = atoi(yytext);
-					if (yylval.integer)  return(INTCONST); 
+					return(INTCONST);
+					//if (yylval.integer)  return(INTCONST); 
 			   }
 {HEX_Type}     { yylval.integer = strtol(yytext + 2, NULL, 16); return(INTCONST); }
 {OCT_Type}     { yylval.integer = strtol(yytext , NULL, 8); return(INTCONST); }
