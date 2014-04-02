@@ -34,6 +34,7 @@ NODE makenode(int op, NODE s1, NODE s2, NODE s3,int val,char *id);
 NODE genLeaf(int op, int val, double rval,char *id);
 arrList addToArrayList(int s, int ss,arrList next);
 void PrintArray(arrList l,FILE *t, int ind);
+char* print_op(int op);
 %}
 
 %token PROGRAM BBEGIN END DECLARE PROCEDURE LABEL INTEGER FLOAT REAL CMP
@@ -240,20 +241,12 @@ atom:   var                        { $$ = $1; }
 
 %%
 /*==   AST - PART constructs the tree ============================*/
-/*arrList addToArrayList(int s, int ss,arrList next)
-{
-	arrList p;
-	p= (arrList)malloc(sizeof(struct arrlist));
-	p->size=s;
-	p->sumsize=ss;
-	p->next=next;
-}*/
 
 NODE makenode(int op, NODE s1, NODE s2, NODE s3,int val,char *id)
 {  
-	int i=0;
 	NODE t;
-    
+	FILE *txt;
+
 	t= (NODE )malloc(sizeof(struct node));
 	t->num_val.val=val;
 
@@ -264,29 +257,30 @@ NODE makenode(int op, NODE s1, NODE s2, NODE s3,int val,char *id)
 	
 	t->s2 = s2;	
 	t->s3 = s3;
-	
-	if(id != NULL) 
-		t->name=id; 
-	else 
-		t->name="";
 
-	if (t->s1!=NULL)
-		i++;
+	t->name = (id != NULL) ? id : "";
 
-	if (s2!=NULL)
-		i++;
+	// counting children 
+	t->children = 0;
+	if (t->s1!=NULL) t->children++;
+	if (t->s2!=NULL) t->children++;
+	if (t->s3!=NULL) t->children++;
 
-	if (s3!=NULL)
-		i++;
-
-	t->children=i;
 	t->op=op;
-		
-	/*if (t->op == IDE)
-		push(findType(t->name));
-	else
-		push(t->op);
-	*/
+
+	if ( op==ADD || op==MMIN || op==MUL || op==DIV || op==AND || op==OR || op==NOT || op==ASSIGN )
+	{
+		if( t->s1->type == t->s2->type )
+			t->type = t->s1->type;
+		else
+		{
+			txt = fopen("outputParser.txt","a");
+
+			printf("\nError at line %d:  %s  %s %s\n", line_number, print_op(t->s2->type), print_op(op), print_op(t->s1->type) );
+			fprintf(txt, "\nError at line %d:  %s  %s %s\n", line_number, print_op(t->s2->type), print_op(op), print_op(t->s1->type));
+		}
+	}
+
 	return(t);
 }
 
@@ -323,8 +317,7 @@ NODE genLeaf(int op, int val, double rval,char *id)
 	switch(op)
 	{
 		case IDE:
-			s = findSymbol(id);
-			t->type = s->type;
+			t->type = findSymbol(id)->type;
 			break;
 
 		case INTCONST:
@@ -728,7 +721,7 @@ int push(int n)
 	FILE *txt;
 	txt = fopen("outputParser.txt","a");
 	
-	if ( (n == ADD) || (n == MMIN) || (n == MUL) || (n == DIV) || n == AND || n == OR || n == NOT || n == ASSIGN)
+	if ( n==ADD || n==MMIN || n==MUL || n==DIV || n==AND || n==OR || n==NOT || n==ASSIGN )
 	{
 		temp1 = pop();
 		temp2 = pop();

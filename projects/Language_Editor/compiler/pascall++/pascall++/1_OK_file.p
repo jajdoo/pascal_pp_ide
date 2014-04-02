@@ -1,7 +1,9 @@
 PROGRAM potato
 {
-VAR INTEGER: i, s;
+VAR INTEGER: i, j, k;
 VAR FLOAT: f;
 VAR BOOLEAN: b;
-i = b + 5;
+i = 5;
+j = 7;
+k = f + i / j;
 }
