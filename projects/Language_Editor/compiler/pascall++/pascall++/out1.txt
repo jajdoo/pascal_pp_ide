@@ -1,4 +1,0 @@
-[1] LOADI 0,R0
-[2] DIV R1,R1,R1
-[3] STORE R1,R0
-[4] NOP 

@@ -1,4 +1,4 @@
-PROGRAM test
+PROGRAM potato
 {
 VAR INTEGER: i, s;
 VAR FLOAT: f;

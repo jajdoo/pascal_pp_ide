@@ -1,1 +1,6 @@
-Info at line 3: adding symbol  f of type 265 to table variable
+Info at line 3: adding symbol  i of type 264 to table variable
+Info at line 3: adding symbol  s of type 264 to table variable
+Info at line 4: adding symbol  f of type 265 to table variable
+Info at line 5: adding symbol  b of type 268 to table variable
+
+Error at line 6: Undeclared identifier: h

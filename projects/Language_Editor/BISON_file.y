@@ -15,20 +15,6 @@ arrLST *lst;
 NODE tmp1;
 NODE tmp2;
 
-
-
-typedef struct stack
-{
-	int value;
-	struct stack *next;
-	struct stack *prev;
-	
-}stack, *Stack;
-
-
-Stack headStack = 0;
-
-
 //  The symbol table - hash table of 26 enteries (alphabetical) of Symbols
 //	Remember : each symbol has a pointer to the next one. See decleration in typedef.h 
 struct Symbol *symbTable[26];//a cell is pointer to first symbol
@@ -262,45 +248,56 @@ atom:   var                        { $$ = $1; }
 	p->sumsize=ss;
 	p->next=next;
 }*/
+
 NODE makenode(int op, NODE s1, NODE s2, NODE s3,int val,char *id)
-{   int i=0;
+{  
+	int i=0;
 	NODE t;
     
 	t= (NODE )malloc(sizeof(struct node));
-    t->num_val.val=val;
-	if(op==CASE)
-	  t->s1=genLeaf(INTCONST,val,0,NULL);
-	else
-	  t->s1 = s1;
+	t->num_val.val=val;
 
+	if(op==CASE)
+		t->s1=genLeaf(INTCONST,val,0,NULL);
+	else
+		t->s1 = s1;
 	
-	t->s2 = s2;
-	
+	t->s2 = s2;	
 	t->s3 = s3;
-    if(id != NULL) 
-           t->name=id; 
+	
+	if(id != NULL) 
+		t->name=id; 
 	else 
-	  t->name="";
-	 if (t->s1!=NULL)
-	   i++;
-     if (s2!=NULL)
-	   i++;
-     if (s3!=NULL)
-	   i++;
+		t->name="";
+
+	if (t->s1!=NULL)
+		i++;
+
+	if (s2!=NULL)
+		i++;
+
+	if (s3!=NULL)
+		i++;
+
 	t->children=i;
 	t->op=op;
-	
-	if (t->op == IDE)
+		
+	/*if (t->op == IDE)
 		push(findType(t->name));
 	else
 		push(t->op);
+	*/
 	return(t);
 }
+
 
 NODE genLeaf(int op, int val, double rval,char *id)
 {
 	NODE t;
-	if(id != NULL&&!findSymbol(id)){
+	struct Symbol* s;
+
+	if(id != NULL&&!findSymbol(id))
+	{
 		FILE *txt; 
 		txt=fopen("outputParser.txt","a");
 		fprintf(txt,"\nError at line %d: Undeclared identifier: %s",line_number,id);
@@ -309,23 +306,42 @@ NODE genLeaf(int op, int val, double rval,char *id)
 	}
 	
 	t= (NODE )malloc(sizeof(struct node));
-        t->num_val.val=val;
-        if (op == REALCONST)
-			 t->num_val.rval=rval;
+	t->num_val.val=val;
+	
 	t->op = op;
+	
 	if(id != NULL) 
            t->name=id;  
 	else	       
 		   t->name="";
+
 	t->s1 = NULL;
 	t->s2 = NULL;
 	t->s3 = NULL;
 	t->children=0;
 	
-	if (t->op == IDE)
-		push(findType(t->name));
-	else
-		push(t->op);
+	switch(op)
+	{
+		case IDE:
+			s = findSymbol(id);
+			t->type = s->type;
+			break;
+
+		case INTCONST:
+			t->type = INTEGER;
+			t->num_val.val = val;
+			break;
+
+		case REALCONST:
+			t->type = FLOAT;
+			t->num_val.rval = rval;
+			break;
+
+		case TRUE:
+		case FALSE:
+			t->type = BOOLEAN;
+		break;
+	}
 	return(t);
 }
 
@@ -446,39 +462,43 @@ char *print_op(int op)
 void print_tree(NODE r, int s)
 { 
   
-if(r != NULL) { 
-                fprintf(treefile,"type=%s\n", print_op(r->op));
-				fprintf(treefile,"children=%d\n", r->children);
-				if(r->name) fprintf(treefile,"my check == = = ==> %s\n",r->name);
-				if(r->op == IDE) fprintf(treefile,"string=%s\n",r->name);
-                if(r->op ==INTCONST)  fprintf(treefile,"int value=%d\n", r->num_val.val); 
-                if(r->op==REALCONST) fprintf(treefile,"real value=%f\n", r->num_val.rval); 
-                fprintf(treefile,"\n");
-				if(r->s1!=NULL){
-                  fprintf(treefile,"| Son1 of %s\n",print_op(r->op));
-                  fprintf(treefile,"|\n");
-	              fprintf(treefile,"---------------\n");
-	              print_tree(r->s1,s+2);
+	if(r != NULL) 
+	{ 
+		fprintf(treefile,"type=%s\n", print_op(r->op));
+		fprintf(treefile,"children=%d\n", r->children);
+		if(r->name) fprintf(treefile,"my check == = = ==> %s\n",r->name);
+		if(r->op == IDE) fprintf(treefile,"string=%s\n",r->name);
+		if(r->op ==INTCONST)  fprintf(treefile,"int value=%d\n", r->num_val.val); 
+		if(r->op==REALCONST) fprintf(treefile,"real value=%f\n", r->num_val.rval);
+		
+		fprintf( treefile, "node type: %s\n\n", print_op(r->type) );
 
-	            } 
+		if(r->s1!=NULL)
+		{
+			fprintf(treefile,"| Son1 of %s\n",print_op(r->op));
+			fprintf(treefile,"|\n");
+			fprintf(treefile,"---------------\n");
+			print_tree(r->s1,s+2);
+		} 
 	  
 	           
-	        if(r->s2!=NULL){
-               fprintf(treefile,"| Son2 of %s\n",print_op(r->op));
-               fprintf(treefile,"|\n");
-	           fprintf(treefile,"---------------\n");
-               print_tree(r->s2, s+2);
+		if(r->s2!=NULL)
+		{
+			fprintf(treefile,"| Son2 of %s\n",print_op(r->op));
+			fprintf(treefile,"|\n");
+			fprintf(treefile,"---------------\n");
+			print_tree(r->s2, s+2);
 	
-            }
+		}
  
-          if(r->s3!=NULL){
-               fprintf(treefile,"| Son3 of %s\n",print_op(r->op));
-               fprintf(treefile,"|\n");
-	           fprintf(treefile,"---------------\n");
-               print_tree(r->s3, s+2);
-	
-            } 
- } 
+		if(r->s3!=NULL)
+		{
+			fprintf(treefile,"| Son3 of %s\n",print_op(r->op));
+			fprintf(treefile,"|\n");
+			fprintf(treefile,"---------------\n");
+			print_tree(r->s3, s+2);
+		}
+	} 
 }
 
 void updateVarType(int op)
@@ -510,7 +530,7 @@ void updateVarType(int op)
 /* Symbol Table Part - Functions that build the symbol table during runtime: */
 /* ------------------------------------------------------------------------- */
 
-void addToSymbolTable(char *IDEName,int size,int IS_ARRAY,arrList lst)
+void addToSymbolTable( char *IDEName, int size, int IS_ARRAY, arrList lst )
 {
 	FILE *txt;
 	txt=fopen("outputParser.txt","a");
@@ -518,7 +538,8 @@ void addToSymbolTable(char *IDEName,int size,int IS_ARRAY,arrList lst)
 	struct Symbol* newSymb; 
 	
 	//fprintf(txt,"Info at line %d: adding to symbol table: %s \n",line_number,IDEName);
-	if(size<=0){
+	if(size<=0)
+	{
 		fprintf(txt,"\nErrorat line %d: illegal array size: %s has the size of %d",line_number,IDEName, size);
 		fclose(txt);
 		exit(1);
@@ -696,45 +717,7 @@ int findType(char *name)
 
 }
 
-
-// pop from stack
-int pop()
-{
-	Stack temp;
-	int value;
-
-	if (empty())	
-			return 0;						
-		
-	value = headStack->value;
-	if (headStack->prev == NULL)
-	{
-		free(headStack);
-		headStack = 0;
-	}
-	else
-	{
-		temp = headStack->prev;
-		temp->next = 0;
-		headStack = temp;	
-	}
-		
-	return value;						
-}
-
-
-
-
-// check if stack empty
-int empty()
-{
-	if (headStack == NULL)
-		return 1;
-	else		
-		return 0;
-}
-
-
+/*
 // push in to stack
 int push(int n)
 {
@@ -849,3 +832,4 @@ int push(int n)
 	return 1;	
 	
 }
+*/

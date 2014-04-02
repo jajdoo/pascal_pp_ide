@@ -40,7 +40,7 @@ typedef struct Symbol
 {
 	char *symb;				// the string that holds the name of the Symbol
 	char *funcName;			// the name of the function where the Symbol is decleared
-	int type;				// the type (0 - Bool, 1 - Int ...)
+	int type;
 	int address;			// relative address to block
 	int size;				// size of variable in bytes
 	int IS_ARRAY;			// if variable is array 1 for [] , x for [][x], 0 for non array
