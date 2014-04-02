@@ -72,7 +72,10 @@ REPEAT       {return(REPEAT);   }
 THEN         {return(THEN);     }
 TRUE         {return(TRUE);     }
 WHILE        {return(WHILE);    }
+<<<<<<< HEAD
 RCD		 	 {return(RCD)};		}
+=======
+>>>>>>> FETCH_HEAD
 
 {IDE}          { yylval.string = (char*) malloc(strlen(yytext)+1);
                strcpy(yylval.string,yytext); return(IDE); }
