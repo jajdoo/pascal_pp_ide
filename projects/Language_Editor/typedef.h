@@ -4,8 +4,6 @@
 #define STATEMENT 1
 #define CASESTAT 2
 #define CASELIST 3
-/*#define BOOLEAN 0*/ /*DELETED BECAUSE THARE WAS A REDECLERATION IN THE miny_tab.h file*/
-/*#define INTEGER 1*/ /*DELETED BECAUSE THARE WAS A REDECLERATION IN THE miny_tab.h file*/
 #define BRACKETS 316
 
 
