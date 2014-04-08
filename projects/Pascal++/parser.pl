@@ -9,6 +9,7 @@ $i = 0;
 foreach my $bblock (@bblocks)
 {
 	my @lines = split(/\[/, $bblock);
+	print "$bblock"."\n";
 	foreach $lst (@lines)
 	{$sav = $lst;}
 	my @lass = split(/\]/, $sav);
@@ -42,6 +43,7 @@ foreach $tmp ( @last)
 	{
 		@temp = split(/\,/, @tt[2]);
 		@temp[1] =~ tr/\r\n//d;
+		$j = $i+1;
 		print MYFILE "$i -> $has{@temp[1]} \n";
 		print MYFILE "$i -> $j \n";
 	}
