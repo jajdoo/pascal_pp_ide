@@ -1,5 +1,7 @@
+#!/usr/bin/perl
+
 local $/;
-open(FILE, 'out2.ir') or die "Can't read file 'filename' [$!]\n";  
+open(FILE, '<out2.ir') or die "Can't read file 'filename' [$!]\n";  
 $document = <FILE>; 
 close (FILE);  
 open (MYFILE, '>graph.dot');
@@ -9,7 +11,6 @@ $i = 0;
 foreach my $bblock (@bblocks)
 {
 	my @lines = split(/\[/, $bblock);
-	print "$bblock"."\n";
 	foreach $lst (@lines)
 	{$sav = $lst;}
 	my @lass = split(/\]/, $sav);
@@ -19,6 +20,11 @@ foreach my $bblock (@bblocks)
 		@lass[1] =~ tr/\r\n//d;
 		push(@last, @lass[1]);
 		push(@first, @fir[0]);
+		open (MYF, ">$i".".html");
+		$bblock =~ s/\n/\n<br>/g;;
+		print MYF "$bblock";
+		close (MYF);
+		print MYFILE "$i [URL=\"$i".".html\"]";
 	} 
 	$i++;
 }
