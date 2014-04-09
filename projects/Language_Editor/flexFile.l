@@ -72,6 +72,7 @@ REPEAT       {return(REPEAT);   }
 THEN         {return(THEN);     }
 TRUE         {return(TRUE);     }
 WHILE        {return(WHILE);    }
+STRUCT		 {return(STRUCT);	}
 
 {IDE}          { yylval.string = (char*) malloc(strlen(yytext)+1);
                strcpy(yylval.string,yytext); return(IDE); }

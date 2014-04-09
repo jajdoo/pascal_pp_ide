@@ -4,7 +4,7 @@
 #define STATEMENT 1
 #define CASESTAT 2
 #define CASELIST 3
-#define BRACKETS 316
+#define BRACKETS 1024
 
 
 #define INT_MAX 32000

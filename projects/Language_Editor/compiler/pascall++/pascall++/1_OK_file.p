@@ -1,9 +1,12 @@
 PROGRAM potato
 {
+STRUCT tomato 
+{
+	VAR INTEGER: a, b;
+	VAR BOOLEAN: c^;
+	VAR FLOAT: d[4], e[5][7];
+};
+
 VAR INTEGER: i, j, k;
-VAR FLOAT: f;
-VAR BOOLEAN: b;
-i = 5.5;
-j = 7;
-k = (i + j) / k;
+i=5;
 }

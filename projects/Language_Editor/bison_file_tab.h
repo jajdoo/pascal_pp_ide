@@ -52,12 +52,13 @@
 #define	TYPE	309
 #define	VAR	310
 #define	RECORD	311
-#define	INTCONST	312
-#define	IDE	313
-#define	POINTER	314
-#define	REALCONST	315
-#define	STRING	316
-#define	DUMMY	317
+#define	STRUCT	312
+#define	INTCONST	313
+#define	IDE	314
+#define	POINTER	315
+#define	REALCONST	316
+#define	STRING	317
+#define	DUMMY	318
 
 
 extern YYSTYPE yylval;

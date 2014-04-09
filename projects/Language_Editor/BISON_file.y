@@ -42,6 +42,9 @@ char* print_op(int op);
 %token READ WRITE TRUE FALSE ADD MMIN MUL DIV GOTO
 %token MOD LES LEQ EQU NEQ GRE GEQ AND OR
 %token AND OR NOT CASE FOR FIN IDENTICAL FROM BY TO CONST TYPE VAR RECORD
+
+%token STRUCT
+
 %token<code> INTCONST 
 %token<string> IDE 
 %token<string> POINTER
@@ -68,9 +71,31 @@ char* print_op(int op);
 program:	PROGRAM IDE block				{$$=makenode(PROGRAM,$3,NULL,NULL,0,$2); root=$$;} 					
        ;
 
-block :LC declarations stat_seq RC                   {$$=makenode(BBEGIN,$3,NULL,NULL,0,NULL);} 
+block :LC struct_decl declarations stat_seq RC       {$$=makenode(BBEGIN,$4,NULL,NULL,0,NULL);} 
 		| LC RC										 {$$=makenode(BBEGIN,NULL,NULL,NULL,0,NULL);} 
        ;
+
+
+
+struct_decl: STRUCT IDE LC member_decl RC ';' ;
+
+member_decl:  VAR tyList ':' memberList ';' member_decl {printf("member_decl_1->");}
+			| VAR tyList ':' memberList ';'				{printf("member_decl_2->");}
+			;
+
+memberList:		single_member ',' memberList			{printf("memberList_1->");}
+			|	single_member							{printf("memberList_2->");}
+			;
+
+single_member : 
+			  IDE			{ printf("single_member(ide)\n"); }
+			| POINTER		{ printf("single_member(ptr)\n"); }
+			| IDE dim		{ printf("single_member(dim)->"); }
+			;
+
+dim: '[' INTCONST ']' dim_tail		{printf("dim_1\n");}
+			;
+dim_tail: dim | ;
 
 
 declarations:VAR varAss declarations | ;
