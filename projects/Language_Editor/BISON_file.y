@@ -76,7 +76,7 @@ block :LC struct_decl declarations stat_seq RC       {$$=makenode(BBEGIN,$4,NULL
        ;
 
 /*************************************************************************/
-/*                                STRUCT                                 */
+/*                          STRUCT decleration                           */
  
 struct_decl: STRUCT IDE LC member_decl RC ';' ;
 
@@ -84,14 +84,14 @@ member_decl:  VAR tyList ':' memberList ';' member_decl {printf("member_decl_1->
 			| VAR tyList ':' memberList ';'				{printf("member_decl_2->");}
 			;
 
-memberList:		single_member ',' memberList			{printf("memberList_1->");}
-			|	single_member							{printf("memberList_2->");}
+memberList:		struct_member ',' memberList			{printf("memberList_1->");}
+			|	struct_member							{printf("memberList_2->");}
 			;
 
-single_member : 
-			  IDE			{ printf("single_member(ide)\n"); }
-			| POINTER		{ printf("single_member(ptr)\n"); }
-			| IDE dim		{ printf("single_member(dim)->"); }
+struct_member : 
+			  IDE			{ printf("struct_member(ide)\n"); }
+			| POINTER		{ printf("struct_member(ptr)\n"); }
+			| IDE dim		{ printf("struct_member(dim)->"); }
 			;
 
 dim: '[' INTCONST ']' dim_tail		{printf("dim_1\n");}
@@ -107,14 +107,14 @@ declarations:	VAR varAss declarations
 
 
 /*************************************************************************/
-/*                                STRUCT                                 */
+/*                            STRUCT variable                            */
 strIdeList:   structIde ',' strIdeList 
 			| structIde 
 			;
 
-structIde:    IDE			{ printf("single_member(ide)\n"); }
-			| POINTER		{ printf("single_member(ptr)\n"); }
-			| IDE dim		{ printf("single_member(dim)->"); }
+structIde:    IDE			{ printf("struct_member(ide)\n"); }
+			| POINTER		{ printf("struct_member(ptr)\n"); }
+			| IDE dim		{ printf("struct_member(dim)->"); }
 			;
 /*************************************************************************/
 
@@ -242,7 +242,7 @@ var:
      ;
 
 /*************************************************************************/
-/*                                STRUCT                                 */
+/*                             STRUCT access                             */
 struct_acc_tail:  IDE 										{printf("struct_tail->");}
 				| IDE '.' struct_acc_tail					{printf("\n");}
 		; 
