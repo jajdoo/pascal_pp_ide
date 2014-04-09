@@ -15,9 +15,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\flexFile.l" />
-    <None Include="..\..\..\bison_file.y" />
     <None Include="..\..\..\bison.simple" />
+    <None Include="..\..\..\bison_file.y" />
+    <None Include="..\..\..\flexFile.l" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\bison_file_tab.c">
@@ -41,9 +41,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\global.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\typedef.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

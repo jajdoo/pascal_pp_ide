@@ -8,5 +8,7 @@ STRUCT tomato
 };
 
 VAR INTEGER: i, j, k;
+STRUCT tomato: t;
 i=5;
+t.a = i + t.b.c;
 }

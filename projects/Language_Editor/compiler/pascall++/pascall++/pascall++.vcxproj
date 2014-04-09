@@ -33,7 +33,6 @@
     <ClInclude Include="..\..\..\bison_file_tab.h" />
     <ClInclude Include="..\..\..\convertTree.h" />
     <ClInclude Include="..\..\..\global.h" />
-    <ClInclude Include="..\..\..\typedef.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{283A1A62-0D8A-4364-AC2D-E3F2B224507B}</ProjectGuid>

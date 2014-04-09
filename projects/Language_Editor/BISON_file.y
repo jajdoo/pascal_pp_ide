@@ -75,8 +75,9 @@ block :LC struct_decl declarations stat_seq RC       {$$=makenode(BBEGIN,$4,NULL
 		| LC RC										 {$$=makenode(BBEGIN,NULL,NULL,NULL,0,NULL);} 
        ;
 
-
-
+/*************************************************************************/
+/*                                STRUCT                                 */
+ 
 struct_decl: STRUCT IDE LC member_decl RC ';' ;
 
 member_decl:  VAR tyList ':' memberList ';' member_decl {printf("member_decl_1->");}
@@ -95,10 +96,27 @@ single_member :
 
 dim: '[' INTCONST ']' dim_tail		{printf("dim_1\n");}
 			;
+
 dim_tail: dim | ;
 
+/*************************************************************************/
 
-declarations:VAR varAss declarations | ;
+declarations:	VAR varAss declarations 
+			 |	STRUCT IDE ':' strIdeList ';' declarations
+			 |	;
+
+
+/*************************************************************************/
+/*                                STRUCT                                 */
+strIdeList:   structIde ',' strIdeList 
+			| structIde 
+			;
+
+structIde:    IDE			{ printf("single_member(ide)\n"); }
+			| POINTER		{ printf("single_member(ptr)\n"); }
+			| IDE dim		{ printf("single_member(dim)->"); }
+			;
+/*************************************************************************/
 
 varAss: tyList ':' idList varAss		{} 
 	|
@@ -199,12 +217,13 @@ case_list:  case               {$$=makenode(CASELIST,$1,NULL,NULL,0,NULL);}
 case :  INTCONST ':' stat_seq  {$$=makenode(CASE,NULL,$3,NULL,$1,NULL);}   
 
 
-var: IDE                         { $$ = genLeaf(IDE,0,0,$1);}
-|POINTER {$$ = genLeaf(POINTER,0,0,$1);}
-     | IDE '[' expr ']'
-     {s=0; lst=findSymbol($1)->lst;} 
-     bracket  
-     { 
+var:
+	IDE '.' struct_acc_tail			{ printf("struct_acc->"); }					
+	| IDE							{ $$ = genLeaf(IDE,0,0,$1);}
+	| POINTER						{$$ = genLeaf(POINTER,0,0,$1);}
+    | IDE '[' expr ']'				{s=0; lst=findSymbol($1)->lst;} 
+    bracket  
+	{ 
 		if(n==1)
 			{$$ = makenode(ADD,genLeaf(IDE,0,0,$1),$3,NULL,0,"check");}
 		else
@@ -212,14 +231,23 @@ var: IDE                         { $$ = genLeaf(IDE,0,0,$1);}
 			tmp1=makenode(ADD,makenode(MUL,$3,genLeaf(INTCONST,lst[s+1].sumsize,0,NULL),NULL,0,"check"),$6,NULL,0,"check");
 			$$ = makenode(ADD,genLeaf(IDE,0,0,$1),tmp1,NULL,0,"check");
 		}
-		FILE *txt; 
-		txt=fopen("outputParser.txt","a");
-		if (n!=findSymbol($1)->IS_ARRAY ) {
-			fprintf(txt,"\nError at line %d: Assign problem %s: %d!=%d.",line_number, $1,n,findSymbol($1)->IS_ARRAY); 
-			fclose(txt);
+			FILE *txt; 
+			txt=fopen("outputParser.txt","a");
+			if (n!=findSymbol($1)->IS_ARRAY ) 
+			{
+				fprintf(txt,"\nError at line %d: Assign problem %s: %d!=%d.",line_number, $1,n,findSymbol($1)->IS_ARRAY); 
+				fclose(txt);
 			}
 	}
      ;
+
+/*************************************************************************/
+/*                                STRUCT                                 */
+struct_acc_tail:  IDE 										{printf("struct_tail->");}
+				| IDE '.' struct_acc_tail					{printf("\n");}
+		; 
+/************************************************************************/
+
 
 bracket: '[' expr ']' 
 	{s=s+1;}
