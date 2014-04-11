@@ -6,6 +6,7 @@
 #include <string.h>
 #include <conio.h>
 #include "typedef.h"
+#include "struct_def.h"
 #define yyerror(x) { FILE *txt; txt=fopen("yyerror.txt","w"); fprintf(txt,"%s in line %d\n",x,line_number);}
 
 static int n;
@@ -35,6 +36,9 @@ NODE genLeaf(int op, int val, double rval,char *id);
 arrList addToArrayList(int s, int ss,arrList next);
 void PrintArray(arrList l,FILE *t, int ind);
 char* print_op(int op);
+
+void print_struct_members( FILE* f, char* struct_name, struct Symbol* members );
+
 %}
 
 %token PROGRAM BBEGIN END DECLARE PROCEDURE LABEL INTEGER FLOAT REAL CMP
@@ -78,7 +82,7 @@ block :LC struct_decl declarations stat_seq RC       {$$=makenode(BBEGIN,$4,NULL
 /*************************************************************************/
 /*                          STRUCT decleration                           */
  
-struct_decl: STRUCT IDE LC member_decl RC ';' ;
+struct_decl: STRUCT IDE LC member_decl RC ';' {struct_test_fuck();};
 
 member_decl:  VAR tyList ':' memberList ';' member_decl {printf("member_decl_1->");}
 			| VAR tyList ':' memberList ';'				{printf("member_decl_2->");}
@@ -89,7 +93,7 @@ memberList:		struct_member ',' memberList			{printf("memberList_1->");}
 			;
 
 struct_member : 
-			  IDE			{ printf("struct_member(ide)\n"); }
+			  IDE			{ new_struct_member($1, 1, 0, NULL, 0); /* need to adress if IDE is a struct */ }
 			| POINTER		{ printf("struct_member(ptr)\n"); }
 			| IDE dim		{ printf("struct_member(dim)->"); }
 			;
@@ -123,8 +127,8 @@ varAss: tyList ':' idList varAss		{}
 	';'{}
 	;
 
-idList: IDE 	{addToSymbolTable($1,1,0,NULL);}idList
-     |POINTER 	{addToSymbolTable($1,1,0,NULL);}idList
+idList: IDE 	{addToSymbolTable($1,1,0,NULL,0);}idList
+     |POINTER 	{addToSymbolTable($1,1,0,NULL,0);}idList
 	|   IDE '[' INTCONST ']' 
 	{
 		s=1;
@@ -135,11 +139,11 @@ idList: IDE 	{addToSymbolTable($1,1,0,NULL);}idList
 		lst[s-o].size=$3;/* calcultes size of each dimentiob*/
 		lst[s-o].sumsize=n*$3;/* sum of array*/
 		
-		addToSymbolTable($1,n*$3,s,lst);
+		addToSymbolTable($1,n*$3,s,lst,0);
 	}
 	idList
-	|',' IDE idList {addToSymbolTable($2,1,0,NULL);}
-	|',' POINTER idList {addToSymbolTable($2,1,0,NULL);}
+	|',' IDE idList {addToSymbolTable($2,1,0,NULL,0);}
+	|',' POINTER idList {addToSymbolTable($2,1,0,NULL,0);}
 	|',' IDE '[' INTCONST ']'
 	{
 		s=1;
@@ -150,7 +154,7 @@ idList: IDE 	{addToSymbolTable($1,1,0,NULL);}idList
 		lst[s-o].size=$4;/* calcultes size of each dimentiob*/
 		lst[s-o].sumsize=n*$4;/* sum of array*/
 		
-		addToSymbolTable($2,n*$4,s,lst);
+		addToSymbolTable($2,n*$4,s,lst,0);
 	}
 	idList
 	|
@@ -576,7 +580,7 @@ void updateVarType(int op)
 /* Symbol Table Part - Functions that build the symbol table during runtime: */
 /* ------------------------------------------------------------------------- */
 
-void addToSymbolTable( char *IDEName, int size, int IS_ARRAY, arrList lst )
+void addToSymbolTable( char *IDEName, int size, int IS_ARRAY, arrList lst, int is_struct )
 {
 	FILE *txt;
 	txt=fopen("outputParser.txt","a");
@@ -619,6 +623,9 @@ void addToSymbolTable( char *IDEName, int size, int IS_ARRAY, arrList lst )
 	newSymb->address=currentAddress;
 	newSymb->size=size;		
 	newSymb->IS_ARRAY=IS_ARRAY;
+
+	newSymb->is_struct = is_struct;
+
 	currentAddress+=newSymb->size;
 	
 	fprintf(txt,"Info at line %d: adding symbol  %s of type %d to table variable\n",line_number, IDEName, currentType);
@@ -700,30 +707,51 @@ int i;
 }
 
 //print currentsymbol table
-void PrintSymbolTable(){
+void PrintSymbolTable()
+{
 	int i;
-	FILE *txt;
-	FILE *txt1;
-	txt=fopen("symbol table.txt","w");
-	txt1=fopen("symbol_table.txt","w");
-	fprintf(txt1,"Name\t|Address\t|Size\t|IS ARRAY\t\t|IS POINTER\t|TYPE\n");
+	FILE* txt;
+	FILE* txt1;
+	FILE* membs;
+	txt=fopen("symbol_table.txt","w");
+	txt1=fopen("symbol_table1.txt","w");
+	membs=fopen("struct_membs.txt","w");
+	fprintf(txt1,"index\t|Name\t|Address\t|Size\t|IS ARRAY\t\t|IS POINTER\t|TYPE\t|is_struct\n");
 	fprintf(txt1,"--------------------------------------------------------------\n");
 	fprintf(txt,"Name   |Address  |Size  |IS ARRAY   |IS RECORD\n");
 	fprintf(txt,"-----------------------------------------------\n");
-	for(i=0;i<26;++i){	
+
+	for(i=0;i<26;++i)
+	{	
 		CurrSymbol=symbTable[i];
 		while (CurrSymbol != NULL)
 		{
-			fprintf(txt1,"%s\t\t|%d\t\t|%d\t\t|%d\t\t|%d\t\t|%d\n"
-				  ,CurrSymbol->symb,CurrSymbol->address,CurrSymbol->size,CurrSymbol->IS_ARRAY,CurrSymbol->IS_POINTER,CurrSymbol->type);
+			fprintf(txt1,"%d\t\t|%s\t\t|%d\t\t|%d\t\t|%d\t\t|%d\t\t|%d|\t\t%d\n",
+				i, 
+				CurrSymbol->symb,
+				CurrSymbol->address,
+				CurrSymbol->size,
+				CurrSymbol->IS_ARRAY,
+				CurrSymbol->IS_POINTER,
+				CurrSymbol->type,
+				CurrSymbol->is_struct);
+
 			fprintf(txt,"%s      |%d        |%d     |%d\n"
-				  ,CurrSymbol->symb,CurrSymbol->address,CurrSymbol->size,CurrSymbol->IS_ARRAY);
+				  ,CurrSymbol->symb,
+				  CurrSymbol->address,
+				  CurrSymbol->size,
+				  CurrSymbol->IS_ARRAY);
+			
+			if( CurrSymbol->is_struct==1 && CurrSymbol->members!=NULL )
+				print_struct_members(membs, CurrSymbol->symb, CurrSymbol->members );
+
 			PrintArray(CurrSymbol->lst,txt,CurrSymbol->IS_ARRAY);
 			CurrSymbol=CurrSymbol->next;
 		}
 	}
 	fclose(txt);
 	fclose(txt1);
+	fclose(membs);
 
 }
 
@@ -733,6 +761,31 @@ void PrintArray(arrLST *l,FILE *t,int ind)
 	fprintf(t,"%d     %d\n",l->size,l->sumsize);
 	PrintArray(l+1,t,ind-1);
 }
+
+
+
+void print_struct_members( FILE* f, char* struct_name, struct Symbol* members )
+{
+	fprintf(f, "members for struct %s\n", struct_name);	
+	fprintf(f,"index\t|Name\t|Address\t|Size\t|IS ARRAY\t\t|IS POINTER\t|TYPE\t|is_struct\n");
+	fprintf(f,"--------------------------------------------------------------\n");
+
+	while( members!=NULL )
+	{
+		fprintf(f,"%s\t\t|%d\t\t|%d\t\t|%d\t\t|%d\t\t|%d|\t\t%d\n",
+		members->symb,
+		members->address,
+		members->size,
+		members->IS_ARRAY,
+		members->IS_POINTER,
+		members->type,
+		members->is_struct);
+		members = members->next;
+	}
+}
+
+
+
 int checkn(int n)
 {
 	if (n==1) 

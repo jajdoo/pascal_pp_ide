@@ -74,6 +74,7 @@
 #include <string.h>
 #include <conio.h>
 #include "typedef.h"
+#include "struct_def.h"
 #define yyerror(x) { FILE *txt; txt=fopen("yyerror.txt","w"); fprintf(txt,"%s in line %d\n",x,line_number);}
 
 static int n;
@@ -103,6 +104,9 @@ NODE genLeaf(int op, int val, double rval,char *id);
 arrList addToArrayList(int s, int ss,arrList next);
 void PrintArray(arrList l,FILE *t, int ind);
 char* print_op(int op);
+
+void print_struct_members( FILE* f, char* struct_name, struct Symbol* members );
+
 
 #ifndef YYLTYPE
 typedef
@@ -223,16 +227,16 @@ static const short yyrhs[] = {     3,
 
 #if YYDEBUG != 0
 static const short yyrline[] = { 0,
-    71,    74,    75,    81,    83,    84,    87,    88,    91,    93,
-    94,    97,   100,   100,   104,   105,   106,   111,   112,   115,
-   116,   117,   121,   122,   126,   127,   127,   128,   128,   134,
-   141,   141,   142,   143,   149,   156,   156,   159,   162,   170,
-   171,   179,   180,   182,   187,   188,   192,   195,   196,   197,
-   198,   201,   204,   205,   208,   211,   214,   215,   217,   220,
-   222,   223,   224,   226,   246,   247,   252,   255,   264,   264,
-   267,   268,   269,   270,   271,   272,   273,   274,   275,   276,
-   277,   278,   279,   280,   282,   283,   287,   288,   289,   290,
-   291
+    75,    78,    79,    85,    87,    88,    91,    92,    95,    97,
+    98,   101,   104,   104,   108,   109,   110,   115,   116,   119,
+   120,   121,   125,   126,   130,   131,   131,   132,   132,   138,
+   145,   145,   146,   147,   153,   160,   160,   163,   166,   174,
+   175,   183,   184,   186,   191,   192,   196,   199,   200,   201,
+   202,   205,   208,   209,   212,   215,   218,   219,   221,   224,
+   226,   227,   228,   230,   250,   251,   256,   259,   268,   268,
+   271,   272,   273,   274,   275,   276,   277,   278,   279,   280,
+   281,   282,   283,   284,   286,   287,   291,   292,   293,   294,
+   295
 };
 
 static const char * const yytname[] = {   "$","error","$undefined.","PROGRAM",
@@ -242,7 +246,7 @@ static const char * const yytname[] = {   "$","error","$undefined.","PROGRAM",
 "LES","LEQ","EQU","NEQ","GRE","GEQ","AND","OR","NOT","CASE","FOR","FIN","IDENTICAL",
 "FROM","BY","TO","CONST","TYPE","VAR","RECORD","STRUCT","INTCONST","IDE","POINTER",
 "REALCONST","STRING","DUMMY","';'","':'","','","'['","']'","'.'","'('","')'",
-"program","block","struct_decl","member_decl","memberList","single_member","dim",
+"program","block","struct_decl","member_decl","memberList","struct_member","dim",
 "dim_tail","declarations","strIdeList","structIde","varAss","idList","@1","@2",
 "@3","@4","@5","@6","brk","@7","@8","tyList","stat_seq","stat","nonlable_stat",
 "assign","cond_stat","loop_stat","case_stat","case_list","case","var","@9","struct_acc_tail",
@@ -892,127 +896,131 @@ yyreduce:
   switch (yyn) {
 
 case 1:
-#line 71 "bison_file.y"
+#line 75 "bison_file.y"
 {yyval.node=makenode(PROGRAM,yyvsp[0].node,NULL,NULL,0,yyvsp[-1].string); root=yyval.node;;
     break;}
 case 2:
-#line 74 "bison_file.y"
+#line 78 "bison_file.y"
 {yyval.node=makenode(BBEGIN,yyvsp[-1].node,NULL,NULL,0,NULL);;
     break;}
 case 3:
-#line 75 "bison_file.y"
+#line 79 "bison_file.y"
 {yyval.node=makenode(BBEGIN,NULL,NULL,NULL,0,NULL);;
     break;}
+case 4:
+#line 85 "bison_file.y"
+{struct_test_fuck();;
+    break;}
 case 5:
-#line 83 "bison_file.y"
+#line 87 "bison_file.y"
 {printf("member_decl_1->");;
     break;}
 case 6:
-#line 84 "bison_file.y"
+#line 88 "bison_file.y"
 {printf("member_decl_2->");;
     break;}
 case 7:
-#line 87 "bison_file.y"
+#line 91 "bison_file.y"
 {printf("memberList_1->");;
     break;}
 case 8:
-#line 88 "bison_file.y"
+#line 92 "bison_file.y"
 {printf("memberList_2->");;
     break;}
 case 9:
-#line 92 "bison_file.y"
-{ printf("single_member(ide)\n"); ;
+#line 96 "bison_file.y"
+{ new_struct_member(yyvsp[0].string, 1, 0, NULL, 0); /* need to adress if IDE is a struct */ ;
     break;}
 case 10:
-#line 93 "bison_file.y"
-{ printf("single_member(ptr)\n"); ;
+#line 97 "bison_file.y"
+{ printf("struct_member(ptr)\n"); ;
     break;}
 case 11:
-#line 94 "bison_file.y"
-{ printf("single_member(dim)->"); ;
+#line 98 "bison_file.y"
+{ printf("struct_member(dim)->"); ;
     break;}
 case 12:
-#line 97 "bison_file.y"
+#line 101 "bison_file.y"
 {printf("dim_1\n");;
     break;}
 case 20:
-#line 115 "bison_file.y"
-{ printf("single_member(ide)\n"); ;
+#line 119 "bison_file.y"
+{ printf("struct_member(ide)\n"); ;
     break;}
 case 21:
-#line 116 "bison_file.y"
-{ printf("single_member(ptr)\n"); ;
+#line 120 "bison_file.y"
+{ printf("struct_member(ptr)\n"); ;
     break;}
 case 22:
-#line 117 "bison_file.y"
-{ printf("single_member(dim)->"); ;
+#line 121 "bison_file.y"
+{ printf("struct_member(dim)->"); ;
     break;}
 case 23:
-#line 121 "bison_file.y"
+#line 125 "bison_file.y"
 {;
     break;}
 case 24:
-#line 123 "bison_file.y"
+#line 127 "bison_file.y"
 {;
     break;}
 case 25:
-#line 126 "bison_file.y"
-{addToSymbolTable(yyvsp[0].string,1,0,NULL);;
+#line 130 "bison_file.y"
+{addToSymbolTable(yyvsp[0].string,1,0,NULL,0);;
     break;}
 case 27:
-#line 127 "bison_file.y"
-{addToSymbolTable(yyvsp[0].string,1,0,NULL);;
+#line 131 "bison_file.y"
+{addToSymbolTable(yyvsp[0].string,1,0,NULL,0);;
     break;}
 case 29:
-#line 129 "bison_file.y"
+#line 133 "bison_file.y"
 {
 		s=1;
 
 	;
     break;}
 case 30:
-#line 134 "bison_file.y"
+#line 138 "bison_file.y"
 { 
 		lst[s-o].size=yyvsp[-3].code;/* calcultes size of each dimentiob*/
 		lst[s-o].sumsize=n*yyvsp[-3].code;/* sum of array*/
 		
-		addToSymbolTable(yyvsp[-5].string,n*yyvsp[-3].code,s,lst);
+		addToSymbolTable(yyvsp[-5].string,n*yyvsp[-3].code,s,lst,0);
 	;
     break;}
 case 32:
-#line 141 "bison_file.y"
-{addToSymbolTable(yyvsp[-1].string,1,0,NULL);;
+#line 145 "bison_file.y"
+{addToSymbolTable(yyvsp[-1].string,1,0,NULL,0);;
     break;}
 case 33:
-#line 142 "bison_file.y"
-{addToSymbolTable(yyvsp[-1].string,1,0,NULL);;
+#line 146 "bison_file.y"
+{addToSymbolTable(yyvsp[-1].string,1,0,NULL,0);;
     break;}
 case 34:
-#line 144 "bison_file.y"
+#line 148 "bison_file.y"
 {
 		s=1;
 
 	;
     break;}
 case 35:
-#line 149 "bison_file.y"
+#line 153 "bison_file.y"
 { 
 		lst[s-o].size=yyvsp[-3].code;/* calcultes size of each dimentiob*/
 		lst[s-o].sumsize=n*yyvsp[-3].code;/* sum of array*/
 		
-		addToSymbolTable(yyvsp[-5].string,n*yyvsp[-3].code,s,lst);
+		addToSymbolTable(yyvsp[-5].string,n*yyvsp[-3].code,s,lst,0);
 	;
     break;}
 case 37:
-#line 157 "bison_file.y"
+#line 161 "bison_file.y"
 {;
     break;}
 case 38:
-#line 160 "bison_file.y"
+#line 164 "bison_file.y"
 {s=s+1;;
     break;}
 case 39:
-#line 162 "bison_file.y"
+#line 166 "bison_file.y"
 {
 			n=n*yyvsp[-3].code; 
 			yyval.code=lst; 
@@ -1023,11 +1031,11 @@ case 39:
 		;
     break;}
 case 40:
-#line 170 "bison_file.y"
+#line 174 "bison_file.y"
 {;
     break;}
 case 41:
-#line 171 "bison_file.y"
+#line 175 "bison_file.y"
 {
 		n=1;
 		o=1;
@@ -1037,95 +1045,95 @@ case 41:
 	;
     break;}
 case 42:
-#line 179 "bison_file.y"
+#line 183 "bison_file.y"
 {updateVarType(BOOLEAN);;
     break;}
 case 43:
-#line 181 "bison_file.y"
+#line 185 "bison_file.y"
 {updateVarType(INTEGER);;
     break;}
 case 44:
-#line 183 "bison_file.y"
+#line 187 "bison_file.y"
 {updateVarType(FLOAT);;
     break;}
 case 45:
-#line 187 "bison_file.y"
+#line 191 "bison_file.y"
 {yyval.node=makenode(STATEMENT,yyvsp[0].node,NULL,NULL,0,NULL);;
     break;}
 case 46:
-#line 189 "bison_file.y"
+#line 193 "bison_file.y"
 {yyval.node=makenode(STATEMENT,yyvsp[-1].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 47:
-#line 192 "bison_file.y"
-{yyval.node=yyvsp[0].node;;
-    break;}
-case 48:
-#line 195 "bison_file.y"
-{yyval.node=yyvsp[-1].node;;
-    break;}
-case 49:
 #line 196 "bison_file.y"
 {yyval.node=yyvsp[0].node;;
     break;}
+case 48:
+#line 199 "bison_file.y"
+{yyval.node=yyvsp[-1].node;;
+    break;}
+case 49:
+#line 200 "bison_file.y"
+{yyval.node=yyvsp[0].node;;
+    break;}
 case 50:
-#line 197 "bison_file.y"
+#line 201 "bison_file.y"
 {yyval.node=yyvsp[0].node;;
     break;}
 case 51:
-#line 198 "bison_file.y"
+#line 202 "bison_file.y"
 {yyval.node=yyvsp[0].node;;
     break;}
 case 52:
-#line 201 "bison_file.y"
+#line 205 "bison_file.y"
 {yyval.node=makenode(ASSIGN,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 53:
-#line 204 "bison_file.y"
+#line 208 "bison_file.y"
 {yyval.node=makenode(IF,yyvsp[-3].node,yyvsp[-1].node,NULL,0,NULL);;
     break;}
 case 54:
-#line 205 "bison_file.y"
+#line 209 "bison_file.y"
 {yyval.node=makenode(IF,yyvsp[-5].node,yyvsp[-3].node,yyvsp[-1].node,0,NULL);;
     break;}
 case 55:
-#line 208 "bison_file.y"
+#line 212 "bison_file.y"
 {yyval.node=makenode(WHILE,yyvsp[-3].node,yyvsp[-1].node,NULL,0,NULL);;
     break;}
 case 56:
-#line 211 "bison_file.y"
+#line 215 "bison_file.y"
 {yyval.node=makenode(CASESTAT,yyvsp[-4].node,yyvsp[-1].node,NULL,0,NULL);;
     break;}
 case 57:
-#line 214 "bison_file.y"
+#line 218 "bison_file.y"
 {yyval.node=makenode(CASELIST,yyvsp[0].node,NULL,NULL,0,NULL);;
     break;}
 case 58:
-#line 215 "bison_file.y"
+#line 219 "bison_file.y"
 {yyval.node=makenode(CASELIST,yyvsp[-1].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 59:
-#line 217 "bison_file.y"
+#line 221 "bison_file.y"
 {yyval.node=makenode(CASE,NULL,yyvsp[0].node,NULL,yyvsp[-2].code,NULL);;
     break;}
 case 60:
-#line 221 "bison_file.y"
+#line 225 "bison_file.y"
 { printf("struct_acc->"); ;
     break;}
 case 61:
-#line 222 "bison_file.y"
+#line 226 "bison_file.y"
 { yyval.node = genLeaf(IDE,0,0,yyvsp[0].string);;
     break;}
 case 62:
-#line 223 "bison_file.y"
+#line 227 "bison_file.y"
 {yyval.node = genLeaf(POINTER,0,0,yyvsp[0].string);;
     break;}
 case 63:
-#line 224 "bison_file.y"
+#line 228 "bison_file.y"
 {s=0; lst=findSymbol(yyvsp[-3].string)->lst;;
     break;}
 case 64:
-#line 226 "bison_file.y"
+#line 230 "bison_file.y"
 { 
 		if(n==1)
 			{yyval.node = makenode(ADD,genLeaf(IDE,0,0,yyvsp[-5].string),yyvsp[-3].node,NULL,0,"check");}
@@ -1144,19 +1152,19 @@ case 64:
 	;
     break;}
 case 65:
-#line 246 "bison_file.y"
+#line 250 "bison_file.y"
 {printf("struct_tail->");;
     break;}
 case 66:
-#line 247 "bison_file.y"
+#line 251 "bison_file.y"
 {printf("\n");;
     break;}
 case 67:
-#line 253 "bison_file.y"
+#line 257 "bison_file.y"
 {s=s+1;;
     break;}
 case 68:
-#line 255 "bison_file.y"
+#line 259 "bison_file.y"
 {	
 		/*calculation of array offset*/
 		if(n==1)
@@ -1168,95 +1176,95 @@ case 68:
 	;
     break;}
 case 69:
-#line 264 "bison_file.y"
+#line 268 "bison_file.y"
 {;
     break;}
 case 70:
-#line 264 "bison_file.y"
+#line 268 "bison_file.y"
 {n=1;yyval.node=NULL;
     break;}
 case 71:
-#line 267 "bison_file.y"
+#line 271 "bison_file.y"
 { yyval.node = makenode(ADD,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 72:
-#line 268 "bison_file.y"
+#line 272 "bison_file.y"
 { yyval.node = makenode(MMIN,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 73:
-#line 269 "bison_file.y"
+#line 273 "bison_file.y"
 { yyval.node = makenode(MUL,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 74:
-#line 270 "bison_file.y"
+#line 274 "bison_file.y"
 { yyval.node = makenode(DIV,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 75:
-#line 271 "bison_file.y"
+#line 275 "bison_file.y"
 { yyval.node = makenode(MOD,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 76:
-#line 272 "bison_file.y"
+#line 276 "bison_file.y"
 { yyval.node = makenode(LES,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 77:
-#line 273 "bison_file.y"
+#line 277 "bison_file.y"
 { yyval.node = makenode(LEQ,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 78:
-#line 274 "bison_file.y"
+#line 278 "bison_file.y"
 { yyval.node = makenode(EQU,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 79:
-#line 275 "bison_file.y"
+#line 279 "bison_file.y"
 { yyval.node = makenode(NEQ,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 80:
-#line 276 "bison_file.y"
+#line 280 "bison_file.y"
 { yyval.node = makenode(GRE,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 81:
-#line 277 "bison_file.y"
+#line 281 "bison_file.y"
 { yyval.node = makenode(GEQ,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 82:
-#line 278 "bison_file.y"
+#line 282 "bison_file.y"
 { yyval.node = makenode(AND,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 83:
-#line 279 "bison_file.y"
+#line 283 "bison_file.y"
 { yyval.node = makenode(OR,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 84:
-#line 280 "bison_file.y"
+#line 284 "bison_file.y"
 { yyval.node = yyvsp[-1].node; ;
     break;}
 case 85:
-#line 282 "bison_file.y"
+#line 286 "bison_file.y"
 { yyval.node =makenode(NOT,yyvsp[0].node,NULL,NULL,0,NULL); ;
     break;}
 case 86:
-#line 283 "bison_file.y"
-{ yyval.node = yyvsp[0].node; ;
-    break;}
-case 87:
 #line 287 "bison_file.y"
 { yyval.node = yyvsp[0].node; ;
     break;}
+case 87:
+#line 291 "bison_file.y"
+{ yyval.node = yyvsp[0].node; ;
+    break;}
 case 88:
-#line 288 "bison_file.y"
+#line 292 "bison_file.y"
 { yyval.node = genLeaf(INTCONST,yyvsp[0].code,0,NULL); ;
     break;}
 case 89:
-#line 289 "bison_file.y"
+#line 293 "bison_file.y"
 { yyval.node = genLeaf(REALCONST,0,yyvsp[0].real,NULL);;
     break;}
 case 90:
-#line 290 "bison_file.y"
+#line 294 "bison_file.y"
 { yyval.node = genLeaf(TRUE,0,0,NULL); ;
     break;}
 case 91:
-#line 291 "bison_file.y"
+#line 295 "bison_file.y"
 { yyval.node = genLeaf(FALSE,0,0,NULL); ;
     break;}
 }
@@ -1457,7 +1465,7 @@ yyerrhandle:
   yystate = yyn;
   goto yynewstate;
 }
-#line 295 "bison_file.y"
+#line 299 "bison_file.y"
 
 /*==   AST - PART constructs the tree ============================*/
 
@@ -1742,7 +1750,7 @@ void updateVarType(int op)
 /* Symbol Table Part - Functions that build the symbol table during runtime: */
 /* ------------------------------------------------------------------------- */
 
-void addToSymbolTable( char *IDEName, int size, int IS_ARRAY, arrList lst )
+void addToSymbolTable( char *IDEName, int size, int IS_ARRAY, arrList lst, int is_struct )
 {
 	FILE *txt;
 	txt=fopen("outputParser.txt","a");
@@ -1785,6 +1793,9 @@ void addToSymbolTable( char *IDEName, int size, int IS_ARRAY, arrList lst )
 	newSymb->address=currentAddress;
 	newSymb->size=size;		
 	newSymb->IS_ARRAY=IS_ARRAY;
+
+	newSymb->is_struct = is_struct;
+
 	currentAddress+=newSymb->size;
 	
 	fprintf(txt,"Info at line %d: adding symbol  %s of type %d to table variable\n",line_number, IDEName, currentType);
@@ -1866,30 +1877,51 @@ int i;
 }
 
 //print currentsymbol table
-void PrintSymbolTable(){
+void PrintSymbolTable()
+{
 	int i;
-	FILE *txt;
-	FILE *txt1;
-	txt=fopen("symbol table.txt","w");
-	txt1=fopen("symbol_table.txt","w");
-	fprintf(txt1,"Name\t|Address\t|Size\t|IS ARRAY\t\t|IS POINTER\t|TYPE\n");
+	FILE* txt;
+	FILE* txt1;
+	FILE* membs;
+	txt=fopen("symbol_table.txt","w");
+	txt1=fopen("symbol_table1.txt","w");
+	membs=fopen("struct_membs.txt","w");
+	fprintf(txt1,"index\t|Name\t|Address\t|Size\t|IS ARRAY\t\t|IS POINTER\t|TYPE\t|is_struct\n");
 	fprintf(txt1,"--------------------------------------------------------------\n");
 	fprintf(txt,"Name   |Address  |Size  |IS ARRAY   |IS RECORD\n");
 	fprintf(txt,"-----------------------------------------------\n");
-	for(i=0;i<26;++i){	
+
+	for(i=0;i<26;++i)
+	{	
 		CurrSymbol=symbTable[i];
 		while (CurrSymbol != NULL)
 		{
-			fprintf(txt1,"%s\t\t|%d\t\t|%d\t\t|%d\t\t|%d\t\t|%d\n"
-				  ,CurrSymbol->symb,CurrSymbol->address,CurrSymbol->size,CurrSymbol->IS_ARRAY,CurrSymbol->IS_POINTER,CurrSymbol->type);
+			fprintf(txt1,"%d\t\t|%s\t\t|%d\t\t|%d\t\t|%d\t\t|%d\t\t|%d|\t\t%d\n",
+				i, 
+				CurrSymbol->symb,
+				CurrSymbol->address,
+				CurrSymbol->size,
+				CurrSymbol->IS_ARRAY,
+				CurrSymbol->IS_POINTER,
+				CurrSymbol->type,
+				CurrSymbol->is_struct);
+
 			fprintf(txt,"%s      |%d        |%d     |%d\n"
-				  ,CurrSymbol->symb,CurrSymbol->address,CurrSymbol->size,CurrSymbol->IS_ARRAY);
+				  ,CurrSymbol->symb,
+				  CurrSymbol->address,
+				  CurrSymbol->size,
+				  CurrSymbol->IS_ARRAY);
+			
+			if( CurrSymbol->is_struct==1 && CurrSymbol->members!=NULL )
+				print_struct_members(membs, CurrSymbol->symb, CurrSymbol->members );
+
 			PrintArray(CurrSymbol->lst,txt,CurrSymbol->IS_ARRAY);
 			CurrSymbol=CurrSymbol->next;
 		}
 	}
 	fclose(txt);
 	fclose(txt1);
+	fclose(membs);
 
 }
 
@@ -1899,6 +1931,31 @@ void PrintArray(arrLST *l,FILE *t,int ind)
 	fprintf(t,"%d     %d\n",l->size,l->sumsize);
 	PrintArray(l+1,t,ind-1);
 }
+
+
+
+void print_struct_members( FILE* f, char* struct_name, struct Symbol* members )
+{
+	fprintf(f, "members for struct %s\n", struct_name);	
+	fprintf(f,"index\t|Name\t|Address\t|Size\t|IS ARRAY\t\t|IS POINTER\t|TYPE\t|is_struct\n");
+	fprintf(f,"--------------------------------------------------------------\n");
+
+	while( members!=NULL )
+	{
+		fprintf(f,"%s\t\t|%d\t\t|%d\t\t|%d\t\t|%d\t\t|%d|\t\t%d\n",
+		members->symb,
+		members->address,
+		members->size,
+		members->IS_ARRAY,
+		members->IS_POINTER,
+		members->type,
+		members->is_struct);
+		members = members->next;
+	}
+}
+
+
+
 int checkn(int n)
 {
 	if (n==1) 

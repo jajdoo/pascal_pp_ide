@@ -45,6 +45,21 @@ typedef struct Symbol
 	int IS_POINTER;			// if variable is a pointer
 	struct arrlist *lst;
 	struct Symbol *next;	// pointer to the next symbol
+
+
+	//----------------------
+	// struct def: 
+	//		- is_struct		= 1
+	//		- type			= 0
+	//		- members		= [actual members]
+	//
+	// struct instance: 
+	//		- is_struct		= 1
+	//		- type			= [index of struct def in symbol table]
+	//		- members		- NULL
+
+	int is_struct;				// is this symbol a struct?
+	struct Symbol* members;		// if this symbol is a struct, these are its members.
 };
 
 typedef union
@@ -65,7 +80,7 @@ void print_tree(NODE r, int s);
 void updateVarType(int op);
 
 /* SymbolTable function declerations */
-void addToSymbolTable(char *IDEName,int size,int IS_ARRAY,arrList lst);
+void addToSymbolTable(char *IDEName, int size, int IS_ARRAY, arrList lst, int is_struct);
 struct Symbol* findSymbol(char *IDEName);
 int getTableEntry (char *IDEName);
 void InitializeTable();
