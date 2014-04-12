@@ -49,9 +49,6 @@
     <ClInclude Include="..\..\..\convertTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\global.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\typedef.h">
       <Filter>Header Files</Filter>
     </ClInclude>

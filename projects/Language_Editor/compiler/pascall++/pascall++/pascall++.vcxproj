@@ -35,7 +35,6 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\bison_file_tab.h" />
     <ClInclude Include="..\..\..\convertTree.h" />
-    <ClInclude Include="..\..\..\global.h" />
     <ClInclude Include="..\..\..\globals.h" />
     <ClInclude Include="..\..\..\parse_tree.h" />
     <ClInclude Include="..\..\..\struct_def.h" />
