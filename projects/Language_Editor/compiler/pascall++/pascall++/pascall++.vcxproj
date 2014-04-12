@@ -28,6 +28,7 @@
     <ClCompile Include="..\..\..\convertTree.c" />
     <ClCompile Include="..\..\..\lex.yy.c" />
     <ClCompile Include="..\..\..\main.c" />
+    <ClCompile Include="..\..\..\parse_tree.c" />
     <ClCompile Include="..\..\..\struct_def.c" />
     <ClCompile Include="..\..\..\symbol_table.c" />
   </ItemGroup>
@@ -36,6 +37,7 @@
     <ClInclude Include="..\..\..\convertTree.h" />
     <ClInclude Include="..\..\..\global.h" />
     <ClInclude Include="..\..\..\globals.h" />
+    <ClInclude Include="..\..\..\parse_tree.h" />
     <ClInclude Include="..\..\..\struct_def.h" />
     <ClInclude Include="..\..\..\symbol_table.h" />
     <ClInclude Include="..\..\..\typedef.h" />

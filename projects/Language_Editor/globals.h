@@ -6,15 +6,15 @@
 
 #include "typedef.h"
 
+int currentType;
+
 static int n;
 static int s;
 static int o;
 arrLST *lst;
-NODE tmp1;
-NODE tmp2;
 
 arrList arrRoot;
-NODE root;
+
 extern int line_number;		// in bison_file.y
 
 

@@ -12,6 +12,8 @@ struct Symbol* cur_symbol_list = NULL;
 
 int current_member_add = 0;
 
+
+
 int member_exists(char* IDEName)
 {
 	struct Symbol* memb = cur_symbol_list;
