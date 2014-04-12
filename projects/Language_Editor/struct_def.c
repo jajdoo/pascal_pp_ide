@@ -4,12 +4,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "globals.h"
 #include "struct_def.h"
+#include "symbol_table.h"
 
 struct Symbol* cur_symbol_list = NULL;
-
-extern int line_number;
-extern int currentType;
 
 int current_member_add = 0;
 
@@ -29,20 +28,20 @@ int member_exists(char* IDEName)
 
 
 
-void struct_test_fuck()
+void struct_def_prints()
 {
 
 	FILE *txt;
 	struct Symbol* members = cur_symbol_list;
 
-	txt = fopen("struct_tests.txt","a");
+	txt = fopen("struct_membs.txt","a");
 
-	fprintf(txt,"index\t|Name\t|Address\t|Size\t|IS ARRAY\t\t|IS POINTER\t|TYPE\t|is_struct\n");
+	fprintf(txt,"Name\t\t|Address\t|Size\t\t|IS ARRAY\t|IS POINTER\t|TYPE\t\t|is_struct\n");
 	fprintf(txt, "--------------------------------------------------------------\n");
 
 	while (members != NULL)
 	{
-		fprintf(txt, "%s\t\t|%d\t\t|%d\t\t|%d\t\t|%d\t\t|%d|\t\t%d\n",
+		fprintf(txt, "%s\t\t|%d\t\t|%d\t\t|%d\t\t|%d\t\t|%d\t\t|%d\n",
 			members->symb,
 			members->address,
 			members->size,

@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "globals.h"
 #include "typedef.h"
 #include "bison_file_tab.h" 
-
-extern int line_number; 
 
 FILE *txt;	
 int count_newline(char*);

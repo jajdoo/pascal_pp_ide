@@ -29,12 +29,15 @@
     <ClCompile Include="..\..\..\lex.yy.c" />
     <ClCompile Include="..\..\..\main.c" />
     <ClCompile Include="..\..\..\struct_def.c" />
+    <ClCompile Include="..\..\..\symbol_table.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\bison_file_tab.h" />
     <ClInclude Include="..\..\..\convertTree.h" />
     <ClInclude Include="..\..\..\global.h" />
+    <ClInclude Include="..\..\..\globals.h" />
     <ClInclude Include="..\..\..\struct_def.h" />
+    <ClInclude Include="..\..\..\symbol_table.h" />
     <ClInclude Include="..\..\..\typedef.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
