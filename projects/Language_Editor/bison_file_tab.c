@@ -884,7 +884,7 @@ case 3:
     break;}
 case 4:
 #line 61 "bison_file.y"
-{struct_def_prints();;
+{addToSymbolTable(yyvsp[-4].string,0,0,NULL,1);;
     break;}
 case 5:
 #line 63 "bison_file.y"

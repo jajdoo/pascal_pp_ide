@@ -58,7 +58,7 @@ block :LC struct_decl declarations stat_seq RC       {$$=makenode(BBEGIN,$4,NULL
 /*                          STRUCT decleration                           */
 /*-----------------------------------------------------------------------*/
 
-struct_decl: STRUCT IDE LC member_decl RC ';' {struct_def_prints();};
+struct_decl: STRUCT IDE LC member_decl RC ';' {addToSymbolTable($2,0,0,NULL,1);};
 
 member_decl:  VAR tyList ':' memberList ';' member_decl {printf("member_decl_1->");}
 			| VAR tyList ':' memberList ';'				{printf("member_decl_2->");}

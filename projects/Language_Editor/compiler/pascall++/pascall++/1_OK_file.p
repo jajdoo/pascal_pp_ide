@@ -2,11 +2,10 @@ PROGRAM potato
 {
 	STRUCT tomato 
 	{
-		VAR INTEGER: a;
+		VAR INTEGER: a,b^;
 		VAR FLOAT: f;
 	};
-	
-	STRUCT tomato: t;
+
 	VAR INTEGER: bbb;
 	bbb = 5;
 }

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "symbol_table.h"
+#include "struct_def.h"
 #include "globals.h"
 
 //  The symbol table - hash table of 26 enteries (alphabetical) of Symbols
@@ -24,9 +25,9 @@ void addToSymbolTable(char *IDEName, int size, int IS_ARRAY, arrList lst, int is
 	struct Symbol* newSymb;
 
 	//fprintf(txt,"Info at line %d: adding to symbol table: %s \n",line_number,IDEName);
-	if (size <= 0)
+	if (size <= 0 && !is_struct)
 	{
-		fprintf(txt, "\nErrorat line %d: illegal array size: %s has the size of %d", line_number, IDEName, size);
+		fprintf(txt, "\nErrorat line %d: illegal size: %s has the size of %d", line_number, IDEName, size);
 		fclose(txt);
 		exit(1);
 	}
@@ -62,6 +63,20 @@ void addToSymbolTable(char *IDEName, int size, int IS_ARRAY, arrList lst, int is
 
 	newSymb->is_struct = is_struct;
 
+	if (is_struct)
+	{
+		newSymb->members = cur_members;
+
+		while (cur_members!=NULL)
+		{
+			newSymb->size += cur_members->size;
+			cur_members = cur_members->next;
+		}
+
+		cur_members = NULL;
+	}
+
+
 	currentAddress += newSymb->size;
 
 	fprintf(txt, "Info at line %d: adding symbol  %s of type %d to table variable\n", line_number, IDEName, currentType);
@@ -74,7 +89,6 @@ void addToSymbolTable(char *IDEName, int size, int IS_ARRAY, arrList lst, int is
 	*first = newSymb;
 
 	fclose(txt);
-	PrintSymbolTable();//print current symbol table
 }
 
 
@@ -178,12 +192,12 @@ void InitializeTable(void){
 void print_struct_members(FILE* f, char* struct_name, struct Symbol* members)
 {
 	fprintf(f, "members for struct %s\n", struct_name);
-	fprintf(f, "index\t|Name\t|Address\t|Size\t|IS ARRAY\t\t|IS POINTER\t|TYPE\t|is_struct\n");
+	fprintf(f, "Name\t\t|Address\t|Size\t\t|IS ARRAY\t|IS POINTER\t|TYPE\t\t|is_struct\n");
 	fprintf(f, "--------------------------------------------------------------\n");
 
 	while (members != NULL)
 	{
-		fprintf(f, "%s\t\t|%d\t\t|%d\t\t|%d\t\t|%d\t\t|%d|\t\t%d\n",
+		fprintf(f, "%s\t\t|%d\t\t|%d\t\t|%d\t\t|%d\t\t|%d\t\t|%d\n",
 			members->symb,
 			members->address,
 			members->size,
@@ -250,6 +264,7 @@ void PrintSymbolTable()
 				print_struct_members(membs, CurrSymbol->symb, CurrSymbol->members);
 
 			PrintArray(CurrSymbol->lst, txt, CurrSymbol->IS_ARRAY);
+
 			CurrSymbol = CurrSymbol->next;
 		}
 	}

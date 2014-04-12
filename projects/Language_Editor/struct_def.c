@@ -8,15 +8,16 @@
 #include "struct_def.h"
 #include "symbol_table.h"
 
-struct Symbol* cur_symbol_list = NULL;
 
 int current_member_add = 0;
+
+struct Symbol* cur_members = NULL;
 
 
 
 int member_exists(char* IDEName)
 {
-	struct Symbol* memb = cur_symbol_list;
+	struct Symbol* memb = cur_members;
 	while (memb != NULL)
 	{
 		if (strcmp(memb->symb, IDEName) == 0)
@@ -28,13 +29,11 @@ int member_exists(char* IDEName)
 }
 
 
-
-
-void struct_def_prints()
+/*
+void struct_def_prints( struct Symbol* members )
 {
 
 	FILE *txt;
-	struct Symbol* members = cur_symbol_list;
 
 	txt = fopen("struct_membs.txt","a");
 
@@ -54,7 +53,7 @@ void struct_def_prints()
 		members = members->next;
 	}
 }
-
+*/
 
 
 
@@ -103,12 +102,12 @@ void new_struct_member(char* IDEName, int size, int IS_ARRAY, arrList lst, int i
 
 	fprintf(txt, "Info at line %d: adding member  %s of type %d to member list variable\n", line_number, IDEName, currentType);
 
-	if (cur_symbol_list != NULL)
-		newSymb->next = cur_symbol_list;
+	if (cur_members != NULL)
+		newSymb->next = cur_members;
 	else
 		newSymb->next = NULL;
 
-	cur_symbol_list = newSymb;
+	cur_members = newSymb;
 
 	fclose(txt);
 }
