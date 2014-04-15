@@ -5,11 +5,22 @@
 #include "symbol_table.h"
 #include "struct_def.h"
 #include "globals.h"
+#include <time.h>       /************************ time **************************/
 
 //  The symbol table - hash table of 26 enteries (alphabetical) of Symbols
 //	Remember : each symbol has a pointer to the next one. See decleration in typedef.h
 
-struct Symbol *symbTable[26];	//a cell is pointer to first symbol
+
+/*********************add hash*****************/
+typedef struct hashIDE
+{
+	int value;
+	char *IDEName;
+	
+}hashIDE;
+hashIDE hash[256];
+/************ add hash*****************/
+struct Symbol *symbTable[256];//a cell is pointer to first symbol ******26***************************size--->256
 struct Symbol **first;			//pointer to a table cell - which is a pointer to symbol struct
 struct Symbol *CurrSymbol;		//pointer to a symbol struct
 int TableInitialized = 0;		//0 - table uninitialized, 1 - table initialized
@@ -102,7 +113,7 @@ int findType(char *name)
 	if (name == "")
 		return 0;
 	else
-	for (i = 0; i<26; ++i){
+		for(i=0;i<256;++i){	/********************************change 26**********/
 		CurrSymbol = symbTable[i];
 		while (CurrSymbol != NULL)
 		{
@@ -164,27 +175,82 @@ struct Symbol* findSymbol(char *IDENameIn)
 
 
 
-int getTableEntry(char *IDEName)
-{
-	if (islower(IDEName[0]))
-		return (IDEName[0] - 'a');
+int getTableEntry (char *IDEName) /* change all function **************************************************************/
+{	
+	FILE *txt;
+	txt=fopen("outputParser.txt","a");
+	int entry,temp=0;
+	int i;
+	
+	for(i=0;i<strlen(IDEName);i++)
+	{
+		if (islower(IDEName[i]))
+			entry = (IDEName[i] - 'a');
+		else
+			entry = (IDEName[i] - 'A');
+			
+		if(i==0)
+			temp = (hash[entry].value ^ entry)% 256;
+		else 
+			temp=(temp ^ entry)% 256;
+	}	
+	if(hash[temp].IDEName == NULL)
+	{
+		hash[temp].IDEName= ( char *)malloc(strlen(IDEName));
+		strcpy(hash[temp].IDEName,IDEName);
+		fprintf(txt,"1temp: %d entry :%d: string %s     %s\n",temp,entry,IDEName,hash[temp].IDEName);
+		return temp;
+	}
+	else if((strcmp(hash[temp].IDEName,IDEName))==0)
+	{
+		fprintf(txt,"2temp: %d entry :%d: string %s     %s\n",temp,entry,IDEName,hash[temp].IDEName);
+		return temp;
+	}
 	else
-		return (IDEName[0] - 'A');
-}
+	{
+		for(i=temp;i<256;i++)
+		{
+				if(hash[i].IDEName == NULL)
+				{
+					hash[i].IDEName= ( char *)malloc(strlen(IDEName));
+					strcpy(hash[i].IDEName,IDEName);
+					fprintf(txt,"3temp: %d entry :%d: string %s     %s\n",i,entry,IDEName,hash[temp].IDEName);
+					return i;
+				}
+		}
+		for(i=temp;i>0;i--)
+		{
+				if(hash[i].IDEName == NULL)
+				{
+					hash[i].IDEName= ( char *)malloc(strlen(IDEName));
+					strcpy(hash[i].IDEName,IDEName);
+					fprintf(txt,"3temp: %d entry :%d: string %s     %s\n",i,entry,IDEName,hash[temp].IDEName);
+					return i;
+				}
+		}
+	} /*end else*/	
+		
+}/* change all function *************************************************************
+end of func*/
+	
 
 
 
-
-
-//zero all cells i.e. NULL all the pointers
+//zero all cells i.e. NULL all the pointers /* initialize hash****************/
 void InitializeTable(void){
 	int i;
-	TableInitialized = 1;
-
-	for (i = 0; i<26; ++i)
-		symbTable[i] = NULL;
-
+	TableInitialized=1;
+	
+	srand (time(NULL));
+	for(i=0;i<256;++i)
+	{
+		symbTable[i]=NULL;
+		hash[i].IDEName=NULL;
+		hash[i].value= rand() % 256;
+	}
 }
+/* initialize hash*********************************/
+
 
 
 
@@ -239,7 +305,7 @@ void PrintSymbolTable()
 	fprintf(txt, "Name   |Address  |Size  |IS ARRAY   |IS RECORD\n");
 	fprintf(txt, "-----------------------------------------------\n");
 
-	for (i = 0; i<26; ++i)
+	for(i=0;i<256;++i){	/**************************change from 26******************/
 	{
 		CurrSymbol = symbTable[i];
 		while (CurrSymbol != NULL)
