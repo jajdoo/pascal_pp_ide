@@ -198,12 +198,10 @@ int getTableEntry (char *IDEName) /* change all function ***********************
 	{
 		hash[temp].IDEName= ( char *)malloc(strlen(IDEName));
 		strcpy(hash[temp].IDEName,IDEName);
-		fprintf(txt,"1temp: %d entry :%d: string %s     %s\n",temp,entry,IDEName,hash[temp].IDEName);
 		return temp;
 	}
 	else if((strcmp(hash[temp].IDEName,IDEName))==0)
 	{
-		fprintf(txt,"2temp: %d entry :%d: string %s     %s\n",temp,entry,IDEName,hash[temp].IDEName);
 		return temp;
 	}
 	else
@@ -214,7 +212,6 @@ int getTableEntry (char *IDEName) /* change all function ***********************
 				{
 					hash[i].IDEName= ( char *)malloc(strlen(IDEName));
 					strcpy(hash[i].IDEName,IDEName);
-					fprintf(txt,"3temp: %d entry :%d: string %s     %s\n",i,entry,IDEName,hash[temp].IDEName);
 					return i;
 				}
 		}
@@ -224,7 +221,6 @@ int getTableEntry (char *IDEName) /* change all function ***********************
 				{
 					hash[i].IDEName= ( char *)malloc(strlen(IDEName));
 					strcpy(hash[i].IDEName,IDEName);
-					fprintf(txt,"3temp: %d entry :%d: string %s     %s\n",i,entry,IDEName,hash[temp].IDEName);
 					return i;
 				}
 		}
