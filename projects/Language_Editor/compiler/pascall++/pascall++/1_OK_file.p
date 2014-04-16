@@ -1,9 +1,15 @@
-PROGRAM potato
+PROGRAM progtato
 {
+
 	STRUCT tomato 
 	{
-		VAR INTEGER: a,b^;
-		VAR FLOAT: f;
+		VAR INTEGER: a,b,c,d,e,f;
+	};
+
+	STRUCT potato 
+	{
+		STRUCT tomato: t;
+		VAR INTEGER: c;
 	};
 
 	VAR INTEGER: bbb;

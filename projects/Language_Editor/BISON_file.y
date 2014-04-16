@@ -50,28 +50,32 @@ int line_number = 1;
 program:	PROGRAM IDE block				{$$=makenode(PROGRAM,$3,NULL,NULL,0,$2); root=$$;} 					
        ;
 
-block :LC struct_decl declarations stat_seq RC       {$$=makenode(BBEGIN,$4,NULL,NULL,0,NULL);} 
-		| LC RC										 {$$=makenode(BBEGIN,NULL,NULL,NULL,0,NULL);} 
+block :	  LC declarations stat_seq RC		{$$=makenode(BBEGIN,$3,NULL,NULL,0,NULL);} 
+		| LC RC								{$$=makenode(BBEGIN,NULL,NULL,NULL,0,NULL);} 
        ;
 
 /*************************************************************************/
 /*                          STRUCT decleration                           */
 /*-----------------------------------------------------------------------*/
 
-struct_decl: STRUCT IDE LC member_decl RC ';' {addToSymbolTable($2,0,0,NULL,1);};
+struct_decl:  STRUCT IDE LC member_decl RC ';'					{addToSymbolTable($2,0,0,NULL,1); post_struct_def(); } ;
 
-member_decl:  VAR tyList ':' memberList ';' member_decl {printf("member_decl_1->");}
-			| VAR tyList ':' memberList ';'				{printf("member_decl_2->");}
+member_decl:  STRUCT IDE										{set_current_struct_name($2);} 
+			  ':' memberList ';'								{clear_current_struct(); }
+			  member_decl_tail
+			| VAR tyList ':' memberList ';' member_decl_tail	{printf("member_primitive_decl_1->");}
 			;
+
+member_decl_tail: member_decl | ;
 
 memberList:		struct_member ',' memberList			{printf("memberList_1->");}
 			|	struct_member							{printf("memberList_2->");}
 			;
 
 struct_member : 
-			  IDE			{ new_struct_member($1, 1, 0, NULL, 0); /* need to adress if IDE is a struct */ }
-			| POINTER		{ printf("struct_member(ptr)\n"); }
-			| IDE dim		{ printf("struct_member(dim)->"); }
+			  IDE					{ new_struct_member($1, 1, 0, NULL); }
+			| POINTER				{ new_struct_member($1, 1, 0, NULL); }
+			| IDE dim				{ printf("struct_member(dim)->"); }
 			;
 
 dim: '[' INTCONST ']' dim_tail		{printf("dim_1\n");}
@@ -81,7 +85,8 @@ dim_tail: dim | ;
 /*-----------------------------------------------------------------------*/
 /*************************************************************************/
 
-declarations:	VAR varAss declarations 
+declarations:	struct_decl declarations 
+			 |  VAR varAss declarations 
 			 |	STRUCT IDE ':' strIdeList ';' declarations
 			 |	;
 
@@ -280,12 +285,3 @@ atom:   var                        { $$ = $1; }
       ;
 
 %%
-/*==   AST - PART constructs the tree ============================*/
-
-int checkn(int n)
-{
-	if (n==1) 
-		return 1;
-	else 
-		lst[s+1].sumsize;
-}

@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -67,7 +66,6 @@ void addToSymbolTable(char *IDEName, int size, int IS_ARRAY, arrList lst, int is
 
 	newSymb->IS_POINTER = isPointer;
 	newSymb->symb = IDEName;
-	newSymb->type = currentType;
 	newSymb->address = currentAddress;
 	newSymb->size = size;
 	newSymb->IS_ARRAY = IS_ARRAY;
@@ -85,7 +83,10 @@ void addToSymbolTable(char *IDEName, int size, int IS_ARRAY, arrList lst, int is
 		}
 
 		cur_members = NULL;
+		newSymb->type = 0;
 	}
+	else
+		newSymb->type = currentType;
 
 
 	currentAddress += newSymb->size;
@@ -124,7 +125,6 @@ int findType(char *name)
 	}
 
 }
-
 
 
 
@@ -301,7 +301,7 @@ void PrintSymbolTable()
 	fprintf(txt, "Name   |Address  |Size  |IS ARRAY   |IS RECORD\n");
 	fprintf(txt, "-----------------------------------------------\n");
 
-	for(i=0;i<256;++i){	/**************************change from 26******************/
+	for(i=0;i<256;++i)	/**************************change from 26******************/
 	{
 		CurrSymbol = symbTable[i];
 		while (CurrSymbol != NULL)
