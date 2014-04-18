@@ -8,7 +8,6 @@
 #include "struct_def.h"
 #include "symbol_table.h"
 
-
 int current_member_add = 0;
 
 struct Symbol* cur_members = NULL;
@@ -17,6 +16,17 @@ struct Symbol* cur_members = NULL;
 struct Symbol* cur_struct;
 
 
+
+struct Symbol* get_cur_struct()
+{
+	return cur_struct;
+}
+
+
+
+/**	clear struct selection 
+	(after declarations of concrete structs is done)
+	*/
 void clear_current_struct()
 {
 	cur_struct = NULL;
@@ -24,13 +34,17 @@ void clear_current_struct()
 
 
 
+/** called after struct definition is done */
 void post_struct_def()
 {
+	cur_members = NULL;
 	current_member_add = 0;
 }
 
 
-
+/**
+	select struct type for declaring concrete struct variables
+*/
 void set_current_struct_name(char* struct_name)
 {
 	cur_struct = findSymbol(struct_name);

@@ -58,7 +58,7 @@ block :	  LC declarations stat_seq RC		{$$=makenode(BBEGIN,$3,NULL,NULL,0,NULL);
 /*                          STRUCT decleration                           */
 /*-----------------------------------------------------------------------*/
 
-struct_decl:  STRUCT IDE LC member_decl RC ';'					{addToSymbolTable($2,0,0,NULL,1); post_struct_def(); } ;
+struct_decl:  STRUCT IDE LC member_decl RC ';'					{addToSymbolTable($2,0,0,NULL); post_struct_def(); } ;
 
 member_decl:  STRUCT IDE										{set_current_struct_name($2);} 
 			  ':' memberList ';'								{clear_current_struct(); }
@@ -87,32 +87,18 @@ dim_tail: dim | ;
 
 declarations:	struct_decl declarations 
 			 |  VAR varAss declarations 
-			 |	STRUCT IDE ':' strIdeList ';' declarations
+			 |	STRUCT IDE							{set_current_struct_name($2);} 
+				':' idList ';'						{clear_current_struct();} 
+				declarations
 			 |	;
-
-
-/*************************************************************************/
-/*                            STRUCT variable                            */
-/*-----------------------------------------------------------------------*/
-strIdeList:   structIde ',' strIdeList 
-			| structIde 
-			;
-
-structIde:    IDE			{ printf("struct_member(ide)\n"); }
-			| POINTER		{ printf("struct_member(ptr)\n"); }
-			| IDE dim		{ printf("struct_member(dim)->"); }
-			;
-
-/*-----------------------------------------------------------------------*/
-/*************************************************************************/
 
 varAss: tyList ':' idList varAss		{} 
 	|
 	';'{}
 	;
 
-idList: IDE 	{addToSymbolTable($1,1,0,NULL,0);}idList
-     |POINTER 	{addToSymbolTable($1,1,0,NULL,0);}idList
+idList: IDE 	{addToSymbolTable($1,1,0,NULL);}idList
+     |POINTER 	{addToSymbolTable($1,1,0,NULL);}idList
 	|   IDE '[' INTCONST ']' 
 	{
 		s=1;
@@ -123,11 +109,11 @@ idList: IDE 	{addToSymbolTable($1,1,0,NULL,0);}idList
 		lst[s-o].size=$3;/* calcultes size of each dimentiob*/
 		lst[s-o].sumsize=n*$3;/* sum of array*/
 		
-		addToSymbolTable($1,n*$3,s,lst,0);
+		addToSymbolTable($1,n*$3,s,lst);
 	}
 	idList
-	|',' IDE idList {addToSymbolTable($2,1,0,NULL,0);}
-	|',' POINTER idList {addToSymbolTable($2,1,0,NULL,0);}
+	|',' IDE idList {addToSymbolTable($2,1,0,NULL);}
+	|',' POINTER idList {addToSymbolTable($2,1,0,NULL);}
 	|',' IDE '[' INTCONST ']'
 	{
 		s=1;
@@ -138,7 +124,7 @@ idList: IDE 	{addToSymbolTable($1,1,0,NULL,0);}idList
 		lst[s-o].size=$4;/* calcultes size of each dimentiob*/
 		lst[s-o].sumsize=n*$4;/* sum of array*/
 		
-		addToSymbolTable($2,n*$4,s,lst,0);
+		addToSymbolTable($2,n*$4,s,lst);
 	}
 	idList
 	|
@@ -164,6 +150,8 @@ brk:  '[' INTCONST ']'
 		$$=NULL;
 	}
 	;
+
+
 tyList: BOOLEAN		{updateVarType(BOOLEAN);}
 	|
 	INTEGER			{updateVarType(INTEGER);}

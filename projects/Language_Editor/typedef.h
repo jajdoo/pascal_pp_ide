@@ -51,11 +51,13 @@ typedef struct Symbol
 	// struct def: 
 	//		- is_struct		= 1
 	//		- type			= 0
+	//		- address		= -1
 	//		- members		= [actual members]
 	//
 	// struct instance: 
 	//		- is_struct		= 1
 	//		- type			= [index of struct def in symbol table]
+	//		- address		= [actual adress]
 	//		- members		- NULL
 
 	int is_struct;				// is this symbol a struct?

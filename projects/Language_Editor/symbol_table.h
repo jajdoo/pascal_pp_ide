@@ -4,6 +4,6 @@
 
 #include "typedef.h"
 
-void addToSymbolTable(char *IDEName, int size, int IS_ARRAY, arrList lst, int is_struct);
+void addToSymbolTable(char *IDEName, int size, int IS_ARRAY, arrList lst);
 
 #endif

@@ -12,6 +12,8 @@ PROGRAM progtato
 		VAR INTEGER: c;
 	};
 
+	STRUCT potato: pp;
 	VAR INTEGER: bbb;
 	bbb = 5;
+	pp.t.a = 6;
 }

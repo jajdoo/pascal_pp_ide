@@ -27,15 +27,17 @@ int currentAddress;				// address of the new variable in stack
 
 
 
-void addToSymbolTable(char *IDEName, int size, int IS_ARRAY, arrList lst, int is_struct)
+void addToSymbolTable(char *IDEName, int size, int IS_ARRAY, arrList lst)
 {
 	FILE *txt;
 	txt = fopen("outputParser.txt", "a");
 	int l, isPointer = 0;
-	struct Symbol* newSymb;
+	struct Symbol* newSymb,* cur_struct;
+
+	cur_struct = get_cur_struct();
 
 	//fprintf(txt,"Info at line %d: adding to symbol table: %s \n",line_number,IDEName);
-	if (size <= 0 && !is_struct)
+	if (size <= 0 && !(cur_struct==NULL))
 	{
 		fprintf(txt, "\nErrorat line %d: illegal size: %s has the size of %d", line_number, IDEName, size);
 		fclose(txt);
@@ -66,13 +68,12 @@ void addToSymbolTable(char *IDEName, int size, int IS_ARRAY, arrList lst, int is
 
 	newSymb->IS_POINTER = isPointer;
 	newSymb->symb = IDEName;
-	newSymb->address = currentAddress;
 	newSymb->size = size;
 	newSymb->IS_ARRAY = IS_ARRAY;
 
-	newSymb->is_struct = is_struct;
+	newSymb->is_struct = (cur_struct != NULL) || (cur_members != NULL);
 
-	if (is_struct)
+	if (newSymb->is_struct && cur_members!=NULL)
 	{
 		newSymb->members = cur_members;
 
@@ -84,12 +85,23 @@ void addToSymbolTable(char *IDEName, int size, int IS_ARRAY, arrList lst, int is
 
 		cur_members = NULL;
 		newSymb->type = 0;
+		newSymb->address = -1;
 	}
 	else
-		newSymb->type = currentType;
+	{
+		newSymb->members = NULL;
+		newSymb->address = currentAddress;
 
+		if (newSymb->is_struct)
+		{
+			newSymb->size = cur_struct->size;
+			newSymb->type = getTableEntry(cur_struct->symb);
+		}
+		else 
+			newSymb->type = currentType;
 
-	currentAddress += newSymb->size;
+		currentAddress += newSymb->size;
+	}
 
 	fprintf(txt, "Info at line %d: adding symbol  %s of type %d to table variable\n", line_number, IDEName, currentType);
 	if (*first != NULL)
