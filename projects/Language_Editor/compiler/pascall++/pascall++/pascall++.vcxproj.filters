@@ -13,11 +13,26 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="BATS">
+      <UniqueIdentifier>{7ef40b23-c873-4699-aabd-4e12bdc092b2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\bison.simple" />
     <None Include="..\..\..\bison_file.y" />
     <None Include="..\..\..\flexFile.l" />
+    <None Include="1_OK_file - structs.p">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="1_OK_file.p">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\bison.bat">
+      <Filter>BATS</Filter>
+    </None>
+    <None Include="..\..\..\flex.bat">
+      <Filter>BATS</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\bison_file_tab.c">

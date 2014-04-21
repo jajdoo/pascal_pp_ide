@@ -257,10 +257,10 @@ expr:   expr ADD expr           { $$ = makenode(ADD,$1,$3,NULL,0,NULL);}
       | expr GEQ expr           { $$ = makenode(GEQ,$1,$3,NULL,0,NULL);}
       | expr AND expr           { $$ = makenode(AND,$1,$3,NULL,0,NULL);}
       | expr OR expr            { $$ = makenode(OR,$1,$3,NULL,0,NULL);}
-      | '(' expr ')'               { $$ = $2; }
-   /*   | MMIN atom %prec DUMMY    { $$ = makenode(MMIN,$2,NULL,NULL,0,NULL); }*/
-      | NOT atom                   { $$ =makenode(NOT,$2,NULL,NULL,0,NULL); }
-      | atom                       { $$ = $1; }
+      | '(' expr ')'            { $$ = $2; }
+	  | '(' tyList ')' expr		{ printf(" casting to %s ", $2); }
+      | NOT atom                { $$ =makenode(NOT,$2,NULL,NULL,0,NULL); }
+      | atom                    { $$ = $1; }
       ;
 
 

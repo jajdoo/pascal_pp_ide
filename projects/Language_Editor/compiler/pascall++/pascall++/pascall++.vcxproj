@@ -19,9 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\bison.bat" />
     <None Include="..\..\..\bison.simple" />
     <None Include="..\..\..\bison_file.y" />
+    <None Include="..\..\..\flex.bat" />
     <None Include="..\..\..\flexFile.l" />
+    <None Include="1_OK_file - structs.p" />
+    <None Include="1_OK_file.p" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\bison_file_tab.c" />
