@@ -1,10 +1,10 @@
 PROGRAM progtato
 {
 	VAR INTEGER: i;
-	VAR FLOAT: f;
-	VAR BOOLEAN: b;
 
-	i = INTEGER (f);
-	f = FLOAT (i);
-	f = FLOAT (b);
+	i = INTEGER (6.42);
+
+	IF i < 5 THEN 
+		i = 6;
+	FI
 }

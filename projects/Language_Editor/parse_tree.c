@@ -242,8 +242,16 @@ NODE makenode(int op, NODE s1, NODE s2, NODE s3, int val, char *id)
 
 	t->op = op;
 
-	if (op == ADD || op == MMIN || op == MUL || op == DIV || op == AND || op == OR || op == NOT || op == ASSIGN)
+	switch (op)
 	{
+	case ADD:
+	case MMIN:
+	case MUL:
+	case DIV:
+	case AND:
+	case OR:
+	case NOT:
+	case ASSIGN:
 		if (t->s1->type == t->s2->type)
 			t->type = t->s1->type;
 		else
@@ -255,10 +263,29 @@ NODE makenode(int op, NODE s1, NODE s2, NODE s3, int val, char *id)
 
 			fclose(txt);
 		}
-	}
-	else if (op == CAST)
-	{
-		if ( is_legal_cast(t->s1->type, currentType) )
+		break;
+
+	case LES:
+	case LEQ:
+	case EQU:
+	case NEQ:
+	case GRE:
+	case GEQ:
+		if (t->s1->type == t->s2->type)
+			t->type = BOOLEAN;
+		else
+		{
+			txt = fopen("outputParser.txt", "a");
+
+			printf("\nError at line %d:  %s  %s %s\n", line_number, print_op(t->s2->type), print_op(op), print_op(t->s1->type));
+			fprintf(txt, "\nError at line %d:  %s  %s %s\n", line_number, print_op(t->s2->type), print_op(op), print_op(t->s1->type));
+
+			fclose(txt);
+		}
+		break;
+
+	case CAST:
+		if (is_legal_cast(t->s1->type, currentType))
 			t->type = currentType;
 	}
 
