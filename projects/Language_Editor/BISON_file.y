@@ -22,7 +22,7 @@ int line_number = 1;
 %token MOD LES LEQ EQU NEQ GRE GEQ AND OR
 %token AND OR NOT CASE FOR FIN IDENTICAL FROM BY TO CONST TYPE VAR RECORD
 
-%token STRUCT
+%token STRUCT CAST
 
 %token<code> INTCONST 
 %token<string> IDE 
@@ -258,8 +258,8 @@ expr:   expr ADD expr           { $$ = makenode(ADD,$1,$3,NULL,0,NULL);}
       | expr AND expr           { $$ = makenode(AND,$1,$3,NULL,0,NULL);}
       | expr OR expr            { $$ = makenode(OR,$1,$3,NULL,0,NULL);}
       | '(' expr ')'            { $$ = $2; }
-	  | '(' tyList ')' expr		{ printf(" casting to %s ", $2); }
-      | NOT atom                { $$ =makenode(NOT,$2,NULL,NULL,0,NULL); }
+	  |  tyList '(' expr ')'	{ $$ = makenode(CAST,$3,NULL,NULL,0,NULL); }
+      | NOT atom                { $$ = makenode(NOT,$2,NULL,NULL,0,NULL); }
       | atom                    { $$ = $1; }
       ;
 

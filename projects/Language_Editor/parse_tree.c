@@ -115,6 +115,12 @@ char *print_op(int op)
 	case REAL:
 		return ("REAL");
 		break;
+	case STRUCT:
+		return ("STRUCT");
+		break;
+	case CAST:
+		return ("CAST");
+		break;
 	default:
 		fprintf(txt, "Error at line %d: Unknown Token is line %d\n", line_number);
 		return ("UNKNOWN");
@@ -189,7 +195,25 @@ void updateVarType(int op)
 }
 
 
+/**
+	test if 'from' can be cast into type 'to'
+	currently hardcoded, but can be make smarter.
+*/
+int is_legal_cast(int from, int to)
+{
+	FILE* txt;
 
+	if (from == INTEGER && to == FLOAT || from == FLOAT && to == INTEGER)
+		return 1;
+
+	txt = fopen("outputParser.txt", "a");
+
+	printf("\nError at line %d: cannot cast from type %s to type %s\n", line_number, print_op(from), print_op(to));
+	fprintf(txt, "\nError at line %d: cannot cast from type %s to type %s\n", line_number, print_op(from), print_op(to));
+
+	fclose(txt);
+	return 0;
+}
 
 
 NODE makenode(int op, NODE s1, NODE s2, NODE s3, int val, char *id)
@@ -228,7 +252,14 @@ NODE makenode(int op, NODE s1, NODE s2, NODE s3, int val, char *id)
 
 			printf("\nError at line %d:  %s  %s %s\n", line_number, print_op(t->s2->type), print_op(op), print_op(t->s1->type));
 			fprintf(txt, "\nError at line %d:  %s  %s %s\n", line_number, print_op(t->s2->type), print_op(op), print_op(t->s1->type));
+
+			fclose(txt);
 		}
+	}
+	else if (op == CAST)
+	{
+		if ( is_legal_cast(t->s1->type, currentType) )
+			t->type = currentType;
 	}
 
 	return(t);
