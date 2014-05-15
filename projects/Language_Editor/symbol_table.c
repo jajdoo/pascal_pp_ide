@@ -75,7 +75,7 @@ void addToSymbolTable(char *IDEName, int size, int IS_ARRAY, arrList lst)
 
 	if (newSymb->is_struct && cur_members!=NULL)
 	{
-		newSymb->members = cur_members;
+		newSymb->list = cur_members;
 
 		while (cur_members!=NULL)
 		{
@@ -89,7 +89,7 @@ void addToSymbolTable(char *IDEName, int size, int IS_ARRAY, arrList lst)
 	}
 	else
 	{
-		newSymb->members = NULL;
+		newSymb->list = NULL;
 		newSymb->address = currentAddress;
 
 		if (newSymb->is_struct)
@@ -334,8 +334,8 @@ void PrintSymbolTable()
 				CurrSymbol->size,
 				CurrSymbol->IS_ARRAY);
 
-			if (CurrSymbol->is_struct == 1 && CurrSymbol->members != NULL)
-				print_struct_members(membs, CurrSymbol->symb, CurrSymbol->members);
+			if (CurrSymbol->is_struct == 1 && CurrSymbol->list != NULL)
+				print_struct_members(membs, CurrSymbol->symb, CurrSymbol->list);
 
 			PrintArray(CurrSymbol->lst, txt, CurrSymbol->IS_ARRAY);
 

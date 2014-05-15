@@ -16,7 +16,7 @@ int line_number = 1;
 
 %}
 
-%token PROGRAM BBEGIN END DECLARE PROCEDURE LABEL INTEGER FLOAT REAL CMP
+%token PROGRAM PROCEDURE BBEGIN END DECLARE PROCEDURE LABEL INTEGER FLOAT REAL CMP
 %token BOOLEAN ARRAY OF ASSIGN LC RC IF THEN ELSE FI THEN WHILE REPEAT DO OD 
 %token READ WRITE TRUE FALSE ADD MMIN MUL DIV GOTO
 %token MOD LES LEQ EQU NEQ GRE GEQ AND OR
@@ -33,9 +33,9 @@ int line_number = 1;
 %token<boolean> BOOLEAN
 %token<float> FLOAT
 
-%type<node> var assign program stat_seq loop_stat case_stat bracket 
+%type<node> var assign program procedure stat_seq loop_stat case_stat bracket 
 %type<node> expr atom block stat nonlable_stat cond_stat case case_list
-%type<code> brk
+%type<code> brk 
 
 %nonassoc LES LEQ EQU NEQ GRE GEQ
 %left ADD MMIN OR
@@ -85,12 +85,31 @@ dim_tail: dim | ;
 /*-----------------------------------------------------------------------*/
 /*************************************************************************/
 
-declarations:	struct_decl declarations 
+declarations:	procedure							{return NULL;}
+			 |  struct_decl declarations 
 			 |  VAR varAss declarations 
 			 |	STRUCT IDE							{set_current_struct_name($2);} 
 				':' idList ';'						{clear_current_struct();} 
 				declarations
 			 |	;
+
+
+/*************************************************************************/
+/*                          PROCEDURE decleration                        */
+/*-----------------------------------------------------------------------*/
+procedure : PROCEDURE IDE '(' param_decl ')' block ';'					{printf("procedure %s\n", $2);}
+
+param_decl :	STRUCT IDE ':' param param_decl_tail	{ printf("struct_param_decl_1->"); }
+			|	VAR tyList ':' param param_decl_tail	{ printf("primitive_param_decl_1->"); }
+			;
+
+param_decl_tail: ',' member_decl | ;
+
+param :		  IDE					{ printf("ide->"); }
+			| POINTER				{ printf("pointer->"); }
+			;
+/*-----------------------------------------------------------------------*/
+/*************************************************************************/
 
 varAss: tyList ':' idList varAss		{} 
 	|

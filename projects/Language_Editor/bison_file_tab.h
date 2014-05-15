@@ -1,8 +1,8 @@
 #define	PROGRAM	258
-#define	BBEGIN	259
-#define	END	260
-#define	DECLARE	261
-#define	PROCEDURE	262
+#define	PROCEDURE	259
+#define	BBEGIN	260
+#define	END	261
+#define	DECLARE	262
 #define	LABEL	263
 #define	INTEGER	264
 #define	FLOAT	265

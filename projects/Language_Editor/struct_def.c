@@ -54,7 +54,7 @@ void set_current_struct_name(char* struct_name)
 		yyerror("no such symbol");
 		return;
 	}
-	if (!cur_struct->is_struct || cur_struct->members == NULL)
+	if (!cur_struct->is_struct || cur_struct->list == NULL)
 	{
 		yyerror("no such struct");
 		return;
@@ -125,7 +125,7 @@ void new_struct_member(char* IDEName, int size, int IS_ARRAY, arrList lst)
 		newSymb->size = size;
 
 	newSymb->is_struct = (cur_struct != NULL);
-	newSymb->members = NULL;
+	newSymb->list = NULL;
 
 	current_member_add += newSymb->size;
 

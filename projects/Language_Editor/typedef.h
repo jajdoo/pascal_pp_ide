@@ -34,6 +34,12 @@ typedef struct node {    /* abstract syntax tree record */
 
 typedef enum{MFALSE,MTRUE} booly;
 
+typedef struct SymbolWrapper
+{
+	struct Symbol*			Symbol;
+	struct SymbolWrapper*	next;
+};
+
 typedef struct Symbol 
 {
 	char *symb;				// the string that holds the name of the Symbol
@@ -60,8 +66,10 @@ typedef struct Symbol
 	//		- address		= [actual adress]
 	//		- members		- NULL
 
-	int is_struct;				// is this symbol a struct?
-	struct Symbol* members;		// if this symbol is a struct, these are its members.
+	int is_struct;					// is this symbol a struct?
+	int isProc;						// is this a procedure?
+	struct SymbolWrapper* list;		// if this symbol is a struct, these are its members.
+								    // if this symbol is a procedure/function, these are its parameters;
 };
 
 typedef union
