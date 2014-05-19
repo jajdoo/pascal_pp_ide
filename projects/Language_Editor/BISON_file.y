@@ -11,6 +11,7 @@
 #include "parse_tree.h"
 #include "struct_def.h"
 #include "symbol_table.h"
+#include "context.h"
 
 int line_number = 1;
 
@@ -85,7 +86,7 @@ dim_tail: dim | ;
 /*-----------------------------------------------------------------------*/
 /*************************************************************************/
 
-declarations:	procedure							{return NULL;}
+declarations:	procedure declarations				{return NULL;}
 			 |  struct_decl declarations 
 			 |  VAR varAss declarations 
 			 |	STRUCT IDE							{set_current_struct_name($2);} 
@@ -97,11 +98,13 @@ declarations:	procedure							{return NULL;}
 /*************************************************************************/
 /*                          PROCEDURE decleration                        */
 /*-----------------------------------------------------------------------*/
-procedure : PROCEDURE IDE '(' param_decl ')' block ';'					{printf("procedure %s\n", $2);}
-
-param_decl :	STRUCT IDE ':' param param_decl_tail	{ printf("struct_param_decl_1->"); }
-			|	VAR tyList ':' param param_decl_tail	{ printf("primitive_param_decl_1->"); }
+procedure : PROCEDURE IDE								{enterContext($2);} 
+			'(' param_decl ')' block ';'				{exitContext();} 
 			;
+
+param_decl :	STRUCT IDE ':' param param_decl_tail	{ printf("param_decl_1->"); }
+			|	VAR tyList ':' param param_decl_tail	{ printf("primitive_param_decl_1->"); }
+			| ;
 
 param_decl_tail: ',' member_decl | ;
 

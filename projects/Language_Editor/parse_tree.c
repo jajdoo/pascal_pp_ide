@@ -307,6 +307,7 @@ NODE genLeaf(int op, int val, double rval, char *id)
 		txt = fopen("outputParser.txt", "a");
 		fprintf(txt, "\nError at line %d: Undeclared identifier: %s", line_number, id);
 		fclose(txt);
+		PrintSymbolTable();
 		exit(1);
 	}
 

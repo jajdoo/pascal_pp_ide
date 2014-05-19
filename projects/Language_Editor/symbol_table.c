@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 #include "symbol_table.h"
 #include "struct_def.h"
 #include "globals.h"
-#include <time.h>       /************************ time **************************/
+#include "context.h"
 
 //  The symbol table - hash table of 26 enteries (alphabetical) of Symbols
 //	Remember : each symbol has a pointer to the next one. See decleration in typedef.h
@@ -33,13 +35,20 @@ void addToSymbolTable(char *IDEName, int size, int IS_ARRAY, arrList lst)
 	txt = fopen("outputParser.txt", "a");
 	int l, isPointer = 0;
 	struct Symbol* newSymb,* cur_struct;
+	char* fullname;
+
+
+	fullname = (char*)malloc( sizeof(char)*(strlen(IDEName) + strlen(getContext())) );
+	fullname[0] = '\0';
+	strcat(fullname, getContext());
+	strcat(fullname, IDEName);
 
 	cur_struct = get_cur_struct();
 
 	//fprintf(txt,"Info at line %d: adding to symbol table: %s \n",line_number,IDEName);
 	if (size <= 0 && !(cur_struct==NULL))
 	{
-		fprintf(txt, "\nErrorat line %d: illegal size: %s has the size of %d", line_number, IDEName, size);
+		fprintf(txt, "\nErrorat line %d: illegal size: %s has the size of %d", line_number, fullname, size);
 		fclose(txt);
 		exit(1);
 	}
@@ -52,7 +61,7 @@ void addToSymbolTable(char *IDEName, int size, int IS_ARRAY, arrList lst)
 
 	//check if the symbol was already declared
 	if (findSymbol(IDEName) != NULL)
-		fprintf(txt, "Error at line %d: Symbol %s already declared", line_number, IDEName);
+		fprintf(txt, "Error at line %d: Symbol %s already declared", line_number, fullname);
 
 	//pointer to a cell
 	if (IDEName[strlen(IDEName) - 1] == '^')
@@ -67,7 +76,7 @@ void addToSymbolTable(char *IDEName, int size, int IS_ARRAY, arrList lst)
 		first = &symbTable[getTableEntry(IDEName)];
 
 	newSymb->IS_POINTER = isPointer;
-	newSymb->symb = IDEName;
+	newSymb->symb = fullname;
 	newSymb->size = size;
 	newSymb->IS_ARRAY = IS_ARRAY;
 
@@ -103,7 +112,7 @@ void addToSymbolTable(char *IDEName, int size, int IS_ARRAY, arrList lst)
 		currentAddress += newSymb->size;
 	}
 
-	fprintf(txt, "Info at line %d: adding symbol  %s of type %d to table variable\n", line_number, IDEName, currentType);
+	fprintf(txt, "Info at line %d: adding symbol  %s of type %d to table variable\n", line_number, fullname, currentType);
 	if (*first != NULL)
 		newSymb->next = (*first)->next;
 	else
@@ -193,14 +202,18 @@ int getTableEntry (char *IDEName) /* change all function ***********************
 	txt=fopen("outputParser.txt","a");
 	int entry,temp=0;
 	int i;
+
+	char buff[1024];
+	strcpy(buff, getContext());
+	strcat(buff, IDEName);
 	
-	for(i=0;i<strlen(IDEName);i++)
+	for(i=0;i<strlen(buff);i++)
 	{
-		if (islower(IDEName[i]))
-			entry = (IDEName[i] - 'a');
+		if (islower(buff[i]))
+			entry = (buff[i] - 'a');
 		else
-			entry = (IDEName[i] - 'A');
-			
+			entry = (buff[i] - 'A');
+		
 		if(i==0)
 			temp = (hash[entry].value ^ entry)% 256;
 		else 
@@ -208,11 +221,11 @@ int getTableEntry (char *IDEName) /* change all function ***********************
 	}	
 	if(hash[temp].IDEName == NULL)
 	{
-		hash[temp].IDEName= ( char *)malloc(strlen(IDEName));
-		strcpy(hash[temp].IDEName,IDEName);
+		hash[temp].IDEName = (char *)malloc(strlen(buff));
+		strcpy(hash[temp].IDEName, buff);
 		return temp;
 	}
-	else if((strcmp(hash[temp].IDEName,IDEName))==0)
+	else if ((strcmp(hash[temp].IDEName, buff)) == 0)
 	{
 		return temp;
 	}
@@ -222,8 +235,8 @@ int getTableEntry (char *IDEName) /* change all function ***********************
 		{
 				if(hash[i].IDEName == NULL)
 				{
-					hash[i].IDEName= ( char *)malloc(strlen(IDEName));
-					strcpy(hash[i].IDEName,IDEName);
+					hash[i].IDEName = (char *)malloc(strlen(buff));
+					strcpy(hash[i].IDEName, buff);
 					return i;
 				}
 		}
@@ -231,8 +244,8 @@ int getTableEntry (char *IDEName) /* change all function ***********************
 		{
 				if(hash[i].IDEName == NULL)
 				{
-					hash[i].IDEName= ( char *)malloc(strlen(IDEName));
-					strcpy(hash[i].IDEName,IDEName);
+					hash[i].IDEName = (char *)malloc(strlen(buff));
+					strcpy(hash[i].IDEName, buff);
 					return i;
 				}
 		}

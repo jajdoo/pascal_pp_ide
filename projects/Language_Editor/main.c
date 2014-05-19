@@ -4,6 +4,7 @@
 #include "typedef.h"
 #include "bison_file_tab.h"
 #include "convertTree.h"
+#include "context.h"
 
 FILE  *treefile;
 extern FILE *yyin;			//  a pointer to the program file that should be compiled.
@@ -59,6 +60,8 @@ int main(int argc, char* argv[])
 		printf("Input filename is missing.\n");
 		return 0;
 	}
+
+	initContext();
 
 	// Build the program tree
 	theProgram = getTree(argv[1]);

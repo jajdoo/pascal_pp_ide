@@ -29,6 +29,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\bison_file_tab.c" />
+    <ClCompile Include="..\..\..\context.c" />
     <ClCompile Include="..\..\..\convertTree.c" />
     <ClCompile Include="..\..\..\lex.yy.c" />
     <ClCompile Include="..\..\..\main.c" />
@@ -39,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\bison_file_tab.h" />
+    <ClInclude Include="..\..\..\context.h" />
     <ClInclude Include="..\..\..\convertTree.h" />
     <ClInclude Include="..\..\..\globals.h" />
     <ClInclude Include="..\..\..\parse_tree.h" />
