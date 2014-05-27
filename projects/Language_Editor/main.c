@@ -30,6 +30,8 @@ NODE getTree(char *progFile)
 	// check syntax and build the program tree.
 	yyparse();
 
+	PrintSymbolTable();
+
 	// root was initialized in yyparse while it was building the tree.
 	// root is the pointer of the returning tree.
 	if (root==NULL) 

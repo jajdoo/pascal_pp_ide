@@ -1,3 +1,0 @@
-Info at line 3: adding symbol  i of type 264 to table variable
-Info at line 6: adding symbol  p.j of type 264 to table variable
-Info at line 12: adding symbol  pp.k of type 264 to table variable
