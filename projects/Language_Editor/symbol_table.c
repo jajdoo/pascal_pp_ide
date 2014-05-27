@@ -155,27 +155,34 @@ struct Symbol* findSymbol(char *IDENameIn)
 	txt = fopen("outputParser.txt", "a");
 	int symbTabEntry;
 	int isPointer = 0;
-	char IDEName[100];
-	strcpy(IDEName, IDENameIn);
-	if (IDEName[strlen(IDEName) - 1] == '^')
+	char buff[1024];
+	char ideaname[1024];
+
+	strcpy(ideaname, IDENameIn);
+
+	if (ideaname[strlen(ideaname) - 1] == '^')
 	{
 		int i = 0;
 		isPointer = 1;
-		IDEName[strlen(IDEName) - 1] = NULL;
+		ideaname[strlen(ideaname) - 1] = NULL;
 	}
-	symbTabEntry = getTableEntry(IDEName);
+
+	symbTabEntry = getTableEntry(ideaname);
 	CurrSymbol = symbTable[symbTabEntry];
+
+	strcpy(buff, getContext());
+	strcat(buff, ideaname);
 
 	while (CurrSymbol != NULL)
 	{
-		if (!strcmp(CurrSymbol->symb, IDEName))
+		if (!strcmp(CurrSymbol->symb, buff))
 		{
 
 			if (isPointer)
 			{
 				if (!CurrSymbol->IS_POINTER)
 				{
-					fprintf(txt, "Error at line %d: variable is not a pointer: %s\n", line_number, IDEName);
+					fprintf(txt, "Error at line %d: variable is not a pointer: %s\n", line_number, buff);
 					fclose(txt);
 					break;
 				}
@@ -209,16 +216,13 @@ int getTableEntry (char *IDEName) /* change all function ***********************
 	
 	for(i=0;i<strlen(buff);i++)
 	{
-		if (islower(buff[i]))
-			entry = (buff[i] - 'a');
-		else
-			entry = (buff[i] - 'A');
+		entry = (int)buff[i];
 		
 		if(i==0)
 			temp = (hash[entry].value ^ entry)% 256;
 		else 
 			temp=(temp ^ entry)% 256;
-	}	
+	}
 	if(hash[temp].IDEName == NULL)
 	{
 		hash[temp].IDEName = (char *)malloc(strlen(buff));
