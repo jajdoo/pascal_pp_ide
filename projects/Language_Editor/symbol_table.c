@@ -1,366 +1,456 @@
+
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <time.h>
-
 #include "symbol_table.h"
-#include "struct_def.h"
-#include "globals.h"
-#include "context.h"
 
-//  The symbol table - hash table of 26 enteries (alphabetical) of Symbols
-//	Remember : each symbol has a pointer to the next one. See decleration in typedef.h
+#define HASH_SIZE 101
+#define HASH_ADD_SUCCESS 1
+#define HASH_ADD_FAILED_NO_CONTEXT -1
+#define HASH_ADD_FAILED_ALREADY_EXIST 0
+
+typedef struct Symbol_t {
+	void *data;
+	struct Context_t *context;
+	struct Symbol_t *next,*prev;
+} *Symbol;
+typedef struct SymbolInContext_t {
+	struct Symbol_t *symbol;
+	char *name;
+	struct SymbolInContext_t *next,*prev;
+} *SymbolInContext;
+typedef struct SymbolList_t {
+	char *symbol;
+	struct Symbol_t *head;
+} *SymbolList;
+
+typedef struct Context_t {
+	char *symbol;
+	struct Context_t *next,*prev;
+	struct SymbolInContext_t *head;
+} *Context;
+typedef int (*Comparator)(void*,void*); 
+typedef void (*FreeFunc)(void*); 
+
+int str_cmp(void*a,void*b) {
+	return strcmp((char *)a,(char *)b);
+}
+typedef struct List_t {
+	struct Node_t *head;
+	struct Node_t *tail;
+	int count;
+	Comparator cmp;
+	FreeFunc freeFunc;
+} *List,*Stack,*Queue;
+
+typedef List * HashTable;
+
+typedef struct Node_t {
+	void *data;
+	struct Node_t *prev,*next;
+} *Node;
+
+Node newNode(void *data) {
+	Node n = (Node)malloc(sizeof(struct Node_t));
+	n->data = data;
+	n->prev=n->next=NULL;
+	return n;
+}
+
+List newList(Comparator cmp,FreeFunc freeFunc) {
+	List l = (List)malloc(sizeof(struct List_t));
+	l->head = l->tail = NULL;
+	l->cmp = cmp;
+	l->freeFunc = freeFunc;
+	l->count=0;
+	return l;
+}
+
+void addToHead(List l,void *data) {
+	Node prevHead;
+	if (l->count==0) {
+		l->head=l->tail = newNode(data);
+		return;
+	}
+	prevHead = l->head;
+	l->head = newNode(data);
+	l->head->next = prevHead;
+	l->count++;
+	return;
+}
+
+void addToTail(List l,void *data) {
+	Node newTail;
+	if (l->count==0) {
+		l->head=l->tail = newNode(data);
+		return;
+	}
+	l->tail->next = newTail = newNode(data);
+	newTail->prev = l->tail;
+	l->tail = l->tail->next;
+	l->count++;
+	return;
+}
 
 
-/*********************add hash*****************/
-typedef struct hashIDE
-{
-	int value;
-	char *IDEName;
+void * removeTail(List l) {
+	Node prevTail;
+	void *data;
+	if ( l->count==0 ) return NULL;
+	prevTail = l->tail;
+	data = prevTail->data;
+	if (l->count==1) {
+		l->head=l->tail = NULL;
+		return;
+	} else {
+		l->tail= l->tail->prev;
+		l->tail->next=NULL;
+	}
+	free(prevTail);
+	l->count--;
+	return data; 
+}
+
+void freeList(List l) {
+	Node n = l->head;
+	while (n!=NULL) {
+		l->freeFunc(n->data);
+		free(n);
+		n=n->next;
+	}
+}
+void * removeHead(List l) {
+	Node prevHead;
+	void *data;
+	if ( l->count==0 ) return NULL;
+	prevHead = l->head;
+	data = prevHead->data;
+	if (l->count==1) {
+		l->head=l->tail = NULL;
+		return;
+	} else {
+		l->head= l->head->next;
+		l->head->prev=NULL;
+	}
+	free(prevHead);
+	l->count--;
+	return data; 
+}
+void *removeNode(List l,Node n) {
+	void *data;
+	if ( n == l->head ) 
+		return removeHead(l); 
+	if ( n == l->tail ) 
+		return removeTail(l); 
+	data = n->data;
+	n->next->prev=n->prev;
+	n->prev->next=n->next;
+	free(n);
+	l->count--;
+	return data;
+}
+
+void* pop(Stack s) {
+	return removeHead(s);
+}
+void push(Stack s,void *e) {
+	addToHead(s,e);
+}
+void* deq(Queue q) {
+	return removeHead(q);
+}
+void enq(Queue q,void *e) {
+	addToTail(q,e);
+}
+
+Symbol newSymbol(void *data) {
+	Symbol s = (Symbol)malloc(sizeof(struct Symbol_t));
+
+	s->data = data;
+	s->prev=s->next=NULL;
+	s->context = NULL;
+	return s;
+}
+SymbolList newSymbolList(char *symbol) {
+	SymbolList s = (SymbolList)malloc(sizeof(struct SymbolList_t));
+	s->symbol = symbol;
+	s->head=NULL;
+	return s;
+}
+SymbolInContext newSymbolInContext(char *name,Symbol symbol) {
+	SymbolInContext s = (SymbolInContext)malloc(sizeof(struct SymbolInContext_t));
+	s->name = name;
+	s->symbol = symbol;
+	s->next=s->prev=NULL;
+	return s;
+}
+
+Context newContext(char *name) {
+	Context c = (Context)malloc(sizeof(struct Context_t));
+	c->next = c->prev = NULL;
+	c->head = NULL;
+	c->symbol = name;
+	return c;
+}
+HashTable newHashTable() {
+	int i = 0;
+	List *hash = (List *)malloc(sizeof(List)*HASH_SIZE);
+	for ( ; i < HASH_SIZE ; i++ ) 
+		hash[i]=NULL;
+	return hash;
+}
+int hash(char *name) {
+	int hashVal,i;
+	hashVal = 0;
+	for (i=0;name[i]!=NULL;i++) 
+		hashVal+=(int)name[i]+i;
+	return hashVal % HASH_SIZE;
+}
+SymbolList hash_find(char *symbol,HashTable hashTable) {
+	List bucket = hashTable[hash(symbol)];
+	Node n;
+	SymbolList s;
+	if ( bucket==NULL ) 
+		return NULL; 
+	n = bucket->head;
+	while (n!=NULL) {
+		s = (SymbolList)n->data;
+		if (bucket->cmp(s->symbol,symbol)==0)
+			return s;
+		n=n->next;
+	}
+	return NULL;
+}
+void *hash_remove(char *symbol,HashTable hashTable) {
+	List bucket = hashTable[hash(symbol)];
+	Node prev,n;
+	SymbolList s;
+	if ( bucket==NULL ) 
+		return NULL; 
+	n = bucket->head;
+	while (n!=NULL) {
+		if ( bucket->cmp(((SymbolList)n->data)->symbol,symbol ) == 0 ) 
+		return removeNode(bucket,n);
+		n=n->next;
+	}
+	return NULL;
+}
+void hash_put(HashTable hashTable,SymbolList s) {
+	int i = hash(s->symbol);
+	List bucket = hashTable[i];
+	if ( bucket==NULL ) 
+		bucket = hashTable[i] = newList(str_cmp,free);
+	push(bucket,s);
+}
+
+HashTable hashTable;
+Context contextStackHead;
+FreeFunc freeFunc;
+
+void init( FreeFunc howToFreeYourData ) {
+	freeFunc = howToFreeYourData;
+	contextStackHead = NULL;
+	hashTable = newHashTable();
+}
+
+
+Symbol getSentinel(char *symbol) {
+	SymbolList s = hash_find(symbol,hashTable);
+	Symbol sentinel = NULL, first;
+	if (s==NULL) {
+		s = newSymbolList(strcpy((char *)malloc((strlen(symbol)+1)*sizeof(char)),symbol));
+		s->head = sentinel = newSymbol(NULL);
+		hash_put(hashTable,s);
+	} else {
+		sentinel = s->head;
+	}
+	return sentinel;
+}
+void insert(Symbol prev,Symbol x,Symbol next) {
+	if ( prev!=NULL ) prev->next = x;
+	if ( next!=NULL ) next->prev = x;
+	x->next = next;
+	x->prev = prev;
+}
+//enter data corresponds to a symbol, returns HASH_ADD_SUCCESS if succeded, HASH_ADD_FAILED_NO_CONTEXT if no context is ever entered,HASH_ADD_FAILED_ALREADY_EXIST if the current context already defined the given symbol
+int addToSymbolTable(char *symbol, void *data) {
+	Symbol sentinel,first,next = NULL,news;
+	SymbolInContext newhead,oldhead;
+	if ( contextStackHead == NULL ) {
+		printf("ERROR : You have not entered a context!");
+		return HASH_ADD_FAILED_NO_CONTEXT;
+	}
+	sentinel = getSentinel(symbol);
+	first = sentinel->next;
+	if (first!=NULL) {
+		if (first->context == contextStackHead)
+			return HASH_ADD_FAILED_ALREADY_EXIST;
+	}
+	news = newSymbol(data);
+	newhead = newSymbolInContext(strcpy((char *)malloc((strlen(symbol)+1)*sizeof(char)),symbol),news);
+	insert(sentinel,news,first);
+	oldhead = contextStackHead -> head;
+	if ( oldhead != NULL) 
+		oldhead -> prev = newhead;
+	newhead -> next = oldhead;
+	contextStackHead -> head = newhead;
+	news->context = contextStackHead;
+	return HASH_ADD_SUCCESS;
+}
+
+
+
+//returns - the data corresponds to the symbol, null if not exists in the current context
+void* getFromSymbolTable(char *symbol) {
+	SymbolList sl;
+	Symbol s=NULL;
+	if ( symbol==NULL ) 
+		return NULL;
+	sl = hash_find(symbol,hashTable);
+	if ( sl!=NULL ) 
+		s = sl->head->next;
+	return (s!=NULL) ? s->data : NULL;
+}
+
+void enter_block( char *block_name ) {
+	Context oldhead = contextStackHead;
+	contextStackHead=newContext(strcpy((char *)malloc((strlen(block_name)+1)*sizeof(char)),block_name));
+	contextStackHead->next=oldhead;
+	if ( oldhead!=NULL ) 
+		oldhead->prev= contextStackHead;
+}
+
+void exit_block(  ) {
+	Context oldhead = contextStackHead;
+	SymbolInContext s = oldhead->head;
+	SymbolInContext temp;
+	Symbol tempSymbol;
+	contextStackHead = oldhead->next;
+	if ( contextStackHead!=NULL) 
+		contextStackHead->prev = NULL;
 	
-}hashIDE;
-hashIDE hash[256];
-/************ add hash*****************/
-struct Symbol *symbTable[256];//a cell is pointer to first symbol ******26***************************size--->256
-struct Symbol **first;			//pointer to a table cell - which is a pointer to symbol struct
-struct Symbol *CurrSymbol;		//pointer to a symbol struct
-int TableInitialized = 0;		//0 - table uninitialized, 1 - table initialized
-int currentAddress;				// address of the new variable in stack
-
-
-
-void addToSymbolTable(char *IDEName, int size, int IS_ARRAY, arrList lst)
-{
-	FILE *txt;
-	txt = fopen("outputParser.txt", "a");
-	int l, isPointer = 0;
-	struct Symbol* newSymb,* cur_struct;
-	char* fullname;
-
-
-	fullname = (char*)malloc( sizeof(char)*(strlen(IDEName) + strlen(getContext())) );
-	fullname[0] = '\0';
-	strcat(fullname, getContext());
-	strcat(fullname, IDEName);
-
-	cur_struct = get_cur_struct();
-
-	//fprintf(txt,"Info at line %d: adding to symbol table: %s \n",line_number,IDEName);
-	if (size <= 0 && !(cur_struct==NULL))
-	{
-		fprintf(txt, "\nErrorat line %d: illegal size: %s has the size of %d", line_number, fullname, size);
-		fclose(txt);
-		exit(1);
+	while (s!=NULL) {
+		temp=s;
+		s=s->next;
+		if ( temp->next ) temp->next->prev = NULL;
+		tempSymbol = temp->symbol;
+		if ( tempSymbol->prev!=NULL ) tempSymbol->prev->next=tempSymbol->next;
+		if ( tempSymbol->next!=NULL ) tempSymbol->next->prev = tempSymbol->prev;
+		tempSymbol->context = NULL;
+		if (tempSymbol->next==NULL) 
+			hash_remove(temp->name,hashTable);
+		freeFunc(tempSymbol->data);
+		free(temp->name);
+		free(temp->symbol);
+		free(temp);
 	}
-
-	newSymb = (struct Symbol*)malloc(sizeof(struct Symbol));
-	newSymb->lst = lst;
-
-	if (!TableInitialized) // if table is uninitialized, then go initialize!
-		InitializeTable();
-
-	//check if the symbol was already declared
-	if (findSymbol(IDEName) != NULL)
-		fprintf(txt, "Error at line %d: Symbol %s already declared", line_number, fullname);
-
-	//pointer to a cell
-	if (IDEName[strlen(IDEName) - 1] == '^')
-	{
-		int i = 0;
-		IDEName[strlen(IDEName) - 1] = NULL;
-		first = &symbTable[getTableEntry(IDEName)];
-
-		isPointer = 1;
-	}
-	else
-		first = &symbTable[getTableEntry(IDEName)];
-
-	newSymb->IS_POINTER = isPointer;
-	newSymb->symb = fullname;
-	newSymb->size = size;
-	newSymb->IS_ARRAY = IS_ARRAY;
-
-	newSymb->is_struct = (cur_struct != NULL) || (cur_members != NULL);
-
-	if (newSymb->is_struct && cur_members!=NULL)
-	{
-		newSymb->list = cur_members;
-
-		while (cur_members!=NULL)
-		{
-			newSymb->size += cur_members->size;
-			cur_members = cur_members->next;
-		}
-
-		cur_members = NULL;
-		newSymb->type = 0;
-		newSymb->address = -1;
-	}
-	else
-	{
-		newSymb->list = NULL;
-		newSymb->address = currentAddress;
-
-		if (newSymb->is_struct)
-		{
-			newSymb->size = cur_struct->size;
-			newSymb->type = getTableEntry(cur_struct->symb);
-		}
-		else 
-			newSymb->type = currentType;
-
-		currentAddress += newSymb->size;
-	}
-
-	fprintf(txt, "Info at line %d: adding symbol  %s of type %d to table variable\n", line_number, fullname, currentType);
-	if (*first != NULL)
-		newSymb->next = (*first)->next;
-	else
-		newSymb->next = NULL;
-
-	//cell is always points to last symbol entered into the list
-	*first = newSymb;
-
-	fclose(txt);
+	free(oldhead->symbol);
+	free(oldhead);
 }
 
-
-
-
-
-// find type of var
-int findType(char *name)
-{
-	int i;
-	if (name == "")
-		return 0;
-	else
-		for(i=0;i<256;++i){	/********************************change 26**********/
-		CurrSymbol = symbTable[i];
-		while (CurrSymbol != NULL)
-		{
-			if (strcmp(name, CurrSymbol->symb) == 0)
-				return CurrSymbol->type;
-			CurrSymbol = CurrSymbol->next;
-		}
-	}
-
-}
-
-
-
-struct Symbol* findSymbol(char *IDENameIn)
-{
-	FILE *txt;
-	txt = fopen("outputParser.txt", "a");
-	int symbTabEntry;
-	int isPointer = 0;
-	char buff[1024];
-	char ideaname[1024];
-
-	strcpy(ideaname, IDENameIn);
-
-	if (ideaname[strlen(ideaname) - 1] == '^')
-	{
-		int i = 0;
-		isPointer = 1;
-		ideaname[strlen(ideaname) - 1] = NULL;
-	}
-
-	symbTabEntry = getTableEntry(ideaname);
-	CurrSymbol = symbTable[symbTabEntry];
-
-	strcpy(buff, getContext());
-	strcat(buff, ideaname);
-
-	while (CurrSymbol != NULL)
-	{
-		if (!strcmp(CurrSymbol->symb, buff))
-		{
-
-			if (isPointer)
-			{
-				if (!CurrSymbol->IS_POINTER)
-				{
-					fprintf(txt, "Error at line %d: variable is not a pointer: %s\n", line_number, buff);
-					fclose(txt);
-					break;
-				}
-
-			}
-
-
-			return (CurrSymbol);
-		}
-		else
-			CurrSymbol = CurrSymbol->next;
-	}
-
-	return (NULL);
-}
-
-
-
-
-
-int getTableEntry (char *IDEName) /* change all function **************************************************************/
-{	
-	FILE *txt;
-	txt=fopen("outputParser.txt","a");
-	int entry,temp=0;
-	int i;
-
-	char buff[1024];
-	strcpy(buff, getContext());
-	strcat(buff, IDEName);
+void printSymbolTable() {
 	
-	for(i=0;i<strlen(buff);i++)
-	{
-		entry = (int)buff[i];
-		
-		if(i==0)
-			temp = (hash[entry].value ^ entry)% 256;
-		else 
-			temp=(temp ^ entry)% 256;
+	int i = 0;
+	Context t = contextStackHead;
+	SymbolInContext s;
+	printf("\n");
+	while (t!=NULL) {
+		printf("%s : ",t->symbol);
+		s = t->head;
+		while(s!=NULL) {
+			printf("%s ",s->name);
+			s = s->next;
+		}
+		printf("\n");
+		t= t->next;
 	}
-	if(hash[temp].IDEName == NULL)
-	{
-		hash[temp].IDEName = (char *)malloc(strlen(buff));
-		strcpy(hash[temp].IDEName, buff);
-		return temp;
-	}
-	else if ((strcmp(hash[temp].IDEName, buff)) == 0)
-	{
-		return temp;
-	}
+	printf("\n");
+}
+void _free(void *a) {
+
+}
+/*
+void main(char *args[],int argc) {
+	init(_free);
+	enter_block("ProcM");
+	add("a","M a");
+	add("b","M b");
+	add("c","M c");
+	printf("\n\nStarted ProcM :\n");
+	printSymbolTable();
+	printf("\n\nRequesting for variables :\n");
+	printf("a : %s\n",get("a"));
+	printf("b : %s\n",get("b"));
+	printf("c : %s\n",get("c"));
+	printf("d : %s\n",get("d"));
+
+
+	enter_block("ProcA");
+	add("a","A a");
+	add("c","A c");
+	add("d","A d");
+	printf("\n\nStarted ProcA :\n");
+	printSymbolTable();
+	printf("\n\nRequesting for variables :\n");
+	printf("a : %s\n",get("a"));
+	printf("b : %s\n",get("b"));
+	printf("c : %s\n",get("c"));
+	printf("d : %s\n",get("d"));
+
+
+	enter_block("ProcB");
+	add("d","B d");
+	add("c","B c");
+	printf("\n\nStarted ProcB :\n");
+	printSymbolTable();
+	printf("\n\nRequesting for variables :\n");
+	printf("a : %s\n",get("a"));
+	printf("b : %s\n",get("b"));
+	printf("c : %s\n",get("c"));
+	printf("d : %s\n",get("d"));
+
+	printf("Trying to add d again...\n");
+	if (add("d","data_c")==HASH_ADD_FAILED_ALREADY_EXIST) 
+		printf("Already Defined!\n");
 	else
-	{
-		for(i=temp;i<256;i++)
-		{
-				if(hash[i].IDEName == NULL)
-				{
-					hash[i].IDEName = (char *)malloc(strlen(buff));
-					strcpy(hash[i].IDEName, buff);
-					return i;
-				}
-		}
-		for(i=temp;i>0;i--)
-		{
-				if(hash[i].IDEName == NULL)
-				{
-					hash[i].IDEName = (char *)malloc(strlen(buff));
-					strcpy(hash[i].IDEName, buff);
-					return i;
-				}
-		}
-	} /*end else*/	
-		
-}/* change all function *************************************************************
-end of func*/
+		printf("BUG!!!\n");
 	
 
+	printf("\n\nRequesting for variables :\n");
+	printf("a : %s\n",get("a"));
+	printf("b : %s\n",get("b"));
+	printf("c : %s\n",get("c"));
+	printf("d : %s\n",get("d"));
+
+	exit_block();
+	printf("\n\nExit ProcB :\n");
+	printSymbolTable();
+	printf("\n\nRequesting for variables :\n");
+	printf("a : %s\n",get("a"));
+	printf("b : %s\n",get("b"));
+	printf("c : %s\n",get("c"));
+	printf("d : %s\n",get("d"));
+
+	exit_block();
+	printf("\n\nExit ProcA :\n");
+	printSymbolTable();
+	printf("\n\nRequesting for variables :\n");
+	printf("a : %s\n",get("a"));
+	printf("b : %s\n",get("b"));
+	printf("c : %s\n",get("c"));
+	printf("d : %s\n",get("d"));
 
 
-//zero all cells i.e. NULL all the pointers /* initialize hash****************/
-void InitializeTable(void){
-	int i;
-	TableInitialized=1;
-	
-	srand (time(NULL));
-	for(i=0;i<256;++i)
-	{
-		symbTable[i]=NULL;
-		hash[i].IDEName=NULL;
-		hash[i].value= rand() % 256;
-	}
+	exit_block();
+	printf("\n\nExit ProcM :\n");
+	printSymbolTable();
+	printf("\n\nRequesting for variables :\n");
+	printf("a : %s\n",get("a"));
+	printf("b : %s\n",get("b"));
+	printf("c : %s\n",get("c"));
+	printf("d : %s\n",get("d"));
+	printf("\n");
+
+	getchar();
 }
-/* initialize hash*********************************/
-
-
-
-
-
-void print_struct_members(FILE* f, char* struct_name, struct Symbol* members)
-{
-	fprintf(f, "members for struct %s\n", struct_name);
-	fprintf(f, "Name\t\t|Address\t|Size\t\t|IS ARRAY\t|IS POINTER\t|TYPE\t\t|is_struct\n");
-	fprintf(f, "--------------------------------------------------------------\n");
-
-	while (members != NULL)
-	{
-		fprintf(f, "%s\t\t|%d\t\t|%d\t\t|%d\t\t|%d\t\t|%d\t\t|%d\n",
-			members->symb,
-			members->address,
-			members->size,
-			members->IS_ARRAY,
-			members->IS_POINTER,
-			members->type,
-			members->is_struct);
-		members = members->next;
-	}
-}
-
-
-
-
-
-void PrintArray(arrLST *l, FILE *t, int ind)
-{
-	if (!ind) return;
-	fprintf(t, "%d     %d\n", l->size, l->sumsize);
-	PrintArray(l + 1, t, ind - 1);
-}
-
-
-
-
-
-//print currentsymbol table
-void PrintSymbolTable()
-{
-	int i;
-	FILE* txt;
-	FILE* txt1;
-	FILE* membs;
-	txt = fopen("symbol_table.txt", "w");
-	txt1 = fopen("symbol_table1.txt", "w");
-	membs = fopen("struct_membs.txt", "w");
-	fprintf(txt1, "index\t|Name\t|Address\t|Size\t|IS ARRAY\t\t|IS POINTER\t|TYPE\t|is_struct\n");
-	fprintf(txt1, "--------------------------------------------------------------\n");
-	fprintf(txt, "Name   |Address  |Size  |IS ARRAY   |IS RECORD\n");
-	fprintf(txt, "-----------------------------------------------\n");
-
-	for(i=0;i<256;++i)	/**************************change from 26******************/
-	{
-		CurrSymbol = symbTable[i];
-		while (CurrSymbol != NULL)
-		{
-			fprintf(txt1, "%d\t\t|%s\t\t|%d\t\t|%d\t\t|%d\t\t|%d\t\t|%d|\t\t%d\n",
-				i,
-				CurrSymbol->symb,
-				CurrSymbol->address,
-				CurrSymbol->size,
-				CurrSymbol->IS_ARRAY,
-				CurrSymbol->IS_POINTER,
-				CurrSymbol->type,
-				CurrSymbol->is_struct);
-
-			fprintf(txt, "%s      |%d        |%d     |%d\n"
-				, CurrSymbol->symb,
-				CurrSymbol->address,
-				CurrSymbol->size,
-				CurrSymbol->IS_ARRAY);
-
-			if (CurrSymbol->is_struct == 1 && CurrSymbol->list != NULL)
-				print_struct_members(membs, CurrSymbol->symb, CurrSymbol->list);
-
-			PrintArray(CurrSymbol->lst, txt, CurrSymbol->IS_ARRAY);
-
-			CurrSymbol = CurrSymbol->next;
-		}
-	}
-	fclose(txt);
-	fclose(txt1);
-	fclose(membs);
-
-}
+*/

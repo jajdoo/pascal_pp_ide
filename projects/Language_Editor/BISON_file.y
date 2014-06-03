@@ -59,7 +59,7 @@ block :	  LC declarations stat_seq RC		{$$=makenode(BBEGIN,$3,NULL,NULL,0,NULL);
 /*                          STRUCT decleration                           */
 /*-----------------------------------------------------------------------*/
 
-struct_decl:  STRUCT IDE LC member_decl RC ';'					{addToSymbolTable($2,0,0,NULL); post_struct_def(); } ;
+struct_decl:  STRUCT IDE LC member_decl RC ';'					{addToSymbolTable($2,$2); post_struct_def(); } ;
 
 member_decl:  STRUCT IDE										{set_current_struct_name($2);} 
 			  ':' memberList ';'								{clear_current_struct(); }
@@ -98,8 +98,8 @@ declarations:	procedure declarations				{return NULL;}
 /*************************************************************************/
 /*                          PROCEDURE decleration                        */
 /*-----------------------------------------------------------------------*/
-procedure : PROCEDURE IDE								{enterContext($2);} 
-			'(' param_decl ')' block ';'				{exitContext();} 
+procedure : PROCEDURE IDE								{enterBlock($2);} 
+			'(' param_decl ')' block ';'				{exitBlock();} 
 			;
 
 param_decl :	STRUCT IDE ':' param param_decl_tail	{ printf("param_decl_1->"); }
@@ -119,8 +119,8 @@ varAss: tyList ':' idList varAss		{}
 	';'{}
 	;
 
-idList: IDE 	{addToSymbolTable($1,1,0,NULL);}idList
-     |POINTER 	{addToSymbolTable($1,1,0,NULL);}idList
+idList: IDE 	{addToSymbolTable($1,$1);}idList
+     |POINTER 	{addToSymbolTable($1,$1);}idList
 	|   IDE '[' INTCONST ']' 
 	{
 		s=1;
@@ -131,11 +131,12 @@ idList: IDE 	{addToSymbolTable($1,1,0,NULL);}idList
 		lst[s-o].size=$3;/* calcultes size of each dimentiob*/
 		lst[s-o].sumsize=n*$3;/* sum of array*/
 		
-		addToSymbolTable($1,n*$3,s,lst);
+		addToSymbolTable($1,$1);
+		// addToSymbolTable($1,n*$3,s,lst);
 	}
 	idList
-	|',' IDE idList {addToSymbolTable($2,1,0,NULL);}
-	|',' POINTER idList {addToSymbolTable($2,1,0,NULL);}
+	|',' IDE idList {addToSymbolTable($2,$2);}
+	|',' POINTER idList {addToSymbolTable($2,$2);}
 	|',' IDE '[' INTCONST ']'
 	{
 		s=1;
@@ -146,7 +147,9 @@ idList: IDE 	{addToSymbolTable($1,1,0,NULL);}idList
 		lst[s-o].size=$4;/* calcultes size of each dimentiob*/
 		lst[s-o].sumsize=n*$4;/* sum of array*/
 		
-		addToSymbolTable($2,n*$4,s,lst);
+
+		addToSymbolTable($2,$2);
+		//addToSymbolTable($2,n*$4,s,lst);
 	}
 	idList
 	|
