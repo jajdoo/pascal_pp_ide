@@ -228,6 +228,7 @@ int Constant(int val)
 
 int Variable(char *varName)
 {
+	/*
 	command *newCommand=(command*)malloc(sizeof(command));
 	int target_register;
 		// loadi x,R0        R0 has x address
@@ -256,7 +257,7 @@ int Variable(char *varName)
 	
 		
 		
-	return target_register;
+	return target_register;*/
 }
 /************************************************************************/
 /* Add LOAD command			                                                */
@@ -402,7 +403,7 @@ void ErrorCommand()
 
 int TreeToIL(NODE n)
 {
-	
+	/*
 	command tempCommand, *tempCommandPtr;
 	int line_marker;
 	int actual_address_reg;
@@ -619,4 +620,5 @@ int TreeToIL(NODE n)
 	 	case CASE:
 			return 1;			
 	}
+	*/
 }

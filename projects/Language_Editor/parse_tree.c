@@ -300,7 +300,7 @@ NODE genLeaf(int op, int val, double rval, char *id)
 {
 	NODE t;
 	struct Symbol* s;
-
+	/*
 	if (id != NULL&&!findSymbol(id))
 	{
 		FILE *txt;
@@ -310,7 +310,7 @@ NODE genLeaf(int op, int val, double rval, char *id)
 		PrintSymbolTable();
 		exit(1);
 	}
-
+	*/
 	t = (NODE)malloc(sizeof(struct node));
 	t->num_val.val = val;
 
@@ -329,7 +329,7 @@ NODE genLeaf(int op, int val, double rval, char *id)
 	switch (op)
 	{
 	case IDE:
-		t->type = findSymbol(id)->type;
+		//t->type = findSymbol(id)->type;
 		break;
 
 	case INTCONST:

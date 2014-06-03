@@ -47,6 +47,7 @@ void post_struct_def()
 */
 void set_current_struct_name(char* struct_name)
 {
+	/*
 	cur_struct = findSymbol(struct_name);
 
 	if (cur_struct == NULL)
@@ -58,7 +59,7 @@ void set_current_struct_name(char* struct_name)
 	{
 		yyerror("no such struct");
 		return;
-	}
+	}*/
 }
 
 
@@ -119,7 +120,7 @@ void new_struct_member(char* IDEName, int size, int IS_ARRAY, arrList lst)
 	if (cur_struct != NULL)
 	{
 		newSymb->size = cur_struct->size;
-		newSymb->type = getTableEntry(cur_struct->symb);
+		//newSymb->type = getTableEntry(cur_struct->symb);
 	}
 	else
 		newSymb->size = size;

@@ -5,6 +5,7 @@
 #include "bison_file_tab.h"
 #include "convertTree.h"
 #include "context.h"
+#include "symbol_table.h"
 
 FILE  *treefile;
 extern FILE *yyin;			//  a pointer to the program file that should be compiled.
@@ -30,7 +31,7 @@ NODE getTree(char *progFile)
 	// check syntax and build the program tree.
 	yyparse();
 
-	PrintSymbolTable();
+	printSymbolTable();
 
 	// root was initialized in yyparse while it was building the tree.
 	// root is the pointer of the returning tree.
@@ -45,6 +46,11 @@ void PrintTree(){
 	treefile = fopen("tree.txt", "w");
 	print_tree(root,0);
 	fclose(treefile);
+}
+
+
+void _free(void *a) {
+
 }
 
 
@@ -63,7 +69,7 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
-	initContext();
+	init(_free);
 
 	// Build the program tree
 	theProgram = getTree(argv[1]);
@@ -72,7 +78,7 @@ int main(int argc, char* argv[])
 	TreeToIL(root);						// Converts the program tree to an intermediate-language representation
 	PrintCommandsToFile("out1.txt");	// Prints the output IL file
 	PrintTree();
-	PrintSymbolTable();
+	printSymbolTable();
 	_getch();
 	return (0);
 }

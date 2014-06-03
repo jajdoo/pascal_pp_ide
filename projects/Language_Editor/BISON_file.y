@@ -98,8 +98,8 @@ declarations:	procedure declarations				{return NULL;}
 /*************************************************************************/
 /*                          PROCEDURE decleration                        */
 /*-----------------------------------------------------------------------*/
-procedure : PROCEDURE IDE								{enterBlock($2);} 
-			'(' param_decl ')' block ';'				{exitBlock();} 
+procedure : PROCEDURE IDE								{enter_block($2);} 
+			'(' param_decl ')' block ';'				{exit_block();} 
 			;
 
 param_decl :	STRUCT IDE ':' param param_decl_tail	{ printf("param_decl_1->"); }
@@ -222,7 +222,7 @@ var:
 	IDE '.' struct_acc_tail			{ printf("struct_acc->"); }					
 	| IDE							{ $$ = genLeaf(IDE,0,0,$1);}
 	| POINTER						{$$ = genLeaf(POINTER,0,0,$1);}
-    | IDE '[' expr ']'				{s=0; lst=findSymbol($1)->lst;} 
+    | IDE '[' expr ']'				{s=0; /*lst=findSymbol($1)->lst;*/} 
     bracket  
 	{ 
 		if(n==1)
@@ -234,11 +234,11 @@ var:
 		}
 			FILE *txt; 
 			txt=fopen("outputParser.txt","a");
-			if (n!=findSymbol($1)->IS_ARRAY ) 
+			/*if (n!=findSymbol($1)->IS_ARRAY ) 
 			{
 				fprintf(txt,"\nError at line %d: Assign problem %s: %d!=%d.",line_number, $1,n,findSymbol($1)->IS_ARRAY); 
 				fclose(txt);
-			}
+			}*/
 	}
      ;
 

@@ -90,10 +90,5 @@ void print_tree(NODE r, int s);
 void updateVarType(int op);
 
 /* SymbolTable function declerations */
-void addToSymbolTable(char *IDEName, int size, int IS_ARRAY, arrList lst, int is_struct);
-struct Symbol* findSymbol(char *IDEName);
-int getTableEntry (char *IDEName);
-void InitializeTable();
-void PrintSymbolTable();
 //int getArraySize(char *IDEName);
 #endif
