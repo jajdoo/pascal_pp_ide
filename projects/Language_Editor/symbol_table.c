@@ -1,9 +1,9 @@
-
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "symbol_table.h"
-
+/** 
+	Author : Ofek Ron
+**/
 #define HASH_SIZE 101
 #define HASH_ADD_SUCCESS 1
 #define HASH_ADD_FAILED_NO_CONTEXT -1
@@ -101,7 +101,7 @@ void * removeTail(List l) {
 	data = prevTail->data;
 	if (l->count==1) {
 		l->head=l->tail = NULL;
-		return;
+		return data;
 	} else {
 		l->tail= l->tail->prev;
 		l->tail->next=NULL;
@@ -127,7 +127,7 @@ void * removeHead(List l) {
 	data = prevHead->data;
 	if (l->count==1) {
 		l->head=l->tail = NULL;
-		return;
+		return data;
 	} else {
 		l->head= l->head->next;
 		l->head->prev=NULL;
@@ -202,7 +202,7 @@ HashTable newHashTable() {
 int hash(char *name) {
 	int hashVal,i;
 	hashVal = 0;
-	for (i=0;name[i]!=NULL;i++) 
+	for (i=0;name[i]!='\0';i++) 
 		hashVal+=(int)name[i]+i;
 	return hashVal % HASH_SIZE;
 }
@@ -223,8 +223,7 @@ SymbolList hash_find(char *symbol,HashTable hashTable) {
 }
 void *hash_remove(char *symbol,HashTable hashTable) {
 	List bucket = hashTable[hash(symbol)];
-	Node prev,n;
-	SymbolList s;
+	Node n;
 	if ( bucket==NULL ) 
 		return NULL; 
 	n = bucket->head;
@@ -256,7 +255,7 @@ void init( FreeFunc howToFreeYourData ) {
 
 Symbol getSentinel(char *symbol) {
 	SymbolList s = hash_find(symbol,hashTable);
-	Symbol sentinel = NULL, first;
+	Symbol sentinel = NULL;
 	if (s==NULL) {
 		s = newSymbolList(strcpy((char *)malloc((strlen(symbol)+1)*sizeof(char)),symbol));
 		s->head = sentinel = newSymbol(NULL);
@@ -366,9 +365,10 @@ void printSymbolTable() {
 	}
 	printf("\n");
 }
+/*
 void _free(void *a) {
 
-}
+}*/
 /*
 void main(char *args[],int argc) {
 	init(_free);
