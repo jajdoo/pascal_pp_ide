@@ -70,6 +70,7 @@ int main(int argc, char* argv[])
 	}
 
 	init(_free);
+	enter_block("program");
 
 	// Build the program tree
 	theProgram = getTree(argv[1]);

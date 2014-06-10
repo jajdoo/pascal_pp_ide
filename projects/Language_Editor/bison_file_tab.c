@@ -965,11 +965,11 @@ case 23:
     break;}
 case 26:
 #line 101 "bison_file.y"
-{enter_block(yyvsp[0].string);;
+{enter_block(yyvsp[0].string); printf("entering conext %s\n", yyvsp[0].string);;
     break;}
 case 27:
 #line 102 "bison_file.y"
-{exit_block();;
+{exit_block(); printf("exiting conext\n");;
     break;}
 case 28:
 #line 105 "bison_file.y"

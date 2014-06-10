@@ -1,23 +1,12 @@
 PROGRAM progtato
 {
-	VAR INTEGER: i;
-	PROCEDURE p()
+	PROCEDURE t() 
 	{
-		VAR INTEGER: j;
-		j = 5;
-	};
-
-	PROCEDURE pp() 
-	{
-		VAR INTEGER: k;
-		k = 5;
-
-		PROCEDURE ppp()
+		PROCEDURE tt()
 		{
-			VAR INTEGER: l;
-			l = 5;
+			PROCEDURE d() 
+			{
+			};
 		};
 	};
-
-	i = 5;
 }

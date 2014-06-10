@@ -98,8 +98,8 @@ declarations:	procedure declarations				{return NULL;}
 /*************************************************************************/
 /*                          PROCEDURE decleration                        */
 /*-----------------------------------------------------------------------*/
-procedure : PROCEDURE IDE								{enter_block($2);} 
-			'(' param_decl ')' block ';'				{exit_block();} 
+procedure : PROCEDURE IDE '(' param_decl ')' 	{enter_block($2); printf("entering conext %s\n", $2);} 
+			block ';'							{exit_block(); printf("exiting conext\n");} 
 			;
 
 param_decl :	STRUCT IDE ':' param param_decl_tail	{ printf("param_decl_1->"); }
