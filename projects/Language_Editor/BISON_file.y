@@ -23,7 +23,7 @@ int line_number = 1;
 %token MOD LES LEQ EQU NEQ GRE GEQ AND OR
 %token AND OR NOT CASE FOR FIN IDENTICAL FROM BY TO CONST TYPE VAR RECORD
 
-%token STRUCT CAST
+%token STRUCT CAST STATEMENT DECLARATION
 
 %token<code> INTCONST 
 %token<string> IDE 
@@ -35,7 +35,8 @@ int line_number = 1;
 %token<float> FLOAT
 
 %type<node> var assign program procedure stat_seq loop_stat case_stat bracket 
-%type<node> expr atom block stat nonlable_stat cond_stat case case_list
+%type<node> expr atom block stat nonlable_stat cond_stat case case_list 
+%type<node> declaration dec_or_stat
 %type<code> brk 
 
 %nonassoc LES LEQ EQU NEQ GRE GEQ
@@ -51,12 +52,8 @@ int line_number = 1;
 program:	PROGRAM IDE block				{$$=makenode(PROGRAM,$3,NULL,NULL,0,$2); root=$$;} 					
        ;
 
-block :	  LC declarations stat_seq RC		{$$=makenode(BBEGIN,$3,NULL,NULL,0,NULL);} 
-		| LC RC								{$$=makenode(BBEGIN,NULL,NULL,NULL,0,NULL);} 
-       ;
-
 /*************************************************************************/
-/*                          STRUCT decleration                           */
+/*                          STRUCT DECLARATION                           */
 /*-----------------------------------------------------------------------*/
 
 struct_decl:  STRUCT IDE LC member_decl RC ';'					{addToSymbolTable($2,$2); post_struct_def(); } ;
@@ -86,20 +83,28 @@ dim_tail: dim | ;
 /*-----------------------------------------------------------------------*/
 /*************************************************************************/
 
-declarations:	procedure declarations				{return NULL;}
-			 |  struct_decl declarations 
-			 |  VAR varAss declarations 
-			 |	STRUCT IDE							{set_current_struct_name($2);} 
-				':' idList ';'						{clear_current_struct();} 
-				declarations
-			 |	;
+
+block :	  LC dec_or_stat RC				{$$=makenode(BBEGIN,NULL,NULL,NULL,0,NULL);} 
+       ;
+
+dec_or_stat : declaration dec_or_stat	{$$=makenode(DECLARATION,NULL,NULL,NULL,0,NULL);}
+			| stat dec_or_stat			{$$=makenode(STATEMENT,NULL,NULL,NULL,0,NULL);}
+			|							{$$=NULL;}
+			;
+
+declaration:	procedure			{}
+			 |  struct_decl			{}
+			 |  VAR varAss			{}
+			 |	STRUCT IDE			{set_current_struct_name($2);} 
+				':' idList ';'		{clear_current_struct();} 
+				;
 
 
 /*************************************************************************/
-/*                          PROCEDURE decleration                        */
+/*                          PROCEDURE DECLARATION                        */
 /*-----------------------------------------------------------------------*/
 procedure : PROCEDURE IDE '(' param_decl ')' 	{enter_block($2); printf("entering conext %s\n", $2);} 
-			block ';'							{exit_block(); printf("exiting conext\n");} 
+			block ';'							{ printSymbolTable(); exit_block(); printf("exiting conext\n");} 
 			;
 
 param_decl :	STRUCT IDE ':' param param_decl_tail	{ printf("param_decl_1->"); }
@@ -185,9 +190,8 @@ tyList: BOOLEAN		{updateVarType(BOOLEAN);}
 	;
 	
 	
-stat_seq: stat                        {$$=makenode(STATEMENT,$1,NULL,NULL,0,NULL);} 
-         | 
-         stat stat_seq              {$$=makenode(STATEMENT,$1,$2,NULL,0,NULL);} 
+stat_seq:  stat                       {$$=makenode(STATEMENT,$1,NULL,NULL,0,NULL);} 
+         | stat stat_seq              {$$=makenode(STATEMENT,$1,$2,NULL,0,NULL);} 
        	 ;
 
 stat:    nonlable_stat                    {$$=$1;}

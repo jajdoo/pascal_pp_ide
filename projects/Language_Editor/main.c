@@ -11,6 +11,7 @@ FILE  *treefile;
 extern FILE *yyin;			//  a pointer to the program file that should be compiled.
 //extern int yyparse (void);  // do syntax checking and build the tree.
 extern YYSTYPE yyval;
+extern int line_number;
 
 NODE getTree(char *progFile) 
 {
@@ -31,8 +32,9 @@ NODE getTree(char *progFile)
 	// check syntax and build the program tree.
 	yyparse();
 
-	printSymbolTable();
+	//printSymbolTable();
 
+	printf("line number :%d", line_number);
 	// root was initialized in yyparse while it was building the tree.
 	// root is the pointer of the returning tree.
 	if (root==NULL) 

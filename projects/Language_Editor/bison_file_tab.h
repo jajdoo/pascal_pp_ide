@@ -54,12 +54,14 @@
 #define	RECORD	311
 #define	STRUCT	312
 #define	CAST	313
-#define	INTCONST	314
-#define	IDE	315
-#define	POINTER	316
-#define	REALCONST	317
-#define	STRING	318
-#define	DUMMY	319
+#define	STATEMENT	314
+#define	DECLARATION	315
+#define	INTCONST	316
+#define	IDE	317
+#define	POINTER	318
+#define	REALCONST	319
+#define	STRING	320
+#define	DUMMY	321
 
 
 extern YYSTYPE yylval;

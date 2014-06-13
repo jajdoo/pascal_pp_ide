@@ -1,7 +1,6 @@
 #ifndef __TYPEDEF___
 #define __TYPEDEF___
 
-#define STATEMENT 1
 #define CASESTAT 2
 #define CASELIST 3
 #define BRACKETS 1024

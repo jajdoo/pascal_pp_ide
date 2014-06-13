@@ -287,6 +287,14 @@ NODE makenode(int op, NODE s1, NODE s2, NODE s3, int val, char *id)
 	case CAST:
 		if (is_legal_cast(t->s1->type, currentType))
 			t->type = currentType;
+		break;
+
+	case STATEMENT:
+		break;
+
+	case DECLARATION:
+		break;
+
 	}
 
 	return(t);
