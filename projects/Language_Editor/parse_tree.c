@@ -122,7 +122,7 @@ char *print_op(int op)
 		return ("CAST");
 		break;
 	default:
-		fprintf(txt, "Error at line %d: Unknown Token is line %d\n", line_number);
+		fprintf(txt, "Error at line %d: Unknown Token %d\n", line_number, op );
 		return ("UNKNOWN");
 	}
 	fclose(txt);

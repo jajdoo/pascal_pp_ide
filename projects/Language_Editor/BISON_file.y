@@ -36,7 +36,7 @@ int line_number = 1;
 
 %type<node> var assign program procedure stat_seq loop_stat case_stat bracket 
 %type<node> expr atom block stat nonlable_stat cond_stat case case_list 
-%type<node> declaration dec_or_stat
+%type<node> declaration dec_or_stat struct_decl
 %type<code> brk 
 
 %nonassoc LES LEQ EQU NEQ GRE GEQ
@@ -84,17 +84,17 @@ dim_tail: dim | ;
 /*************************************************************************/
 
 
-block :	  LC dec_or_stat RC				{$$=makenode(BBEGIN,NULL,NULL,NULL,0,NULL);} 
+block :	  LC dec_or_stat RC				{$$=makenode(BBEGIN,$2,NULL,NULL,0,NULL);} 
        ;
 
-dec_or_stat : declaration dec_or_stat	{$$=makenode(DECLARATION,NULL,NULL,NULL,0,NULL);}
-			| stat dec_or_stat			{$$=makenode(STATEMENT,NULL,NULL,NULL,0,NULL);}
+dec_or_stat : declaration dec_or_stat	{$$=makenode(DECLARATION,$1,$2,NULL,0,NULL);}
+			| stat dec_or_stat			{$$=makenode(STATEMENT,$1,$2,NULL,0,NULL);}
 			|							{$$=NULL;}
 			;
 
-declaration:	procedure			{}
-			 |  struct_decl			{}
-			 |  VAR varAss			{}
+declaration:	procedure			{$$ = $1;}
+			 |  struct_decl			{$$ = $1;}
+			 |  VAR varAss			{$$ = makenode(DECLARATION, $2, NULL, NULL, 0, NULL);}
 			 |	STRUCT IDE			{set_current_struct_name($2);} 
 				':' idList ';'		{clear_current_struct();} 
 				;
@@ -104,7 +104,7 @@ declaration:	procedure			{}
 /*                          PROCEDURE DECLARATION                        */
 /*-----------------------------------------------------------------------*/
 procedure : PROCEDURE IDE '(' param_decl ')' 	{enter_block($2); printf("entering conext %s\n", $2);} 
-			block ';'							{ printSymbolTable(); exit_block(); printf("exiting conext\n");} 
+			block ';'							{printSymbolTable(); exit_block(); printf("exiting conext\n"); $$ = $1; } 
 			;
 
 param_decl :	STRUCT IDE ':' param param_decl_tail	{ printf("param_decl_1->"); }

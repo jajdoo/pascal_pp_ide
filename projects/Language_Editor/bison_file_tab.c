@@ -945,15 +945,15 @@ case 14:
     break;}
 case 17:
 #line 87 "bison_file.y"
-{yyval.node=makenode(BBEGIN,NULL,NULL,NULL,0,NULL);;
+{yyval.node=makenode(BBEGIN,yyvsp[-1].node,NULL,NULL,0,NULL);;
     break;}
 case 18:
 #line 90 "bison_file.y"
-{yyval.node=makenode(DECLARATION,NULL,NULL,NULL,0,NULL);;
+{yyval.node=makenode(DECLARATION,yyvsp[-1].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 19:
 #line 91 "bison_file.y"
-{yyval.node=makenode(STATEMENT,NULL,NULL,NULL,0,NULL);;
+{yyval.node=makenode(STATEMENT,yyvsp[-1].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 20:
 #line 92 "bison_file.y"
@@ -961,15 +961,15 @@ case 20:
     break;}
 case 21:
 #line 95 "bison_file.y"
-{;
+{yyval.node = yyvsp[0].node;;
     break;}
 case 22:
 #line 96 "bison_file.y"
-{;
+{yyval.node = yyvsp[0].node;;
     break;}
 case 23:
 #line 97 "bison_file.y"
-{;
+{yyval.node = makenode(DECLARATION, yyvsp[0], NULL, NULL, 0, NULL);;
     break;}
 case 24:
 #line 98 "bison_file.y"
@@ -985,7 +985,7 @@ case 26:
     break;}
 case 27:
 #line 107 "bison_file.y"
-{ printSymbolTable(); exit_block(); printf("exiting conext\n");;
+{printSymbolTable(); exit_block(); printf("exiting conext\n"); yyval.node = yyvsp[-7]; ;
     break;}
 case 28:
 #line 110 "bison_file.y"
