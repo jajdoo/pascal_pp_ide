@@ -121,6 +121,12 @@ char *print_op(int op)
 	case CAST:
 		return ("CAST");
 		break;
+	case PROCEDURE:
+		return ("PROCEDURE");
+		break;
+	case DECLARATION:
+		return ("DECLARATION");
+		break;
 	default:
 		fprintf(txt, "Error at line %d: Unknown Token %d\n", line_number, op );
 		return ("UNKNOWN");
@@ -295,6 +301,8 @@ NODE makenode(int op, NODE s1, NODE s2, NODE s3, int val, char *id)
 	case DECLARATION:
 		break;
 
+	case PROCEDURE:
+		break;
 	}
 
 	return(t);
