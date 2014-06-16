@@ -94,7 +94,7 @@ dec_or_stat : declaration dec_or_stat	{$$=makenode(DECLARATION,$1,$2,NULL,0,NULL
 
 declaration:	procedure			{$$ = $1;}
 			 |  struct_decl			{$$ = $1;}
-			 |  VAR varAss			{$$ = makenode(DECLARATION, $2, NULL, NULL, 0, NULL);}
+			 |  VAR varAss			{}
 			 |	STRUCT IDE			{set_current_struct_name($2);} 
 				':' idList ';'		{clear_current_struct();} 
 				;
@@ -103,8 +103,18 @@ declaration:	procedure			{$$ = $1;}
 /*************************************************************************/
 /*                          PROCEDURE DECLARATION                        */
 /*-----------------------------------------------------------------------*/
-procedure : PROCEDURE IDE '(' param_decl ')' 	{enter_block($2); printf("entering conext %s\n", $2);} 
-			block ';'							{printSymbolTable(); exit_block(); printf("exiting conext\n"); $$ = $1; } 
+procedure : PROCEDURE IDE '(' param_decl ')' 	
+			{
+				enter_block($2); 
+				printf("entering conext %s\n", $2);
+			} 
+			block ';'							
+			{
+				printSymbolTable(); 
+				exit_block(); 
+				printf("exiting conext\n"); 
+				$$ = makenode(PROCEDURE, $7, NULL, NULL, 0, NULL);
+				} 
 			;
 
 param_decl :	STRUCT IDE ':' param param_decl_tail	{ printf("param_decl_1->"); }

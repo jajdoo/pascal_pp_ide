@@ -213,15 +213,15 @@ static const short yyrhs[] = {     3,
 static const short yyrline[] = { 0,
     52,    59,    61,    62,    64,    64,    67,    67,    69,    70,
     73,    75,    76,    79,    82,    82,    87,    90,    91,    92,
-    95,    96,    97,    98,    99,   106,   107,   110,   111,   112,
-   114,   114,   116,   117,   122,   123,   127,   128,   128,   129,
-   129,   135,   143,   143,   144,   145,   151,   160,   160,   163,
-   166,   174,   175,   185,   186,   188,   193,   194,   197,   200,
-   201,   202,   203,   206,   209,   210,   213,   216,   219,   220,
-   222,   225,   227,   228,   229,   231,   253,   254,   261,   264,
-   273,   273,   276,   277,   278,   279,   280,   281,   282,   283,
-   284,   285,   286,   287,   288,   289,   290,   291,   292,   296,
-   297,   298,   299,   300
+    95,    96,    97,    98,    99,   106,   111,   120,   121,   122,
+   124,   124,   126,   127,   132,   133,   137,   138,   138,   139,
+   139,   145,   153,   153,   154,   155,   161,   170,   170,   173,
+   176,   184,   185,   195,   196,   198,   203,   204,   207,   210,
+   211,   212,   213,   216,   219,   220,   223,   226,   229,   230,
+   232,   235,   237,   238,   239,   241,   263,   264,   271,   274,
+   283,   283,   286,   287,   288,   289,   290,   291,   292,   293,
+   294,   295,   296,   297,   298,   299,   300,   301,   302,   306,
+   307,   308,   309,   310
 };
 
 static const char * const yytname[] = {   "$","error","$undefined.","PROGRAM",
@@ -969,7 +969,7 @@ case 22:
     break;}
 case 23:
 #line 97 "bison_file.y"
-{yyval.node = makenode(DECLARATION, yyvsp[0], NULL, NULL, 0, NULL);;
+{;
     break;}
 case 24:
 #line 98 "bison_file.y"
@@ -980,54 +980,62 @@ case 25:
 {clear_current_struct();;
     break;}
 case 26:
-#line 106 "bison_file.y"
-{enter_block(yyvsp[-3].string); printf("entering conext %s\n", yyvsp[-3].string);;
+#line 107 "bison_file.y"
+{
+				enter_block(yyvsp[-3].string); 
+				printf("entering conext %s\n", yyvsp[-3].string);
+			;
     break;}
 case 27:
-#line 107 "bison_file.y"
-{printSymbolTable(); exit_block(); printf("exiting conext\n"); yyval.node = yyvsp[-7]; ;
+#line 112 "bison_file.y"
+{
+				printSymbolTable(); 
+				exit_block(); 
+				printf("exiting conext\n"); 
+				yyval.node = makenode(PROCEDURE, yyvsp[-1].node, NULL, NULL, 0, NULL);
+				;
     break;}
 case 28:
-#line 110 "bison_file.y"
+#line 120 "bison_file.y"
 { printf("param_decl_1->"); ;
     break;}
 case 29:
-#line 111 "bison_file.y"
+#line 121 "bison_file.y"
 { printf("primitive_param_decl_1->"); ;
     break;}
 case 33:
-#line 116 "bison_file.y"
+#line 126 "bison_file.y"
 { printf("ide->"); ;
     break;}
 case 34:
-#line 117 "bison_file.y"
+#line 127 "bison_file.y"
 { printf("pointer->"); ;
     break;}
 case 35:
-#line 122 "bison_file.y"
+#line 132 "bison_file.y"
 {;
     break;}
 case 36:
-#line 124 "bison_file.y"
+#line 134 "bison_file.y"
 {;
     break;}
 case 37:
-#line 127 "bison_file.y"
+#line 137 "bison_file.y"
 {addToSymbolTable(yyvsp[0].string,yyvsp[0].string);;
     break;}
 case 39:
-#line 128 "bison_file.y"
+#line 138 "bison_file.y"
 {addToSymbolTable(yyvsp[0].string,yyvsp[0].string);;
     break;}
 case 41:
-#line 130 "bison_file.y"
+#line 140 "bison_file.y"
 {
 		s=1;
 
 	;
     break;}
 case 42:
-#line 135 "bison_file.y"
+#line 145 "bison_file.y"
 { 
 		lst[s-o].size=yyvsp[-3].code;/* calcultes size of each dimentiob*/
 		lst[s-o].sumsize=n*yyvsp[-3].code;/* sum of array*/
@@ -1037,22 +1045,22 @@ case 42:
 	;
     break;}
 case 44:
-#line 143 "bison_file.y"
+#line 153 "bison_file.y"
 {addToSymbolTable(yyvsp[-1].string,yyvsp[-1].string);;
     break;}
 case 45:
-#line 144 "bison_file.y"
+#line 154 "bison_file.y"
 {addToSymbolTable(yyvsp[-1].string,yyvsp[-1].string);;
     break;}
 case 46:
-#line 146 "bison_file.y"
+#line 156 "bison_file.y"
 {
 		s=1;
 
 	;
     break;}
 case 47:
-#line 151 "bison_file.y"
+#line 161 "bison_file.y"
 { 
 		lst[s-o].size=yyvsp[-3].code;/* calcultes size of each dimentiob*/
 		lst[s-o].sumsize=n*yyvsp[-3].code;/* sum of array*/
@@ -1063,15 +1071,15 @@ case 47:
 	;
     break;}
 case 49:
-#line 161 "bison_file.y"
+#line 171 "bison_file.y"
 {;
     break;}
 case 50:
-#line 164 "bison_file.y"
+#line 174 "bison_file.y"
 {s=s+1;;
     break;}
 case 51:
-#line 166 "bison_file.y"
+#line 176 "bison_file.y"
 {
 			n=n*yyvsp[-3].code; 
 			yyval.code=lst; 
@@ -1082,11 +1090,11 @@ case 51:
 		;
     break;}
 case 52:
-#line 174 "bison_file.y"
+#line 184 "bison_file.y"
 {;
     break;}
 case 53:
-#line 175 "bison_file.y"
+#line 185 "bison_file.y"
 {
 		n=1;
 		o=1;
@@ -1096,95 +1104,95 @@ case 53:
 	;
     break;}
 case 54:
-#line 185 "bison_file.y"
+#line 195 "bison_file.y"
 {updateVarType(BOOLEAN);;
     break;}
 case 55:
-#line 187 "bison_file.y"
+#line 197 "bison_file.y"
 {updateVarType(INTEGER);;
     break;}
 case 56:
-#line 189 "bison_file.y"
+#line 199 "bison_file.y"
 {updateVarType(FLOAT);;
     break;}
 case 57:
-#line 193 "bison_file.y"
+#line 203 "bison_file.y"
 {yyval.node=makenode(STATEMENT,yyvsp[0].node,NULL,NULL,0,NULL);;
     break;}
 case 58:
-#line 194 "bison_file.y"
+#line 204 "bison_file.y"
 {yyval.node=makenode(STATEMENT,yyvsp[-1].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 59:
-#line 197 "bison_file.y"
+#line 207 "bison_file.y"
 {yyval.node=yyvsp[0].node;;
     break;}
 case 60:
-#line 200 "bison_file.y"
+#line 210 "bison_file.y"
 {yyval.node=yyvsp[-1].node;;
     break;}
 case 61:
-#line 201 "bison_file.y"
+#line 211 "bison_file.y"
 {yyval.node=yyvsp[0].node;;
     break;}
 case 62:
-#line 202 "bison_file.y"
+#line 212 "bison_file.y"
 {yyval.node=yyvsp[0].node;;
     break;}
 case 63:
-#line 203 "bison_file.y"
+#line 213 "bison_file.y"
 {yyval.node=yyvsp[0].node;;
     break;}
 case 64:
-#line 206 "bison_file.y"
+#line 216 "bison_file.y"
 {yyval.node=makenode(ASSIGN,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 65:
-#line 209 "bison_file.y"
+#line 219 "bison_file.y"
 {yyval.node=makenode(IF,yyvsp[-3].node,yyvsp[-1].node,NULL,0,NULL);;
     break;}
 case 66:
-#line 210 "bison_file.y"
+#line 220 "bison_file.y"
 {yyval.node=makenode(IF,yyvsp[-5].node,yyvsp[-3].node,yyvsp[-1].node,0,NULL);;
     break;}
 case 67:
-#line 213 "bison_file.y"
+#line 223 "bison_file.y"
 {yyval.node=makenode(WHILE,yyvsp[-3].node,yyvsp[-1].node,NULL,0,NULL);;
     break;}
 case 68:
-#line 216 "bison_file.y"
+#line 226 "bison_file.y"
 {yyval.node=makenode(CASESTAT,yyvsp[-4].node,yyvsp[-1].node,NULL,0,NULL);;
     break;}
 case 69:
-#line 219 "bison_file.y"
+#line 229 "bison_file.y"
 {yyval.node=makenode(CASELIST,yyvsp[0].node,NULL,NULL,0,NULL);;
     break;}
 case 70:
-#line 220 "bison_file.y"
+#line 230 "bison_file.y"
 {yyval.node=makenode(CASELIST,yyvsp[-1].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 71:
-#line 222 "bison_file.y"
+#line 232 "bison_file.y"
 {yyval.node=makenode(CASE,NULL,yyvsp[0].node,NULL,yyvsp[-2].code,NULL);;
     break;}
 case 72:
-#line 226 "bison_file.y"
+#line 236 "bison_file.y"
 { printf("struct_acc->"); ;
     break;}
 case 73:
-#line 227 "bison_file.y"
+#line 237 "bison_file.y"
 { yyval.node = genLeaf(IDE,0,0,yyvsp[0].string);;
     break;}
 case 74:
-#line 228 "bison_file.y"
+#line 238 "bison_file.y"
 {yyval.node = genLeaf(POINTER,0,0,yyvsp[0].string);;
     break;}
 case 75:
-#line 229 "bison_file.y"
+#line 239 "bison_file.y"
 {s=0; /*lst=findSymbol($1)->lst;*/;
     break;}
 case 76:
-#line 231 "bison_file.y"
+#line 241 "bison_file.y"
 { 
 		if(n==1)
 			{yyval.node = makenode(ADD,genLeaf(IDE,0,0,yyvsp[-5].string),yyvsp[-3].node,NULL,0,"check");}
@@ -1203,19 +1211,19 @@ case 76:
 	;
     break;}
 case 77:
-#line 253 "bison_file.y"
+#line 263 "bison_file.y"
 {printf("struct_tail->");;
     break;}
 case 78:
-#line 254 "bison_file.y"
+#line 264 "bison_file.y"
 {printf("\n");;
     break;}
 case 79:
-#line 262 "bison_file.y"
+#line 272 "bison_file.y"
 {s=s+1;;
     break;}
 case 80:
-#line 264 "bison_file.y"
+#line 274 "bison_file.y"
 {	
 		/*calculation of array offset*/
 		if(n==1)
@@ -1227,99 +1235,99 @@ case 80:
 	;
     break;}
 case 81:
-#line 273 "bison_file.y"
+#line 283 "bison_file.y"
 {;
     break;}
 case 82:
-#line 273 "bison_file.y"
+#line 283 "bison_file.y"
 {n=1;yyval.node=NULL;
     break;}
 case 83:
-#line 276 "bison_file.y"
+#line 286 "bison_file.y"
 { yyval.node = makenode(ADD,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 84:
-#line 277 "bison_file.y"
+#line 287 "bison_file.y"
 { yyval.node = makenode(MMIN,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 85:
-#line 278 "bison_file.y"
+#line 288 "bison_file.y"
 { yyval.node = makenode(MUL,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 86:
-#line 279 "bison_file.y"
+#line 289 "bison_file.y"
 { yyval.node = makenode(DIV,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 87:
-#line 280 "bison_file.y"
+#line 290 "bison_file.y"
 { yyval.node = makenode(MOD,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 88:
-#line 281 "bison_file.y"
+#line 291 "bison_file.y"
 { yyval.node = makenode(LES,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 89:
-#line 282 "bison_file.y"
+#line 292 "bison_file.y"
 { yyval.node = makenode(LEQ,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 90:
-#line 283 "bison_file.y"
+#line 293 "bison_file.y"
 { yyval.node = makenode(EQU,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 91:
-#line 284 "bison_file.y"
+#line 294 "bison_file.y"
 { yyval.node = makenode(NEQ,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 92:
-#line 285 "bison_file.y"
+#line 295 "bison_file.y"
 { yyval.node = makenode(GRE,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 93:
-#line 286 "bison_file.y"
+#line 296 "bison_file.y"
 { yyval.node = makenode(GEQ,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 94:
-#line 287 "bison_file.y"
+#line 297 "bison_file.y"
 { yyval.node = makenode(AND,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 95:
-#line 288 "bison_file.y"
+#line 298 "bison_file.y"
 { yyval.node = makenode(OR,yyvsp[-2].node,yyvsp[0].node,NULL,0,NULL);;
     break;}
 case 96:
-#line 289 "bison_file.y"
+#line 299 "bison_file.y"
 { yyval.node = yyvsp[-1].node; ;
     break;}
 case 97:
-#line 290 "bison_file.y"
+#line 300 "bison_file.y"
 { yyval.node = makenode(CAST,yyvsp[-1].node,NULL,NULL,0,NULL); ;
     break;}
 case 98:
-#line 291 "bison_file.y"
+#line 301 "bison_file.y"
 { yyval.node = makenode(NOT,yyvsp[0].node,NULL,NULL,0,NULL); ;
     break;}
 case 99:
-#line 292 "bison_file.y"
+#line 302 "bison_file.y"
 { yyval.node = yyvsp[0].node; ;
     break;}
 case 100:
-#line 296 "bison_file.y"
+#line 306 "bison_file.y"
 { yyval.node = yyvsp[0].node; ;
     break;}
 case 101:
-#line 297 "bison_file.y"
+#line 307 "bison_file.y"
 { yyval.node = genLeaf(INTCONST,yyvsp[0].code,0,NULL); ;
     break;}
 case 102:
-#line 298 "bison_file.y"
+#line 308 "bison_file.y"
 { yyval.node = genLeaf(REALCONST,0,yyvsp[0].real,NULL);;
     break;}
 case 103:
-#line 299 "bison_file.y"
+#line 309 "bison_file.y"
 { yyval.node = genLeaf(TRUE,0,0,NULL); ;
     break;}
 case 104:
-#line 300 "bison_file.y"
+#line 310 "bison_file.y"
 { yyval.node = genLeaf(FALSE,0,0,NULL); ;
     break;}
 }
@@ -1520,4 +1528,4 @@ yyerrhandle:
   yystate = yyn;
   goto yynewstate;
 }
-#line 304 "bison_file.y"
+#line 314 "bison_file.y"
