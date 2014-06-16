@@ -11,7 +11,7 @@
 #include "parse_tree.h"
 #include "struct_def.h"
 #include "symbol_table.h"
-#include "context.h"
+#include "symbol_stack.h"
 
 int line_number = 1;
 
@@ -23,7 +23,7 @@ int line_number = 1;
 %token MOD LES LEQ EQU NEQ GRE GEQ AND OR
 %token AND OR NOT CASE FOR FIN IDENTICAL FROM BY TO CONST TYPE VAR RECORD
 
-%token STRUCT CAST STATEMENT DECLARATION
+%token STRUCT CAST STATEMENT DECLARATION BLOCK_BODY
 
 %token<code> INTCONST 
 %token<string> IDE 
@@ -37,7 +37,7 @@ int line_number = 1;
 %type<node> var assign program procedure stat_seq loop_stat case_stat bracket 
 %type<node> expr atom block stat nonlable_stat cond_stat case case_list 
 %type<node> declaration dec_or_stat struct_decl
-%type<code> brk 
+%type<integer> type_list
 
 %nonassoc LES LEQ EQU NEQ GRE GEQ
 %left ADD MMIN OR
@@ -61,7 +61,7 @@ struct_decl:  STRUCT IDE LC member_decl RC ';'					{addToSymbolTable($2,$2); pos
 member_decl:  STRUCT IDE										{set_current_struct_name($2);} 
 			  ':' memberList ';'								{clear_current_struct(); }
 			  member_decl_tail
-			| VAR tyList ':' memberList ';' member_decl_tail	{printf("member_primitive_decl_1->");}
+			| VAR type_list ':' memberList ';' member_decl_tail	{printf("member_primitive_decl_1->");}
 			;
 
 member_decl_tail: member_decl | ;
@@ -85,20 +85,53 @@ dim_tail: dim | ;
 
 
 block :	  LC dec_or_stat RC				{$$=makenode(BBEGIN,$2,NULL,NULL,0,NULL);} 
-       ;
+;
 
-dec_or_stat : declaration dec_or_stat	{$$=makenode(DECLARATION,$1,$2,NULL,0,NULL);}
-			| stat dec_or_stat			{$$=makenode(STATEMENT,$1,$2,NULL,0,NULL);}
+
+dec_or_stat : 
+				procedure	dec_or_stat	{$$=makenode(BLOCK_BODY,$1,$2,NULL,0,NULL);}
+			|	stat		dec_or_stat	{$$=makenode(BLOCK_BODY,$1,$2,NULL,0,NULL);}
+			|	declaration	dec_or_stat	{$$=$2;}
 			|							{$$=NULL;}
-			;
+;
 
-declaration:	procedure			{$$ = $1;}
-			 |  struct_decl			{$$ = $1;}
-			 |  VAR varAss			{}
-			 |	STRUCT IDE			{set_current_struct_name($2);} 
-				':' idList ';'		{clear_current_struct();} 
-				;
 
+declaration:    
+				struct_decl		{ $$ = $1; }
+			 |  var_decl		{ $$ = NULL; }
+;			 
+			 /*|	STRUCT IDE		{set_current_struct_name($2);} 
+				':' idList ';'	{clear_current_struct();} */
+
+
+
+var_decl :
+			VAR					
+			{
+				symbol_stack_push(); 
+			}
+			type_list ':' IDE ';'	
+			{
+				symbol_stack_set_name($5);
+				addToSymbolTable( $5, (void*) symbol_stack_pop() );
+			}
+;
+ 
+
+type_list: 
+		BOOLEAN		{ symbol_stack_set_type(BOOLEAN);}
+	|	INTEGER		{ symbol_stack_set_type(INTEGER);}
+	|	FLOAT		{ symbol_stack_set_type(FLOAT);}
+;
+
+/*
+idList: 
+		IDE 		{addToSymbolTable($1,$1);} 
+		idList		{}
+     |	POINTER 	{addToSymbolTable($1,$1);} 
+		idList		{}
+;
+*/
 
 /*************************************************************************/
 /*                          PROCEDURE DECLARATION                        */
@@ -114,12 +147,14 @@ procedure : PROCEDURE IDE '(' param_decl ')'
 				exit_block(); 
 				printf("exiting conext\n"); 
 				$$ = makenode(PROCEDURE, $7, NULL, NULL, 0, NULL);
-				} 
-			;
+			} 
+;
 
 param_decl :	STRUCT IDE ':' param param_decl_tail	{ printf("param_decl_1->"); }
-			|	VAR tyList ':' param param_decl_tail	{ printf("primitive_param_decl_1->"); }
-			| ;
+			|	VAR										{ } 
+				type_list ':' param param_decl_tail		{ printf("primitive_param_decl_1->"); }
+			|											{ }
+;
 
 param_decl_tail: ',' member_decl | ;
 
@@ -129,76 +164,6 @@ param :		  IDE					{ printf("ide->"); }
 /*-----------------------------------------------------------------------*/
 /*************************************************************************/
 
-varAss: tyList ':' idList varAss		{} 
-	|
-	';'{}
-	;
-
-idList: IDE 	{addToSymbolTable($1,$1);}idList
-     |POINTER 	{addToSymbolTable($1,$1);}idList
-	|   IDE '[' INTCONST ']' 
-	{
-		s=1;
-
-	} 
-	brk 
-	{ 
-		lst[s-o].size=$3;/* calcultes size of each dimentiob*/
-		lst[s-o].sumsize=n*$3;/* sum of array*/
-		
-		addToSymbolTable($1,$1);
-		// addToSymbolTable($1,n*$3,s,lst);
-	}
-	idList
-	|',' IDE idList {addToSymbolTable($2,$2);}
-	|',' POINTER idList {addToSymbolTable($2,$2);}
-	|',' IDE '[' INTCONST ']'
-	{
-		s=1;
-
-	} 
-	brk 
-	{ 
-		lst[s-o].size=$4;/* calcultes size of each dimentiob*/
-		lst[s-o].sumsize=n*$4;/* sum of array*/
-		
-
-		addToSymbolTable($2,$2);
-		//addToSymbolTable($2,n*$4,s,lst);
-	}
-	idList
-	|
-	{}
-	;								
-brk:  '[' INTCONST ']'
-		{s=s+1;} 
-		brk 
-		{
-			n=n*$2; 
-			$$=lst; 
-			lst[s-o].size=$2;/* calcultes size of each dimentiob*/
-			lst[s-o].sumsize=n;/* sum of array*/
-			
-			o=o+1;
-		}
-	|{} 
-	{
-		n=1;
-		o=1;
-		lst =(arrLST*)malloc(sizeof(arrLST)*s); 
-		
-		$$=NULL;
-	}
-	;
-
-
-tyList: BOOLEAN		{updateVarType(BOOLEAN);}
-	|
-	INTEGER			{updateVarType(INTEGER);}
-	|
-	FLOAT			{updateVarType(FLOAT);}
-	;
-	
 	
 stat_seq:  stat                       {$$=makenode(STATEMENT,$1,NULL,NULL,0,NULL);} 
          | stat stat_seq              {$$=makenode(STATEMENT,$1,$2,NULL,0,NULL);} 
@@ -297,7 +262,7 @@ expr:   expr ADD expr           { $$ = makenode(ADD,$1,$3,NULL,0,NULL);}
       | expr AND expr           { $$ = makenode(AND,$1,$3,NULL,0,NULL);}
       | expr OR expr            { $$ = makenode(OR,$1,$3,NULL,0,NULL);}
       | '(' expr ')'            { $$ = $2; }
-	  |  tyList '(' expr ')'	{ $$ = makenode(CAST,$3,NULL,NULL,0,NULL); }
+	  |  type_list '(' expr ')'	{ $$ = makenode(CAST,$3,NULL,NULL,0,NULL); }
       | NOT atom                { $$ = makenode(NOT,$2,NULL,NULL,0,NULL); }
       | atom                    { $$ = $1; }
       ;

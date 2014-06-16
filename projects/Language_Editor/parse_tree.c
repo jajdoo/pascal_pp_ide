@@ -127,6 +127,9 @@ char *print_op(int op)
 	case DECLARATION:
 		return ("DECLARATION");
 		break;
+	case BLOCK_BODY:
+		return ("BLOCK_BODY");
+		break;
 	default:
 		fprintf(txt, "Error at line %d: Unknown Token %d\n", line_number, op );
 		return ("UNKNOWN");

@@ -56,12 +56,13 @@
 #define	CAST	313
 #define	STATEMENT	314
 #define	DECLARATION	315
-#define	INTCONST	316
-#define	IDE	317
-#define	POINTER	318
-#define	REALCONST	319
-#define	STRING	320
-#define	DUMMY	321
+#define	BLOCK_BODY	316
+#define	INTCONST	317
+#define	IDE	318
+#define	POINTER	319
+#define	REALCONST	320
+#define	STRING	321
+#define	DUMMY	322
 
 
 extern YYSTYPE yylval;

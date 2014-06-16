@@ -71,7 +71,7 @@ int member_exists(char* IDEName)
 	{
 		if (strcmp(memb->symb, IDEName) == 0)
 			return 1;
-		memb = memb->next;
+//		memb = memb->next;
 	}
 
 	return 0;
@@ -96,7 +96,7 @@ void new_struct_member(char* IDEName, int size, int IS_ARRAY, arrList lst)
 	}
 
 	newSymb = (struct Symbol*)malloc(sizeof(struct Symbol));
-	newSymb->lst = lst;
+	//newSymb->lst = lst;
 
 
 	//check if the symbol was already declared
@@ -126,17 +126,17 @@ void new_struct_member(char* IDEName, int size, int IS_ARRAY, arrList lst)
 		newSymb->size = size;
 
 	newSymb->is_struct = (cur_struct != NULL);
-	newSymb->list = NULL;
+	//newSymb->list = NULL;
 
 	current_member_add += newSymb->size;
 
 	fprintf(txt, "Info at line %d: adding member  %s of type %d to member list variable\n", line_number, IDEName, currentType);
-
+	/*
 	if (cur_members != NULL)
 		newSymb->next = cur_members;
 	else
 		newSymb->next = NULL;
-
+	*/
 	cur_members = newSymb;
 
 	fclose(txt);

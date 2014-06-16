@@ -4,7 +4,6 @@
 #include "typedef.h"
 #include "bison_file_tab.h"
 #include "convertTree.h"
-#include "context.h"
 #include "symbol_table.h"
 
 FILE  *treefile;
@@ -51,8 +50,33 @@ void PrintTree(){
 }
 
 
+
+/* later use */
 void _free(void *a) {
 
+}
+
+void print_symbol(Symbol* symbol)
+{
+	printf("\n--------------------------------------\n");
+	printf("symbol:		%s\n"
+		"type:		%d\n"
+		"add:		%d\n"
+		"proc?		%d\n"
+		"array?		%d\n"
+		"pointer?	%d\n"
+		"struct?		%d\n"
+		"(list)		  \n",
+		symbol->symb,
+		symbol->type,
+		symbol->address,
+		symbol->isProc,
+		symbol->IS_ARRAY,
+		symbol->IS_POINTER,
+		symbol->is_struct
+		);
+	//symbol->list = NULL
+	printf("-------------------------------------\n");
 }
 
 
@@ -71,7 +95,7 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
-	init(_free);
+	init(_free, print_symbol);
 	enter_block("program");
 
 	// Build the program tree

@@ -1,6 +1,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "symbol_table.h"
+
 /** 
 	Author : Ofek Ron
 **/
@@ -245,9 +248,12 @@ void hash_put(HashTable hashTable,SymbolList s) {
 HashTable hashTable;
 Context contextStackHead;
 FreeFunc freeFunc;
+PrintFunc printFunc;
 
-void init( FreeFunc howToFreeYourData ) {
+void init(FreeFunc howToFreeYourData, PrintFunc print ) {
+
 	freeFunc = howToFreeYourData;
+	printFunc = print;
 	contextStackHead = NULL;
 	hashTable = newHashTable();
 }
@@ -352,18 +358,23 @@ void printSymbolTable() {
 	int i = 0;
 	Context t = contextStackHead;
 	SymbolInContext s;
-	printf("\n");
+	printf("                    symbol table                 \n");
+	printf("=================================================\n");
+	printf("------------------------------------------------\n");
 	while (t!=NULL) {
 		printf("%s : ",t->symbol);
 		s = t->head;
 		while(s!=NULL) {
-			printf("%s ",s->name);
+			//printf("%s ",s->name);
+			printFunc(s);
 			s = s->next;
 		}
 		printf("\n");
 		t= t->next;
 	}
-	printf("\n");
+
+	printf("------------------------------------------------\n");
+	printf("=================================================\n");
 }
 /*
 void _free(void *a) {

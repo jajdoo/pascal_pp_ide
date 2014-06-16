@@ -37,7 +37,7 @@ typedef struct SymbolWrapper
 {
 	struct Symbol*			Symbol;
 	struct SymbolWrapper*	next;
-};
+} SymbolWrapper ;
 
 typedef struct Symbol 
 {
@@ -48,10 +48,8 @@ typedef struct Symbol
 	int size;				// size of variable in bytes
 	int IS_ARRAY;			// if variable is array 1 for [] , x for [][x], 0 for non array
 	int IS_POINTER;			// if variable is a pointer
-	struct arrlist *lst;
-	struct Symbol *next;	// pointer to the next symbol
-
-
+/*	struct arrlist *lst;
+*/
 	//----------------------
 	// struct def: 
 	//		- is_struct		= 1
@@ -67,9 +65,9 @@ typedef struct Symbol
 
 	int is_struct;					// is this symbol a struct?
 	int isProc;						// is this a procedure?
-	struct SymbolWrapper* list;		// if this symbol is a struct, these are its members.
+	SymbolWrapper* list;		// if this symbol is a struct, these are its members.
 								    // if this symbol is a procedure/function, these are its parameters;
-};
+} Symbol;
 
 typedef union
    { int code;

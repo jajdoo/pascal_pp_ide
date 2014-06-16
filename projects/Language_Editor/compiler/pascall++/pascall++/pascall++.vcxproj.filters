@@ -35,9 +35,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\bison_file_tab.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\convertTree.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -56,10 +53,13 @@
     <ClCompile Include="..\..\..\stack.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\context.c">
+    <ClCompile Include="..\..\..\symbol_table.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\symbol_table.c">
+    <ClCompile Include="..\..\..\symbol_stack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\bison_file_tab.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -85,10 +85,10 @@
     <ClInclude Include="..\..\..\stack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\context.h">
+    <ClInclude Include="..\..\..\symbol_table.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\symbol_table.h">
+    <ClInclude Include="..\..\..\symbol_stack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
