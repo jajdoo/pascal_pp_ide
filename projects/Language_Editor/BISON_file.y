@@ -56,30 +56,38 @@ program:	PROGRAM IDE block				{$$=makenode(PROGRAM,$3,NULL,NULL,0,$2); root=$$;}
 /*                          STRUCT DECLARATION                           */
 /*-----------------------------------------------------------------------*/
 
-struct_decl:  STRUCT IDE LC member_decl RC ';'					{addToSymbolTable($2,$2); post_struct_def(); } ;
+struct_decl:  
+			STRUCT IDE				
+			{
+				symbol_stack_push();
+				symbol_stack_set_isstruct(1);
+				symbol_stack_set_name($2);
+			} 
+			LC member_decl RC ';'	
+			{
+				symbol_stack_pop();
+			} 
+;
 
-member_decl:  STRUCT IDE										{set_current_struct_name($2);} 
-			  ':' memberList ';'								{clear_current_struct(); }
-			  member_decl_tail
-			| VAR type_list ':' memberList ';' member_decl_tail	{printf("member_primitive_decl_1->");}
-			;
 
-member_decl_tail: member_decl | ;
+member_decl :
+			VAR													{ symbol_stack_push(); }
+			type_list ':' member_id_list ';' member_decl_tail	{ }
+;
 
-memberList:		struct_member ',' memberList			{printf("memberList_1->");}
-			|	struct_member							{printf("memberList_2->");}
-			;
+member_decl_tail	:
+						member_decl	{}
+					|				{}
+;
 
-struct_member : 
-			  IDE					{ new_struct_member($1, 1, 0, NULL); }
-			| POINTER				{ new_struct_member($1, 1, 0, NULL); }
-			| IDE dim				{ printf("struct_member(dim)->"); }
-			;
+member_id_list: 
+		IDE
+		{
+			symbol_stack_set_name($1); 
+			symbol_stack_pop_as_member();
+		}
+;
 
-dim: '[' INTCONST ']' dim_tail		{printf("dim_1\n");}
-			;
-
-dim_tail: dim | ;
 /*-----------------------------------------------------------------------*/
 /*************************************************************************/
 
@@ -97,12 +105,9 @@ dec_or_stat :
 
 
 declaration:    
-				struct_decl		{ $$ = $1; }
+				struct_decl		{ $$ = NULL; }
 			 |  var_decl		{ $$ = NULL; }
-;			 
-			 /*|	STRUCT IDE		{set_current_struct_name($2);} 
-				':' idList ';'	{clear_current_struct();} */
-
+;
 
 
 var_decl :
