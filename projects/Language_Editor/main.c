@@ -56,17 +56,18 @@ void _free(void *a) {
 
 }
 
-void print_symbol(Symbol* symbol)
+void print_symbol(struct Symbol* symbol)
 {
-	printf("\n--------------------------------------\n");
+	int n;
+	SymbolWrapper* w;
+	//printf("\n--------------------------------------\n");
 	printf("symbol:		%s\n"
 		"type:		%d\n"
 		"add:		%d\n"
 		"proc?		%d\n"
 		"array?		%d\n"
 		"pointer?	%d\n"
-		"struct?		%d\n"
-		"(list)		  \n",
+		"struct?		%d\n\n\n",
 		symbol->symb,
 		symbol->type,
 		symbol->address,
@@ -75,8 +76,18 @@ void print_symbol(Symbol* symbol)
 		symbol->IS_POINTER,
 		symbol->is_struct
 		);
+
+	n = 0;
+	w = symbol->list;
+	while (w != NULL)
+	{
+		printf("child %d of %s ::: \n", n, symbol->symb);
+		print_symbol(w->Symbol);
+		w = w->next;
+		n++;
+	}
 	//symbol->list = NULL
-	printf("-------------------------------------\n");
+	//printf("--------------------------------------\n");
 }
 
 

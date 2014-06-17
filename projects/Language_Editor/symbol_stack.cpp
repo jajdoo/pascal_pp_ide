@@ -3,6 +3,7 @@
 #include <stack>
 
 #include "symbol_stack.h"
+#include "symbol_table.h"
 #include "typedef.h"
 
 std::stack<Symbol*> symbol_stack;
@@ -12,6 +13,7 @@ void symbol_stack_push()
 {
 	Symbol* symbol = (Symbol*)malloc(sizeof(Symbol));
 	symbol->symb = NULL;
+	symbol->type = -1;
 	symbol->address = -1;
 	symbol->funcName = "";
 	symbol->isProc = 0;
@@ -23,11 +25,39 @@ void symbol_stack_push()
 }
 
 
-Symbol* symbol_stack_pop()
+void symbol_stack_pop()
 {
 	Symbol* s = symbol_stack.top();
 	symbol_stack.pop();
-	return s; 
+	addToSymbolTable(s->symb, (void*)s);
+}
+
+
+void symbol_stack_pop_as_member()
+{
+	SymbolWrapper* w,* next;
+	Symbol* child,* parent;
+	
+	child = symbol_stack.top();
+	symbol_stack.pop();
+	parent = symbol_stack.top();
+
+	w = (SymbolWrapper*)malloc(sizeof(SymbolWrapper));
+	w->Symbol = child;
+
+	if (parent->list == NULL)
+	{
+		w->next = NULL;
+		parent->list = w;
+	}
+	else
+	{
+		next = parent->list;
+		w->next = next;
+		parent->list = w;
+	}
+	
+	addToSymbolTable(child->symb, (void*)child);
 }
 
 
@@ -39,7 +69,8 @@ void symbol_stack_set_type(int type)
 
 void symbol_stack_set_name(char* name)
 {
-	symbol_stack.top()->symb = name;
+	symbol_stack.top()->symb = (char*)malloc(sizeof(char)*strlen(name));
+	strcpy(symbol_stack.top()->symb, name);
 }
 
 
@@ -80,9 +111,9 @@ void symbol_stack_set_isstruct(int is_struct)
 
 
 
-void print_symbol(Symbol* symbol)
+void print_symbol(struct Symbol* symbol)
 {
-	printf("\n--------------------------------------\n");
+	//printf("\n--------------------------------------\n");
 	printf(	"symbol:		%s\n"
 			"type:		%d\n"
 			"add:		%d\n"
@@ -90,7 +121,7 @@ void print_symbol(Symbol* symbol)
 			"array?		%d\n"
 			"pointer?	%d\n"
 			"struct?		%d\n"
-			"(list)		  \n", 
+			"(list)		  \n\n", 
 				symbol->symb,
 				symbol->type,
 				symbol->address,
@@ -100,7 +131,7 @@ void print_symbol(Symbol* symbol)
 				symbol->is_struct
 				);
 	//symbol->list = NULL
-	printf("-------------------------------------\n");
+	//printf("-------------------------------------\n");
 }
 
 /* TEMP TEMP TEMP TEMP TEMP */

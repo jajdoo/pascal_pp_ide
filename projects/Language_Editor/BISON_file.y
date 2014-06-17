@@ -106,61 +106,74 @@ declaration:
 
 
 var_decl :
-			VAR					
-			{
-				symbol_stack_push(); 
-			}
-			type_list ':' IDE ';'	
-			{
-				symbol_stack_set_name($5);
-				addToSymbolTable( $5, (void*) symbol_stack_pop() );
-			}
+			VAR							{ symbol_stack_push(); }
+			type_list ':' id_list ';'	{ }
 ;
  
 
 type_list: 
-		BOOLEAN		{ symbol_stack_set_type(BOOLEAN);}
-	|	INTEGER		{ symbol_stack_set_type(INTEGER);}
-	|	FLOAT		{ symbol_stack_set_type(FLOAT);}
+		BOOLEAN		{ symbol_stack_set_type(BOOLEAN); }
+	|	INTEGER		{ symbol_stack_set_type(INTEGER); }
+	|	FLOAT		{ symbol_stack_set_type(FLOAT); }
 ;
 
-/*
-idList: 
-		IDE 		{addToSymbolTable($1,$1);} 
-		idList		{}
-     |	POINTER 	{addToSymbolTable($1,$1);} 
-		idList		{}
+
+id_list: 
+		IDE 		
+		{
+			symbol_stack_set_name($1); 
+			symbol_stack_pop();
+		} 
+     |	
+		POINTER 	
+		{
+			symbol_stack_set_ispointer(1);
+			symbol_stack_set_name($1);
+			symbol_stack_pop();
+		} 
 ;
-*/
 
 /*************************************************************************/
 /*                          PROCEDURE DECLARATION                        */
 /*-----------------------------------------------------------------------*/
-procedure : PROCEDURE IDE '(' param_decl ')' 	
+procedure : 
+			PROCEDURE IDE  	
 			{
-				enter_block($2); 
+				symbol_stack_push();
+				symbol_stack_set_name($2);
+				symbol_stack_set_isprocedure(1);
+				enter_block($2);
 				printf("entering conext %s\n", $2);
 			} 
-			block ';'							
+			'(' param_decl ')' block ';'
 			{
-				printSymbolTable(); 
-				exit_block(); 
+				printSymbolTable();
+				exit_block();
+				symbol_stack_pop();
+
 				printf("exiting conext\n"); 
 				$$ = makenode(PROCEDURE, $7, NULL, NULL, 0, NULL);
-			} 
+			}
 ;
 
-param_decl :	STRUCT IDE ':' param param_decl_tail	{ printf("param_decl_1->"); }
-			|	VAR										{ } 
-				type_list ':' param param_decl_tail		{ printf("primitive_param_decl_1->"); }
-			|											{ }
+param_decl :
+			VAR											{ symbol_stack_push(); }
+			type_list ':' param_id_list param_decl_tail	{ }
 ;
 
-param_decl_tail: ',' member_decl | ;
+param_decl_tail	:
+					',' param_decl	{}
+					|				{}
+;
 
-param :		  IDE					{ printf("ide->"); }
-			| POINTER				{ printf("pointer->"); }
-			;
+param_id_list: 
+		IDE
+		{
+			symbol_stack_set_name($1); 
+			symbol_stack_pop_as_member();
+		}
+;
+
 /*-----------------------------------------------------------------------*/
 /*************************************************************************/
 

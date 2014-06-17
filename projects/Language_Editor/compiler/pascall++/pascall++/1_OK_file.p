@@ -1,11 +1,7 @@
 PROGRAM progtato
 {
-	VAR INTEGER: a;
-	PROCEDURE t() 
+	PROCEDURE t( VAR INTEGER: a, VAR INTEGER: c ) 
 	{
-		PROCEDURE tt()
-		{
-			VAR INTEGER: b;
-		}; 
+		VAR INTEGER: b;
 	};
 }

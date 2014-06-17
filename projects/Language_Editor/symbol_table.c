@@ -358,23 +358,23 @@ void printSymbolTable() {
 	int i = 0;
 	Context t = contextStackHead;
 	SymbolInContext s;
-	printf("                    symbol table                 \n");
+	printf("\n\n\n\n\n                    symbol table                 \n");
 	printf("=================================================\n");
-	printf("------------------------------------------------\n");
+	printf("-------------------------------------------------\n");
 	while (t!=NULL) {
-		printf("%s : ",t->symbol);
+		//printf("%s : ",t->symbol);
 		s = t->head;
 		while(s!=NULL) {
 			//printf("%s ",s->name);
-			printFunc(s);
+			printFunc(s->symbol->data);
 			s = s->next;
 		}
 		printf("\n");
 		t= t->next;
 	}
 
-	printf("------------------------------------------------\n");
-	printf("=================================================\n");
+	printf("-------------------------------------------------\n");
+	printf("=================================================\n\n\n\n\n\n");
 }
 /*
 void _free(void *a) {
