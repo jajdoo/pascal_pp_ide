@@ -33,42 +33,6 @@ typedef struct node {    /* abstract syntax tree record */
 
 typedef enum{MFALSE,MTRUE} booly;
 
-typedef struct SymbolWrapper
-{
-	struct Symbol*			Symbol;
-	struct SymbolWrapper*	next;
-} SymbolWrapper ;
-
-typedef struct Symbol 
-{
-	char *symb;				// the string that holds the name of the Symbol
-	char *funcName;			// the name of the function where the Symbol is decleared
-	int type;
-	int address;			// relative address to block
-	int size;				// size of variable in bytes
-	int IS_ARRAY;			// if variable is array 1 for [] , x for [][x], 0 for non array
-	int IS_POINTER;			// if variable is a pointer
-/*	struct arrlist *lst;
-*/
-	//----------------------
-	// struct def: 
-	//		- is_struct		= 1
-	//		- type			= 0
-	//		- address		= -1
-	//		- members		= [actual members]
-	//
-	// struct instance: 
-	//		- is_struct		= 1
-	//		- type			= [index of struct def in symbol table]
-	//		- address		= [actual adress]
-	//		- members		- NULL
-
-	int is_struct;					// is this symbol a struct?
-	int isProc;						// is this a procedure?
-	SymbolWrapper* list;		// if this symbol is a struct, these are its members.
-								    // if this symbol is a procedure/function, these are its parameters;
-} Symbol;
-
 typedef union
    { int code;
      double real;

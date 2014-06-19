@@ -12,6 +12,7 @@
 #include "struct_def.h"
 #include "symbol_table.h"
 #include "symbol_stack.h"
+#include "symbol.h"
 
 int line_number = 1;
 
@@ -59,19 +60,19 @@ program:	PROGRAM IDE block				{$$=makenode(PROGRAM,$3,NULL,NULL,0,$2); root=$$;}
 struct_decl:  
 			STRUCT IDE				
 			{
-				symbol_stack_push();
-				symbol_stack_set_isstruct(1);
-				symbol_stack_set_name($2);
+				//symbol_stack_push();
+				//symbol_stack_set_isstruct(1);
+				//symbol_stack_set_name($2);
 			} 
 			LC member_decl RC ';'	
 			{
-				symbol_stack_pop();
+				//symbol_stack_pop();
 			} 
 ;
 
 
 member_decl :
-			VAR													{ symbol_stack_push(); }
+			VAR													{ /*symbol_stack_push();*/ }
 			type_list ':' member_id_list ';' member_decl_tail	{ }
 ;
 
@@ -83,8 +84,8 @@ member_decl_tail	:
 member_id_list: 
 		IDE
 		{
-			symbol_stack_set_name($1); 
-			symbol_stack_pop_as_member();
+			//symbol_stack_set_name($1); 
+			//symbol_stack_pop_as_member();
 		}
 ;
 
@@ -111,30 +112,30 @@ declaration:
 
 
 var_decl :
-			VAR							{ symbol_stack_push(); }
+			VAR							{ }//symbol_stack_push(); }
 			type_list ':' id_list ';'	{ }
 ;
  
 
 type_list: 
-		BOOLEAN		{ symbol_stack_set_type(BOOLEAN); }
-	|	INTEGER		{ symbol_stack_set_type(INTEGER); }
-	|	FLOAT		{ symbol_stack_set_type(FLOAT); }
+		BOOLEAN		{} //symbol_stack_set_type(BOOLEAN); }
+	|	INTEGER		{} //symbol_stack_set_type(INTEGER); }
+	|	FLOAT		{} //symbol_stack_set_type(FLOAT); }
 ;
 
 
 id_list: 
 		IDE 		
 		{
-			symbol_stack_set_name($1); 
-			symbol_stack_pop();
+			//symbol_stack_set_name($1); 
+			//symbol_stack_pop();
 		} 
      |	
 		POINTER 	
 		{
-			symbol_stack_set_ispointer(1);
-			symbol_stack_set_name($1);
-			symbol_stack_pop();
+			//symbol_stack_set_ispointer(1);
+			//symbol_stack_set_name($1);
+			//symbol_stack_pop();
 		} 
 ;
 
@@ -144,9 +145,9 @@ id_list:
 procedure : 
 			PROCEDURE IDE  	
 			{
-				symbol_stack_push();
-				symbol_stack_set_name($2);
-				symbol_stack_set_isprocedure(1);
+				//symbol_stack_push();
+				//symbol_stack_set_name($2);
+				//symbol_stack_set_isprocedure(1);
 				enter_block($2);
 				printf("entering conext %s\n", $2);
 			} 
@@ -154,7 +155,7 @@ procedure :
 			{
 				printSymbolTable();
 				exit_block();
-				symbol_stack_pop();
+				//symbol_stack_pop();
 
 				printf("exiting conext\n"); 
 				$$ = makenode(PROCEDURE, $7, NULL, NULL, 0, NULL);
@@ -162,7 +163,7 @@ procedure :
 ;
 
 param_decl :
-			VAR											{ symbol_stack_push(); }
+			VAR											{ }//symbol_stack_push(); }
 			type_list ':' param_id_list param_decl_tail	{ }
 ;
 
@@ -174,8 +175,8 @@ param_decl_tail	:
 param_id_list: 
 		IDE
 		{
-			symbol_stack_set_name($1); 
-			symbol_stack_pop_as_indepedant_member();
+			//symbol_stack_set_name($1); 
+			//symbol_stack_pop_as_indepedant_member();
 		}
 ;
 

@@ -1,9 +1,13 @@
 
+//IGNORE 
+
+/*
 
 #include <stack>
 
 #include "symbol_stack.h"
 #include "symbol_table.h"
+#include "symbol.h"
 #include "typedef.h"
 
 std::stack<Symbol*> symbol_stack;
@@ -160,8 +164,9 @@ void print_symbol(struct Symbol* symbol)
 	//printf("-------------------------------------\n");
 }
 
-/* TEMP TEMP TEMP TEMP TEMP */
+
+
 void symbol_stack_showme()
 {
 	print_symbol(symbol_stack.top());
-}
+}*/

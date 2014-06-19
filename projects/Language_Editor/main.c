@@ -5,6 +5,7 @@
 #include "bison_file_tab.h"
 #include "convertTree.h"
 #include "symbol_table.h"
+#include "symbol.h"
 
 FILE  *treefile;
 extern FILE *yyin;			//  a pointer to the program file that should be compiled.
@@ -52,8 +53,23 @@ void PrintTree(){
 
 
 /* later use */
-void _free(void *a) {
+void _free(void *a) 
+{
+	SymbolWrapper* w; 
+	Symbol* s = (Symbol*)a;
+	
+	if( s->symb!=NULL) 
+		free(s->symb);
 
+	w = s->list;
+	while (w != NULL )
+	{
+		if (w->Symbol)
+			free(w->Symbol);
+		w = w->next;
+	}
+
+	free(s);
 }
 
 void print_symbol(struct Symbol* symbol)
@@ -71,7 +87,7 @@ void print_symbol(struct Symbol* symbol)
 		symbol->symb,
 		symbol->type,
 		symbol->address,
-		symbol->isProc,
+		symbol->is_proc,
 		symbol->IS_ARRAY,
 		symbol->IS_POINTER,
 		symbol->is_struct

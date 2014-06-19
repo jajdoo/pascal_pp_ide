@@ -1,5 +1,6 @@
 PROGRAM progtato
 {
+	VAR INTEGER: b;
 	STRUCT tester
 	{
 		VAR INTEGER: intmemb;

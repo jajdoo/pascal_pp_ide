@@ -1,4 +1,4 @@
-
+/*
 #ifndef _SYMBOL_STACK_H__
 #define _SYMBOL_STACK_H__
 
@@ -9,19 +9,19 @@ typedef struct Symbol Symbol;
 	#endif
 
 		
-		/* start a new synbol above the previous one*/
+		// start a new synbol above the previous one
 		void symbol_stack_push();
 
-		/* move this symbol to the symbol table */
+		// move this symbol to the symbol table 
 		void symbol_stack_pop();
 
-		/* make the last symbol be a member of the symbol before it (struct param etc)*/
+		// make the last symbol be a member of the symbol before it (struct param etc)
 		void symbol_stack_pop_as_member();
 
-		/* make the last symbol be a member of the symbol before it (procedure param etc)*/
+		// make the last symbol be a member of the symbol before it (procedure param etc)
 		void symbol_stack_pop_as_indepedant_member();
 
-		/*setters*/
+		//setters
 		void symbol_stack_set_type(int type);
 		void symbol_stack_set_name(char* name);
 		void symbol_stack_set_address(int address);
@@ -31,7 +31,7 @@ typedef struct Symbol Symbol;
 		void symbol_stack_set_isprocedure(int is_procedure);
 		void symbol_stack_set_isstruct(int is_struct);
 
-		/*temp debug method*/
+		//temp debug method
 		void symbol_stack_showme();
 
 	#ifdef __cplusplus
@@ -39,3 +39,4 @@ typedef struct Symbol Symbol;
 	#endif
 
 #endif
+*/

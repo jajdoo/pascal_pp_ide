@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "struct_def.h"
 #include "symbol_table.h"
+#include "symbol.h"
 
 int current_member_add = 0;
 
