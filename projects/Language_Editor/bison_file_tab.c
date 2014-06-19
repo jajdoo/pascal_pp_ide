@@ -1012,7 +1012,7 @@ case 29:
 #line 176 "bison_file.y"
 {
 			symbol_stack_set_name(yyvsp[0].string); 
-			symbol_stack_pop_as_member();
+			symbol_stack_pop_as_indepedant_member();
 		;
     break;}
 case 30:

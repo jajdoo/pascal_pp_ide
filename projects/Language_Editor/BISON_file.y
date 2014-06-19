@@ -175,7 +175,7 @@ param_id_list:
 		IDE
 		{
 			symbol_stack_set_name($1); 
-			symbol_stack_pop_as_member();
+			symbol_stack_pop_as_indepedant_member();
 		}
 ;
 

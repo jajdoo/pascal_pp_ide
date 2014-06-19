@@ -15,8 +15,11 @@ typedef struct Symbol Symbol;
 		/* move this symbol to the symbol table */
 		void symbol_stack_pop();
 
-		/* make the last symbol be a member of the symbol before it (struct member, procedure param etc)*/
+		/* make the last symbol be a member of the symbol before it (struct param etc)*/
 		void symbol_stack_pop_as_member();
+
+		/* make the last symbol be a member of the symbol before it (procedure param etc)*/
+		void symbol_stack_pop_as_indepedant_member();
 
 		/*setters*/
 		void symbol_stack_set_type(int type);

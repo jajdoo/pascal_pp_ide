@@ -35,6 +35,32 @@ void symbol_stack_pop()
 
 void symbol_stack_pop_as_member()
 {
+	SymbolWrapper* w, *next;
+	Symbol* child, *parent;
+
+	child = symbol_stack.top();
+	symbol_stack.pop();
+	parent = symbol_stack.top();
+
+	w = (SymbolWrapper*)malloc(sizeof(SymbolWrapper));
+	w->Symbol = child;
+
+	if (parent->list == NULL)
+	{
+		w->next = NULL;
+		parent->list = w;
+	}
+	else
+	{
+		next = parent->list;
+		w->next = next;
+		parent->list = w;
+	}
+}
+
+
+void symbol_stack_pop_as_indepedant_member()
+{
 	SymbolWrapper* w,* next;
 	Symbol* child,* parent;
 	
