@@ -1,9 +1,15 @@
 PROGRAM progtato
 {
 	VAR INTEGER: b;
-
-	PROCEDURE t( VAR INTEGER: e , VAR BOOLEAN: r ) 
+	STRUCT s
 	{
-		VAR INTEGER: b;
+	VAR INTEGER: n;
+	VAR BOOLEAN: i;
+	VAR FLOAT: r;
+	};
+
+	PROCEDURE e( VAR INTEGER: r , VAR BOOLEAN: b ) 
+	{
+		VAR INTEGER: z;
 	};
 }

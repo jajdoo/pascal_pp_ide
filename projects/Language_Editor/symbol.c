@@ -21,6 +21,7 @@ void symbol_new()
 	cur->IS_POINTER = 0;
 	cur->is_param = 0;
 	cur->is_struct = 0;
+	cur->is_struct_member = 0;
 	cur->list = NULL;
 }
 
@@ -48,6 +49,26 @@ void symbol_finish()
 		else
 			context_symbol->list = w;
 	}
+
+	if (cur->is_struct_member)
+	{
+		context_symbol = (Symbol*)symbol_table_getcontext();
+		w = (SymbolWrapper*)malloc(sizeof(SymbolWrapper));
+		w->Symbol = cur;
+		w->next = NULL;
+
+		prev = context_symbol->list;
+
+		if (prev != NULL)
+		{
+			while (prev->next != NULL)
+				prev = prev->next;
+			prev->next = w;
+		}
+		else
+			context_symbol->list = w;
+	}
+
 	addToSymbolTable(cur->symb, (void*)cur);
 	cur = NULL;
 }
@@ -62,6 +83,10 @@ void symbol_set_isparam(int param)
 void symbol_set_type(int type)
 {
 	cur->type = type;
+}
+void symbol_set_isstructmember(int struc_member)
+{
+	cur->is_struct_member = struc_member;
 }
 
 
@@ -117,6 +142,8 @@ void symbol_free(void *a)
 
 	if (s->is_param)
 		return;
+	if (s->is_struct_member)
+		return;
 
 	if (s->symb != NULL)
 		free(s->symb);
@@ -151,6 +178,7 @@ void symbol_print(struct Symbol* symbol)
 		"array?		%d\n"
 		"pointer?	%d\n"
 		"parameter?	%d\n"
+		"struct_member?	%d\n"
 		"struct?		%d\n\n\n",
 		symbol->symb,
 		symbol->type,
@@ -159,6 +187,7 @@ void symbol_print(struct Symbol* symbol)
 		symbol->IS_ARRAY,
 		symbol->IS_POINTER,
 		symbol->is_param,
+		symbol->is_struct_member,
 		symbol->is_struct
 		);
 
