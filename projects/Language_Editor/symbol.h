@@ -33,6 +33,7 @@ typedef struct Symbol
 	//		- address		= [actual adress]
 	//		- members		- NULL
 
+	int is_param;
 	int is_struct;					// is this symbol a struct?
 	int is_proc;					// is this a procedure?
 	SymbolWrapper* list;		// if this symbol is a struct, these are its members.
@@ -43,16 +44,12 @@ typedef struct Symbol
 /* start a new symbol */
 void symbol_new();
 
-void symbol_free(Symbol* s);
+void symbol_free(void *a);
+
+void symbol_print(struct Symbol* symbol);
 
 /* move this symbol to the symbol table */
 void symbol_finish();
-
-/* same as finish, but also becomes a part of param list of the symbol (procedure) above it */
-void symbol_finish_as_parameter();
-
-/* same as finish, but also becomes a part of member list of the symbol (struct) above it */
-void symbol_finish_as_member();
 
 /*setters*/
 void symbol_set_type(int type);
@@ -63,5 +60,6 @@ void symbol_set_isarray(int is_array);
 void symbol_set_ispointer(int is_pointer);
 void symbol_set_isprocedure(int is_procedure);
 void symbol_set_isstruct(int is_struct);
+void symbol_set_isparameter(int is_param);
 
 #endif 

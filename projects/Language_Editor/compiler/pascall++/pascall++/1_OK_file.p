@@ -1,18 +1,9 @@
 PROGRAM progtato
 {
 	VAR INTEGER: b;
-	STRUCT tester
-	{
-		VAR INTEGER: intmemb;
-		VAR FLOAT: realmemb;
-	};
 
-	PROCEDURE t( VAR INTEGER: a, VAR INTEGER: c ) 
+	PROCEDURE t( VAR INTEGER: e , VAR BOOLEAN: r ) 
 	{
 		VAR INTEGER: b;
-		PROCEDURE tt( VAR FLOAT: a )
-		{
-			VAR BOOLEAN: b;
-		}; 
 	};
 }

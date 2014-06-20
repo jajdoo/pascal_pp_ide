@@ -51,62 +51,6 @@ void PrintTree(){
 }
 
 
-
-/* later use */
-void _free(void *a) 
-{
-	SymbolWrapper* w; 
-	Symbol* s = (Symbol*)a;
-	
-	if( s->symb!=NULL) 
-		free(s->symb);
-
-	w = s->list;
-	while (w != NULL )
-	{
-		if (w->Symbol)
-			free(w->Symbol);
-		w = w->next;
-	}
-
-	free(s);
-}
-
-void print_symbol(struct Symbol* symbol)
-{
-	int n;
-	SymbolWrapper* w;
-	//printf("\n--------------------------------------\n");
-	printf("symbol:		%s\n"
-		"type:		%d\n"
-		"add:		%d\n"
-		"proc?		%d\n"
-		"array?		%d\n"
-		"pointer?	%d\n"
-		"struct?		%d\n\n\n",
-		symbol->symb,
-		symbol->type,
-		symbol->address,
-		symbol->is_proc,
-		symbol->IS_ARRAY,
-		symbol->IS_POINTER,
-		symbol->is_struct
-		);
-
-	n = 0;
-	w = symbol->list;
-	while (w != NULL)
-	{
-		printf("child %d of %s ::: \n", n, symbol->symb);
-		print_symbol(w->Symbol);
-		w = w->next;
-		n++;
-	}
-	//symbol->list = NULL
-	//printf("--------------------------------------\n");
-}
-
-
 int main(int argc, char* argv[])
 {
 	FILE *txt;
@@ -122,7 +66,7 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
-	init(_free, print_symbol);
+	init(symbol_free, symbol_print);
 	enter_block("program");
 
 	// Build the program tree

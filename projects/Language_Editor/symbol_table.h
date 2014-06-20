@@ -11,4 +11,6 @@ void enter_block(char *block_name);
 void exit_block();
 void printSymbolTable();
 
+void* symbol_table_getcontext();
+
 #endif

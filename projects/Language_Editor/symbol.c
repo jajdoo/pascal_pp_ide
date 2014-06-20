@@ -1,12 +1,15 @@
 
 
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include "symbol.h"
+#include "symbol_table.h"
 
 Symbol* cur;
 
 
-void symbol_create()
+void symbol_new()
 {
 	cur = (Symbol*)malloc(sizeof(Symbol));
 	cur->symb = NULL;
@@ -16,6 +19,7 @@ void symbol_create()
 	cur->is_proc = 0;
 	cur->IS_ARRAY = 0;
 	cur->IS_POINTER = 0;
+	cur->is_param = 0;
 	cur->is_struct = 0;
 	cur->list = NULL;
 }
@@ -23,42 +27,35 @@ void symbol_create()
 
 void symbol_finish()
 {
-	Symbol* s = cur;
-	//symbol_stack.pop();
-	addToSymbolTable(s->symb, (void*)s);
-}
-
-
-void symbol_finish_as_member()
-{
 	SymbolWrapper* w, *prev;
-	Symbol* child, *parent;
+	Symbol* context_symbol;
 
-	child = cur;
-	//symbol_stack.pop();
-	prev = NULL; // FIND THE PROCEDURE / STRUCT
-	parent = cur;
-
-	w = (SymbolWrapper*)malloc(sizeof(SymbolWrapper));
-	w->Symbol = child;
-
-	if (parent->list == NULL)
+	if (cur->is_param)
 	{
+		context_symbol = (Symbol*)symbol_table_getcontext();
+		w = (SymbolWrapper*)malloc(sizeof(SymbolWrapper));
+		w->Symbol = cur;
 		w->next = NULL;
-		parent->list = w;
+
+		prev = context_symbol->list;
+
+		if ( prev != NULL )
+		{
+			while ( prev->next != NULL )
+				prev = prev->next;
+			prev->next = w;
+		}
+		else
+			context_symbol->list = w;
 	}
-	else
-	{
-		while (prev->next != NULL)
-			prev = prev->next;
-		prev->next = w;
-		parent->list = w;
-	}
+	addToSymbolTable(cur->symb, (void*)cur);
+	cur = NULL;
 }
 
 
-void symbol_finish_as_parameter()
+void symbol_set_isparam(int param) 
 {
+	cur->is_param = param;
 }
 
 
@@ -70,7 +67,7 @@ void symbol_set_type(int type)
 
 void symbol_set_name(char* name)
 {
-	cur->symb = (char*)malloc(sizeof(char)*strlen(name));
+	cur->symb = (char*)malloc(sizeof(char)*(strlen(name) + 1));
 	strcpy(cur->symb, name);
 }
 
@@ -109,4 +106,71 @@ void symbol_set_isprocedure(int is_procedure)
 void symbol_set_isstruct(int is_struct)
 {
 	cur->is_struct = is_struct;
+}
+
+
+/* later use */
+void symbol_free(void *a)
+{
+	SymbolWrapper* w,* p;
+	Symbol* s = (Symbol*)a;
+
+	if (s->is_param)
+		return;
+
+	if (s->symb != NULL)
+		free(s->symb);
+
+	w = s->list;
+	while (w != NULL)
+	{
+		w->Symbol->is_param = 0;
+		symbol_free(w->Symbol);
+
+		p = w;
+		w = w->next;
+		free(p);
+	}
+
+	free(s);
+}
+
+void symbol_print(struct Symbol* symbol)
+{
+	int n;
+	SymbolWrapper* w;
+
+	if (symbol == NULL)
+		return;
+
+	//printf("\n--------------------------------------\n");
+	printf("symbol:		%s\n"
+		"type:		%d\n"
+		"add:		%d\n"
+		"proc?		%d\n"
+		"array?		%d\n"
+		"pointer?	%d\n"
+		"parameter?	%d\n"
+		"struct?		%d\n\n\n",
+		symbol->symb,
+		symbol->type,
+		symbol->address,
+		symbol->is_proc,
+		symbol->IS_ARRAY,
+		symbol->IS_POINTER,
+		symbol->is_param,
+		symbol->is_struct
+		);
+
+	n = 0;
+	w = symbol->list;
+	while (w != NULL)
+	{
+		printf("child %d of %s ::: \n", n, symbol->symb);
+		symbol_print(w->Symbol);
+		w = w->next;
+		n++;
+	}
+	//symbol->list = NULL
+	//printf("--------------------------------------\n");
 }

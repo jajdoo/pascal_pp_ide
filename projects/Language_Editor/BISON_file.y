@@ -60,9 +60,10 @@ program:	PROGRAM IDE block				{$$=makenode(PROGRAM,$3,NULL,NULL,0,$2); root=$$;}
 struct_decl:  
 			STRUCT IDE				
 			{
-				//symbol_stack_push();
-				//symbol_stack_set_isstruct(1);
-				//symbol_stack_set_name($2);
+				symbol_new(); //symbol_stack_push();
+				symbol_set_isstruct(1); //symbol_stack_set_isstruct(1);
+				symbol_set_name($2); //symbol_stack_set_name($2);
+				symbol_finish();
 			} 
 			LC member_decl RC ';'	
 			{
@@ -112,23 +113,23 @@ declaration:
 
 
 var_decl :
-			VAR							{ }//symbol_stack_push(); }
+			VAR							{ symbol_new(); }//symbol_stack_push(); }
 			type_list ':' id_list ';'	{ }
 ;
  
 
 type_list: 
-		BOOLEAN		{} //symbol_stack_set_type(BOOLEAN); }
-	|	INTEGER		{} //symbol_stack_set_type(INTEGER); }
-	|	FLOAT		{} //symbol_stack_set_type(FLOAT); }
+		BOOLEAN		{ symbol_set_type(BOOLEAN); } //symbol_stack_set_type(BOOLEAN); }
+	|	INTEGER		{ symbol_set_type(INTEGER); } //symbol_stack_set_type(INTEGER); }
+	|	FLOAT		{ symbol_set_type(FLOAT); } //symbol_stack_set_type(FLOAT); }
 ;
 
 
 id_list: 
 		IDE 		
 		{
-			//symbol_stack_set_name($1); 
-			//symbol_stack_pop();
+			symbol_set_name($1); 
+			symbol_finish();
 		} 
      |	
 		POINTER 	
@@ -145,9 +146,10 @@ id_list:
 procedure : 
 			PROCEDURE IDE  	
 			{
-				//symbol_stack_push();
-				//symbol_stack_set_name($2);
-				//symbol_stack_set_isprocedure(1);
+				symbol_new();
+				symbol_set_name($2);
+				symbol_set_isprocedure(1);
+				symbol_finish();
 				enter_block($2);
 				printf("entering conext %s\n", $2);
 			} 
@@ -155,7 +157,6 @@ procedure :
 			{
 				printSymbolTable();
 				exit_block();
-				//symbol_stack_pop();
 
 				printf("exiting conext\n"); 
 				$$ = makenode(PROCEDURE, $7, NULL, NULL, 0, NULL);
@@ -163,8 +164,13 @@ procedure :
 ;
 
 param_decl :
-			VAR											{ }//symbol_stack_push(); }
+			VAR											
+			{ 
+				symbol_new();
+				symbol_set_isparam(1);
+			}
 			type_list ':' param_id_list param_decl_tail	{ }
+			|
 ;
 
 param_decl_tail	:
@@ -175,7 +181,9 @@ param_decl_tail	:
 param_id_list: 
 		IDE
 		{
-			//symbol_stack_set_name($1); 
+			symbol_set_name($1);
+			symbol_finish();
+
 			//symbol_stack_pop_as_indepedant_member();
 		}
 ;

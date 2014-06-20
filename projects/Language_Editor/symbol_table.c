@@ -361,6 +361,11 @@ void printSymbolTable() {
 	printf("\n\n\n\n\n                    symbol table                 \n");
 	printf("=================================================\n");
 	printf("-------------------------------------------------\n");
+
+	printf("context symbol::::::::::::::::::::: \n");
+	printFunc( (Symbol*)symbol_table_getcontext() );
+	
+	printf("symbols::::::::::::::::::::;\n");
 	while (t!=NULL) {
 		//printf("%s : ",t->symbol);
 		s = t->head;
@@ -376,6 +381,22 @@ void printSymbolTable() {
 	printf("-------------------------------------------------\n");
 	printf("=================================================\n\n\n\n\n\n");
 }
+
+
+
+
+
+
+
+void* symbol_table_getcontext()
+{
+	return getFromSymbolTable(contextStackHead->symbol);
+}
+
+
+
+
+
 /*
 void _free(void *a) {
 
