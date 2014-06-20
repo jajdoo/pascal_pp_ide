@@ -59,20 +59,27 @@ program:	PROGRAM IDE block				{$$=makenode(PROGRAM,$3,NULL,NULL,0,$2); root=$$;}
 struct_decl:  
 			STRUCT IDE				
 			{
-				symbol_new(); //symbol_stack_push();
+				symbol_new();
 				symbol_set_isstruct(1); //symbol_stack_set_isstruct(1);
 				symbol_set_name($2); //symbol_stack_set_name($2);
+				symbol_set_address(-1);
+				symbol_set_type(0); 
 				symbol_finish();
+				enter_block($2);
 			} 
 			LC member_decl RC ';'	
 			{
+				exit_block();
 				//symbol_stack_pop();
 			} 
 ;
 
 
 member_decl :
-			VAR													{ /*symbol_stack_push();*/ }
+			VAR												
+				{  symbol_new();  /*symbol_stack_push();*/ 
+				   symbol_set_isstructmember(1);
+				}
 			type_list ':' member_id_list ';' member_decl_tail	{ }
 ;
 
@@ -84,8 +91,8 @@ member_decl_tail	:
 member_id_list: 
 		IDE
 		{
-			//symbol_stack_set_name($1); 
-			//symbol_stack_pop_as_member();
+			symbol_set_name($1); 
+			symbol_finish();
 		}
 ;
 

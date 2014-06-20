@@ -1,0 +1,37 @@
+type=PROGRAM
+children=1
+my check == = = ==> progtato
+node type: UNKNOWN
+
+| Son1 of PROGRAM
+|
+---------------
+type=BEGIN
+children=1
+my check == = = ==> 
+node type: UNKNOWN
+
+| Son1 of BEGIN
+|
+---------------
+type=BLOCK_BODY
+children=1
+my check == = = ==> 
+node type: UNKNOWN
+
+| Son1 of BLOCK_BODY
+|
+---------------
+type=PROCEDURE
+children=1
+my check == = = ==> 
+node type: UNKNOWN
+
+| Son1 of PROCEDURE
+|
+---------------
+type=BEGIN
+children=0
+my check == = = ==> 
+node type: UNKNOWN
+

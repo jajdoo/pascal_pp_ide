@@ -35,6 +35,7 @@ typedef struct Symbol
 
 	int is_param;
 	int is_struct;					// is this symbol a struct?
+	int is_struct_member;
 	int is_proc;					// is this a procedure?
 	SymbolWrapper* list;		// if this symbol is a struct, these are its members.
 	// if this symbol is a procedure/function, these are its parameters;
@@ -61,5 +62,6 @@ void symbol_set_ispointer(int is_pointer);
 void symbol_set_isprocedure(int is_procedure);
 void symbol_set_isstruct(int is_struct);
 void symbol_set_isparameter(int is_param);
+void symbol_set_isstructmember(int struc_member);
 
 #endif 
