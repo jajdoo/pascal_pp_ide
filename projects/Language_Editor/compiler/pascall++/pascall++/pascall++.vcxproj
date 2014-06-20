@@ -36,7 +36,6 @@
     <ClCompile Include="..\..\..\stack.c" />
     <ClCompile Include="..\..\..\struct_def.c" />
     <ClCompile Include="..\..\..\symbol.c" />
-    <ClCompile Include="..\..\..\symbol_stack.cpp" />
     <ClCompile Include="..\..\..\symbol_table.c" />
   </ItemGroup>
   <ItemGroup>
@@ -47,7 +46,6 @@
     <ClInclude Include="..\..\..\stack.h" />
     <ClInclude Include="..\..\..\struct_def.h" />
     <ClInclude Include="..\..\..\symbol.h" />
-    <ClInclude Include="..\..\..\symbol_stack.h" />
     <ClInclude Include="..\..\..\symbol_table.h" />
     <ClInclude Include="..\..\..\typedef.h" />
   </ItemGroup>
@@ -124,6 +122,10 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

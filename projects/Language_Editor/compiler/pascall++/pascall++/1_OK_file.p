@@ -1,9 +1,6 @@
 PROGRAM progtato
 {
-	VAR INTEGER: b;
-
-	PROCEDURE t( VAR INTEGER: e , VAR BOOLEAN: r ) 
+	PROCEDURE t( VAR INTEGER: e ) 
 	{
-		VAR INTEGER: b;
 	};
 }

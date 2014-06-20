@@ -27,10 +27,10 @@
     <None Include="1_OK_file.p">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\..\bison.bat">
+    <None Include="..\..\..\flex.bat">
       <Filter>BATS</Filter>
     </None>
-    <None Include="..\..\..\flex.bat">
+    <None Include="..\..\..\bison.bat">
       <Filter>BATS</Filter>
     </None>
   </ItemGroup>
@@ -54,9 +54,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\symbol_table.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\symbol_stack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\bison_file_tab.c">
@@ -89,9 +86,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\symbol_table.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\symbol_stack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\symbol.h">

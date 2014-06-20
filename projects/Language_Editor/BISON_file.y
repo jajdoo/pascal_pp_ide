@@ -11,7 +11,6 @@
 #include "parse_tree.h"
 #include "struct_def.h"
 #include "symbol_table.h"
-#include "symbol_stack.h"
 #include "symbol.h"
 
 int line_number = 1;
@@ -164,18 +163,22 @@ procedure :
 ;
 
 param_decl :
-			VAR											
-			{ 
-				symbol_new();
-				symbol_set_isparam(1);
-			}
-			type_list ':' param_id_list param_decl_tail	{ }
-			|
+			param param_decl_tail { }
+			|					  { }
+;
+
+param: 
+	VAR											
+	{ 
+		symbol_new();
+		symbol_set_isparam(1);
+	}
+	type_list ':' param_id_list
 ;
 
 param_decl_tail	:
-					',' param_decl	{}
-					|				{}
+					',' param param_decl_tail	{}
+					|							{}
 ;
 
 param_id_list: 
