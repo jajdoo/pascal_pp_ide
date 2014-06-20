@@ -23,7 +23,7 @@ int line_number = 1;
 %token MOD LES LEQ EQU NEQ GRE GEQ AND OR
 %token AND OR NOT CASE FOR FIN IDENTICAL FROM BY TO CONST TYPE VAR RECORD
 
-%token STRUCT CAST STATEMENT DECLARATION BLOCK_BODY
+%token STRUCT CAST STATEMENT DECLARATION BLOCK_BODY PROC_CALL
 
 %token<code> INTCONST 
 %token<string> IDE 
@@ -36,7 +36,7 @@ int line_number = 1;
 
 %type<node> var assign program procedure stat_seq loop_stat case_stat bracket 
 %type<node> expr atom block stat nonlable_stat cond_stat case case_list 
-%type<node> declaration dec_or_stat struct_decl
+%type<node> declaration dec_or_stat struct_decl proc_call
 %type<integer> type_list
 
 %nonassoc LES LEQ EQU NEQ GRE GEQ
@@ -100,6 +100,7 @@ block :	  LC dec_or_stat RC				{$$=makenode(BBEGIN,$2,NULL,NULL,0,NULL);}
 dec_or_stat : 
 				procedure	dec_or_stat	{$$=makenode(BLOCK_BODY,$1,$2,NULL,0,NULL);}
 			|	stat		dec_or_stat	{$$=makenode(BLOCK_BODY,$1,$2,NULL,0,NULL);}
+			|	proc_call	dec_or_stat	{$$=$1;}
 			|	declaration	dec_or_stat	{$$=$2;}
 			|							{$$=NULL;}
 ;
@@ -117,7 +118,7 @@ var_decl :
 ;
  
 
-type_list: 
+type_list:
 		BOOLEAN		{ symbol_set_type(BOOLEAN); } //symbol_stack_set_type(BOOLEAN); }
 	|	INTEGER		{ symbol_set_type(INTEGER); } //symbol_stack_set_type(INTEGER); }
 	|	FLOAT		{ symbol_set_type(FLOAT); } //symbol_stack_set_type(FLOAT); }
@@ -177,23 +178,50 @@ param:
 ;
 
 param_decl_tail	:
-					',' param param_decl_tail	{}
-					|							{}
+	',' param param_decl_tail	{}
+				|				{}
 ;
 
 param_id_list: 
-		IDE
-		{
-			symbol_set_name($1);
-			symbol_finish();
-
-			//symbol_stack_pop_as_indepedant_member();
-		}
+	IDE
+	{
+		symbol_set_name($1);
+		symbol_finish();
+	}
 ;
 
-/*-----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 /*************************************************************************/
 
+
+/*************************************************************************/
+/*                          PROCEDURE CALL                               */
+/*----------------------------------------------------------------------*/
+
+
+
+proc_call : 
+	IDE '(' args ')' ';'
+	{ 
+		printf("FUNCTION CALL %s\n\n", $1); 
+		$$ = makenode(PROC_CALL,NULL,NULL,NULL,0,NULL);
+	}
+;
+
+
+args : 
+		expr args_tail	{ printf(" ARG %d\n", $1->num_val ); }
+	|	
+;
+
+args_tail :
+		',' expr args_tail	{ printf(" ARG %d\n", $2->num_val); }
+	|						{ printf(" ARGS FINISH\n"); }
+;
+
+
+/*----------------------------------------------------------------------*/
+/*************************************************************************/
 	
 stat_seq:  stat                       {$$=makenode(STATEMENT,$1,NULL,NULL,0,NULL);} 
          | stat stat_seq              {$$=makenode(STATEMENT,$1,$2,NULL,0,NULL);} 

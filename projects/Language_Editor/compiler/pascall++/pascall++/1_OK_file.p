@@ -1,6 +1,4 @@
 PROGRAM progtato
 {
-	PROCEDURE t( VAR INTEGER: e ) 
-	{
-	};
+	aaa123( 1, 5 );
 }

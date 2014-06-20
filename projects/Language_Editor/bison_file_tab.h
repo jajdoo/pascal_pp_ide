@@ -57,12 +57,13 @@
 #define	STATEMENT	314
 #define	DECLARATION	315
 #define	BLOCK_BODY	316
-#define	INTCONST	317
-#define	IDE	318
-#define	POINTER	319
-#define	REALCONST	320
-#define	STRING	321
-#define	DUMMY	322
+#define	PROC_CALL	317
+#define	INTCONST	318
+#define	IDE	319
+#define	POINTER	320
+#define	REALCONST	321
+#define	STRING	322
+#define	DUMMY	323
 
 
 extern YYSTYPE yylval;
