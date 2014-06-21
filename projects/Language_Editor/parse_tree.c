@@ -6,6 +6,9 @@
 
 #include "bison_file_tab.h"
 #include "globals.h"
+#include "symbol.h"
+#include "symbol_table.h"
+
 
 
 char *print_op(int op)
@@ -318,7 +321,7 @@ NODE makenode(int op, NODE s1, NODE s2, NODE s3, int val, char *id)
 NODE genLeaf(int op, int val, double rval, char *id)
 {
 	NODE t;
-	struct Symbol* s;
+	Symbol* s;
 	/*
 	if (id != NULL&&!findSymbol(id))
 	{
@@ -348,7 +351,9 @@ NODE genLeaf(int op, int val, double rval, char *id)
 	switch (op)
 	{
 	case IDE:
-		//t->type = findSymbol(id)->type;
+		s = (Symbol *) getFromSymbolTable(id);/*find symbol */
+		 t->type =  s->type;
+
 		break;
 
 	case INTCONST:
