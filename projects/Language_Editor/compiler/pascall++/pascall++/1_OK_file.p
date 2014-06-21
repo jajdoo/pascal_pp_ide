@@ -1,4 +1,5 @@
 PROGRAM progtato
 {
-	aaa123( 1, 5 );
+	VAR INTEGER: a;
+	a = a + 5;
 }
