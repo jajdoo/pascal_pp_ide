@@ -61,8 +61,8 @@ struct_decl:
 			STRUCT IDE				
 			{
 				symbol_new();
-				symbol_set_isstruct(1); //symbol_stack_set_isstruct(1);
-				symbol_set_name($2); //symbol_stack_set_name($2);
+				symbol_set_isstruct(1);
+				symbol_set_name($2);
 				symbol_set_address(-1);
 				symbol_set_type(0); 
 				symbol_finish();
@@ -71,14 +71,13 @@ struct_decl:
 			LC member_decl RC ';'	
 			{
 				exit_block();
-				//symbol_stack_pop();
 			} 
 ;
 
 
 member_decl :
 			VAR												
-				{  symbol_new();  /*symbol_stack_push();*/ 
+				{  symbol_new();
 				   symbol_set_isstructmember(1);
 				}
 			type_list ':' member_id_list ';' member_decl_tail	{ }
@@ -121,15 +120,15 @@ declaration:
 
 
 var_decl :
-			VAR							{ symbol_new(); }//symbol_stack_push(); }
+			VAR							{ symbol_new(); }
 			type_list ':' id_list ';'	{ }
 ;
  
 
 type_list:
-		BOOLEAN		{ symbol_set_type(BOOLEAN); } //symbol_stack_set_type(BOOLEAN); }
-	|	INTEGER		{ symbol_set_type(INTEGER); } //symbol_stack_set_type(INTEGER); }
-	|	FLOAT		{ symbol_set_type(FLOAT); } //symbol_stack_set_type(FLOAT); }
+		BOOLEAN		{ symbol_set_type(BOOLEAN); }
+	|	INTEGER		{ symbol_set_type(INTEGER); }
+	|	FLOAT		{ symbol_set_type(FLOAT); }
 ;
 
 
