@@ -32,7 +32,7 @@ void symbol_finish()
 	SymbolWrapper* w, *prev;
 	Symbol* context_symbol;
 
-	if (cur->is_param)
+	if (cur->is_param || cur->is_struct_member)
 	{
 		context_symbol = (Symbol*)symbol_table_getcontext();
 		w = (SymbolWrapper*)malloc(sizeof(SymbolWrapper));
@@ -44,25 +44,6 @@ void symbol_finish()
 		if ( prev != NULL )
 		{
 			while ( prev->next != NULL )
-				prev = prev->next;
-			prev->next = w;
-		}
-		else
-			context_symbol->list = w;
-	}
-
-	if (cur->is_struct_member)
-	{
-		context_symbol = (Symbol*)symbol_table_getcontext();
-		w = (SymbolWrapper*)malloc(sizeof(SymbolWrapper));
-		w->Symbol = cur;
-		w->next = NULL;
-
-		prev = context_symbol->list;
-
-		if (prev != NULL)
-		{
-			while (prev->next != NULL)
 				prev = prev->next;
 			prev->next = w;
 		}

@@ -1,4 +1,8 @@
 PROGRAM progtato
 {
-	aaa123( 1, 5 );
+
+	PROCEDURE pr( VAR INTEGER: a )
+	{
+	};
+	pr(1.1);
 }

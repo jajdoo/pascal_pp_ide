@@ -5,16 +5,20 @@
 #include "symbol.h"
 #include "proc_call.h"
 #include "symbol_table.h"
+#include "parse_tree.h"
 
 
 Symbol* proc_symbol;
 SymbolWrapper* cur_child;
+int args_count;
+
 
 void proc_call_setproc(char* p)
 {
 	printf("starting proc call validation for %s\n", p);
 
 	proc_symbol = (Symbol*) getFromSymbolTable(p);
+
 	if (proc_symbol == NULL)
 	{
 		printf("no such symbol: %s\n", p);
@@ -24,18 +28,25 @@ void proc_call_setproc(char* p)
 	if (!proc_symbol->is_proc)
 	{
 		printf("symbol %s is not a proc\n", p);
+		return;
 	}
 
+	args_count = 0;
 	cur_child = proc_symbol->list;
 }
 
 
 void proc_call_finish()
 {
+	if (cur_child != NULL)
+	{
+		printf("argument count missmatch - expacted: %d recieved: %d \n", -1, args_count);
+	}
+
 	proc_symbol = NULL;
 	cur_child = NULL;
 
-	printf("proc call validation finished");
+	printf("proc call validation finished\n");
 }
 
 
@@ -44,9 +55,22 @@ void proc_call_validate_arg(int type)
 	Symbol* s;
 	
 	if (cur_child == NULL)
+	{
+		printf("too many arguments in proc call \n");
 		return;
+	}
 
 	s = cur_child->Symbol;
 
-	
+	if (type != cur_child->Symbol->type)
+	{
+		printf("parameter type missmatch; argument %d : expacted %s, recieved %s \n",
+			args_count,
+			print_op(cur_child->Symbol->type),
+			print_op(type)
+			);
+	}
+
+	args_count++;
+	cur_child = cur_child->next;
 }

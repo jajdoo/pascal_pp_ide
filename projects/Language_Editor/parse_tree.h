@@ -11,5 +11,6 @@ NODE root;
 
 NODE makenode(int op, NODE s1, NODE s2, NODE s3, int val, char *id);
 NODE genLeaf(int op, int val, double rval, char *id);
+char *print_op(int op);
 
 #endif

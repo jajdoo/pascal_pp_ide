@@ -12,6 +12,7 @@
 #include "struct_def.h"
 #include "symbol_table.h"
 #include "symbol.h"
+#include "proc_call.h"
 
 int line_number = 1;
 
@@ -208,22 +209,31 @@ param_id_list:
 
 
 proc_call : 
-	IDE '(' args ')' ';'
+	IDE 
+	{
+		proc_call_setproc($1);
+	}
+	'(' args ')' ';'
 	{ 
-		printf("FUNCTION CALL %s\n\n", $1); 
+		printf("FUNCTION CALL %s\n\n", $1);
+		proc_call_finish();
 		$$ = makenode(PROC_CALL,NULL,NULL,NULL,0,NULL);
 	}
 ;
 
 
 args : 
-		expr args_tail	{ printf(" ARG %d\n", $1->num_val ); }
+		expr		
+		{
+			proc_call_validate_arg($1->type);
+		}
+		args_tail	
 	|	
 ;
 
 args_tail :
 		',' expr args_tail	{ printf(" ARG %d\n", $2->num_val); }
-	|						{ printf(" ARGS FINISH\n"); }
+	|						{ }
 ;
 
 
