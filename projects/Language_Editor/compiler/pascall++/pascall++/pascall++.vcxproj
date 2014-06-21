@@ -33,6 +33,7 @@
     <ClCompile Include="..\..\..\lex.yy.c" />
     <ClCompile Include="..\..\..\main.c" />
     <ClCompile Include="..\..\..\parse_tree.c" />
+    <ClCompile Include="..\..\..\proc_call.c" />
     <ClCompile Include="..\..\..\stack.c" />
     <ClCompile Include="..\..\..\struct_def.c" />
     <ClCompile Include="..\..\..\symbol.c" />
@@ -43,6 +44,7 @@
     <ClInclude Include="..\..\..\convertTree.h" />
     <ClInclude Include="..\..\..\globals.h" />
     <ClInclude Include="..\..\..\parse_tree.h" />
+    <ClInclude Include="..\..\..\proc_call.h" />
     <ClInclude Include="..\..\..\stack.h" />
     <ClInclude Include="..\..\..\struct_def.h" />
     <ClInclude Include="..\..\..\symbol.h" />

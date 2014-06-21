@@ -62,6 +62,9 @@
     <ClCompile Include="..\..\..\symbol.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\proc_call.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\bison_file_tab.h">
@@ -89,6 +92,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\symbol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\proc_call.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

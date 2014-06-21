@@ -28,6 +28,7 @@ void symbol_new()
 
 void symbol_finish()
 {
+	int table_ret_code;
 	SymbolWrapper* w, *prev;
 	Symbol* context_symbol;
 
@@ -68,8 +69,24 @@ void symbol_finish()
 		else
 			context_symbol->list = w;
 	}
+	
+	table_ret_code = addToSymbolTable(cur->symb, (void*)cur);
 
-	addToSymbolTable(cur->symb, (void*)cur);
+	switch (table_ret_code)
+	{
+	case HASH_ADD_FAILED_NO_CONTEXT:
+		printf("could not add symbol %s - no context\n", cur->symb);
+		symbol_free(cur);
+		break;
+	case HASH_ADD_FAILED_ALREADY_EXIST:
+		printf("could not add symbol %s - redifinition\n", cur->symb);
+		symbol_free(cur);
+		break;
+	case HASH_ADD_SUCCESS:
+		printf("successfuly added symbol %s \n", cur->symb);
+		break;
+	}
+
 	cur = NULL;
 }
 

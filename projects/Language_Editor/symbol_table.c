@@ -7,10 +7,6 @@
 /** 
 	Author : Ofek Ron
 **/
-#define HASH_SIZE 101
-#define HASH_ADD_SUCCESS 1
-#define HASH_ADD_FAILED_NO_CONTEXT -1
-#define HASH_ADD_FAILED_ALREADY_EXIST 0
 
 typedef struct Symbol_t {
 	void *data;
