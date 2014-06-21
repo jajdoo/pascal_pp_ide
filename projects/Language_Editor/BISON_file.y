@@ -262,7 +262,7 @@ case_list:  case               {$$=makenode(CASELIST,$1,NULL,NULL,0,NULL);}
 case :  INTCONST ':' stat_seq  {$$=makenode(CASE,NULL,$3,NULL,$1,NULL);}   
 
 
-var:
+var:/*************************************************************************************/
 	IDE '.' struct_acc_tail			{ printf("struct_acc->"); }					
 	| IDE							{ $$ = genLeaf(IDE,0,0,$1);}
 	| POINTER						{$$ = genLeaf(POINTER,0,0,$1);}
