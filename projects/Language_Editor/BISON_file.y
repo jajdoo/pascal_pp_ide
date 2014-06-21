@@ -24,7 +24,7 @@ int line_number = 1;
 %token MOD LES LEQ EQU NEQ GRE GEQ AND OR
 %token AND OR NOT CASE FOR FIN IDENTICAL FROM BY TO CONST TYPE VAR RECORD
 
-%token STRUCT CAST STATEMENT DECLARATION BLOCK_BODY PROC_CALL
+%token STRUCT CAST STATEMENT DECLARATION BLOCK_BODY PROC_CALL ARGUMENT_LIST
 
 %token<code> INTCONST 
 %token<string> IDE 
@@ -37,7 +37,7 @@ int line_number = 1;
 
 %type<node> var assign program procedure stat_seq loop_stat case_stat bracket 
 %type<node> expr atom block stat nonlable_stat cond_stat case case_list 
-%type<node> declaration dec_or_stat struct_decl proc_call
+%type<node> declaration dec_or_stat struct_decl proc_call args args_tail
 %type<integer> type_list
 
 %nonassoc LES LEQ EQU NEQ GRE GEQ
@@ -215,24 +215,21 @@ proc_call :
 	'(' args ')' ';'
 	{ 
 		proc_call_finish();
-		$$ = makenode(PROC_CALL,NULL,NULL,NULL,0,NULL);
+		$$ = makenode(PROC_CALL,$4,NULL,NULL,0,NULL);
 	}
 ;
 
 
 args : 
-		expr		
-		{
-			proc_call_validate_arg($1->type);
-		}
-		args_tail	
-	|	
+		expr		{ proc_call_validate_arg($1->type); }
+		args_tail	{ $$ = makenode(ARGUMENT_LIST,$1,$3,NULL,0,NULL); }
+	|				{ $$ = NULL;}
 ;
 
 args_tail :
 		',' expr	{ proc_call_validate_arg($2->type); }
-		args_tail	{}
-	|				{}
+		args_tail	{ $$ = makenode(ARGUMENT_LIST,$2,$4,NULL,0,NULL); }
+	|				{ $$ = NULL; }
 ;
 
 

@@ -133,6 +133,12 @@ char *print_op(int op)
 	case BLOCK_BODY:
 		return ("BLOCK_BODY");
 		break;
+	case ARGUMENT_LIST:
+		return ("ARGUMENT_LIST");
+		break;
+	case PROC_CALL:
+		return ("PROC_CALL");
+		break;
 	default:
 		fprintf(txt, "Error at line %d: Unknown Token %d\n", line_number, op );
 		return ("UNKNOWN");
