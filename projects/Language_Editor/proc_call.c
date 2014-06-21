@@ -38,10 +38,8 @@ void proc_call_setproc(char* p)
 
 void proc_call_finish()
 {
-	if (cur_child != NULL)
-	{
-		printf("argument count missmatch - expacted: %d recieved: %d \n", -1, args_count);
-	}
+	if (proc_symbol->child_count!=args_count)
+		printf("argument count missmatch - expacted: %d recieved: %d \n", proc_symbol->child_count, args_count);
 
 	proc_symbol = NULL;
 	cur_child = NULL;
@@ -54,11 +52,10 @@ void proc_call_validate_arg(int type)
 {
 	Symbol* s;
 	
+	args_count++;
+
 	if (cur_child == NULL)
-	{
-		printf("too many arguments in proc call \n");
 		return;
-	}
 
 	s = cur_child->Symbol;
 
@@ -71,6 +68,5 @@ void proc_call_validate_arg(int type)
 			);
 	}
 
-	args_count++;
 	cur_child = cur_child->next;
 }

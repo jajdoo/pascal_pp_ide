@@ -37,6 +37,7 @@ typedef struct Symbol
 	int is_struct;					// is this symbol a struct?
 	int is_struct_member;
 	int is_proc;					// is this a procedure?
+	int child_count;				// if is_proc - how many params ?
 	SymbolWrapper* list;		// if this symbol is a struct, these are its members.
 	// if this symbol is a procedure/function, these are its parameters;
 } Symbol;

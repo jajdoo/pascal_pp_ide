@@ -215,7 +215,6 @@ proc_call :
 	}
 	'(' args ')' ';'
 	{ 
-		printf("FUNCTION CALL %s\n\n", $1);
 		proc_call_finish();
 		$$ = makenode(PROC_CALL,NULL,NULL,NULL,0,NULL);
 	}
@@ -232,8 +231,9 @@ args :
 ;
 
 args_tail :
-		',' expr args_tail	{ printf(" ARG %d\n", $2->num_val); }
-	|						{ }
+		',' expr	{ proc_call_validate_arg($2->type); }
+		args_tail	{}
+	|				{}
 ;
 
 

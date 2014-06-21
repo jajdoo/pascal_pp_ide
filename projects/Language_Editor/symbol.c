@@ -22,6 +22,7 @@ void symbol_new()
 	cur->is_param = 0;
 	cur->is_struct = 0;
 	cur->is_struct_member = 0;
+	cur->child_count = 0;
 	cur->list = NULL;
 }
 
@@ -49,6 +50,8 @@ void symbol_finish()
 		}
 		else
 			context_symbol->list = w;
+
+		context_symbol->child_count++;
 	}
 	
 	table_ret_code = addToSymbolTable(cur->symb, (void*)cur);
