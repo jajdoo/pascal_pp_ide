@@ -1,8 +1,13 @@
 PROGRAM progtato
 {
-
-	PROCEDURE pr( VAR INTEGER: a, VAR FLOAT: b, VAR BOOLEAN: c )
+	VAR INTEGER: c;
+	STRUCT s
 	{
+		VAR INTEGER: a;
+		VAR FLOAT: b;
 	};
-	pr( 1, 1.1, TRUE );
+
+	STRUCT s: e;
+
+	c = e.a
 }

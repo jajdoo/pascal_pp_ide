@@ -15,7 +15,6 @@ void symbol_new()
 	cur->symb = NULL;
 	cur->type = -1;
 	cur->address = -1;
-	cur->funcName = "";
 	cur->is_proc = 0;
 	cur->IS_ARRAY = 0;
 	cur->IS_POINTER = 0;

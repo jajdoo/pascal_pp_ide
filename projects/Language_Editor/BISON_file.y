@@ -9,7 +9,6 @@
 #include "globals.h"
 #include "typedef.h"
 #include "parse_tree.h"
-#include "struct_def.h"
 #include "symbol_table.h"
 #include "symbol.h"
 #include "proc_call.h"
@@ -115,9 +114,13 @@ dec_or_stat :
 
 declaration:    
 				struct_decl		{ $$ = NULL; }
+			 |  struct_def		{ $$ = NULL; }
 			 |  var_decl		{ $$ = NULL; }
 ;
 
+struct_def:
+			STRUCT IDE ':' IDE ';'	{ }
+;
 
 var_decl :
 			VAR							{ symbol_new(); }
@@ -158,14 +161,14 @@ procedure :
 				symbol_set_isprocedure(1);
 				symbol_finish();
 				enter_block($2);
-				printf("entering conext %s\n", $2);
+				//printf("entering context %s\n", $2);
 			} 
 			'(' param_decl ')' block ';'
 			{
-				printSymbolTable();
+				//printSymbolTable();
 				exit_block();
 
-				printf("exiting conext\n"); 
+				//printf("exiting context\n"); 
 				$$ = makenode(PROCEDURE, $7, NULL, NULL, 0, NULL);
 			}
 ;

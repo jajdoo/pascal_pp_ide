@@ -12,7 +12,6 @@ typedef struct SymbolWrapper
 typedef struct Symbol
 {
 	char *symb;				// the string that holds the name of the Symbol
-	char *funcName;			// the name of the function where the Symbol is decleared
 	int type;
 	int address;			// relative address to block
 	int size;				// size of variable in bytes
