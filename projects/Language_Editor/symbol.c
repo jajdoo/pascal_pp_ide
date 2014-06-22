@@ -21,8 +21,15 @@ void symbol_new()
 	cur->is_param = 0;
 	cur->is_struct = 0;
 	cur->is_struct_member = 0;
+	cur->struct_type = NULL;
 	cur->child_count = 0;
 	cur->list = NULL;
+}
+
+void symbol_cancel()
+{
+	symbol_free(cur);
+	cur = NULL;
 }
 
 
@@ -131,6 +138,29 @@ void symbol_set_isprocedure(int is_procedure)
 void symbol_set_isstruct(int is_struct)
 {
 	cur->is_struct = is_struct;
+}
+
+
+int symbol_set_struct_type(char* struct_name)
+{
+	Symbol* struct_symbol;
+	struct_symbol = getFromSymbolTable(struct_name);
+
+	if (struct_symbol == NULL)
+	{
+		printf("no such struct %s \n", struct_name );
+		return 0;
+	}
+
+	if (!struct_symbol->is_struct)
+	{
+		printf("symbol %s is not a struct \n", struct_name);
+		return 0;
+	}
+
+	cur->struct_type = struct_symbol;
+
+	return 1;
 }
 
 

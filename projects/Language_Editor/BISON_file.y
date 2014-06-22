@@ -119,7 +119,17 @@ declaration:
 ;
 
 struct_def:
-			STRUCT IDE ':' IDE ';'	{ }
+			STRUCT IDE ':' IDE ';'
+			{
+				symbol_new();
+				if(symbol_set_struct_type($2))
+				{
+					symbol_set_name($4);
+					symbol_finish();
+				}
+				else
+					symbol_cancel();
+			}
 ;
 
 var_decl :
