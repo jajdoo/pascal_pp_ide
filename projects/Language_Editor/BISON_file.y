@@ -122,7 +122,7 @@ block :	  LC dec_or_stat RC				{$$=makenode(BBEGIN,$2,NULL,NULL,0,NULL);}
 dec_or_stat : 
 				procedure	dec_or_stat	{$$=makenode(BLOCK_BODY,$1,$2,NULL,0,NULL);}
 			|	stat		dec_or_stat	{$$=makenode(BLOCK_BODY,$1,$2,NULL,0,NULL);}
-			|	proc_call	dec_or_stat	{$$=$1;}
+			|	proc_call	dec_or_stat	{$$=makenode(BLOCK_BODY,$1,$2,NULL,0,NULL);}
 			|	declaration	dec_or_stat	{$$=$2;}
 			|							{$$=NULL;}
 ;
@@ -239,12 +239,16 @@ param_id_list:
 proc_call : 
 	IDE 
 	{
+		
 		proc_call_setproc($1);
 	}
 	'(' args ')' ';'
 	{ 
 		proc_call_finish();
-		$$ = makenode(PROC_CALL,$4,NULL,NULL,0,NULL);
+		if( proc_call_valid())
+			$$ = makenode(PROC_CALL,$4,NULL,NULL,0,NULL);
+		else
+			$$ = NULL;
 	}
 ;
 

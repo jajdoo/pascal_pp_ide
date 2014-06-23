@@ -15,6 +15,12 @@ PROGRAM progtato
 		STRUCT s2: mm;
 	};
 
+	PROCEDURE p( VAR INTEGER: a )
+	{
+	};
+
 	STRUCT s2: e;
+
+	p(1);
 	c = e.mm.a;
 }

@@ -12,6 +12,9 @@ Symbol* proc_symbol;
 SymbolWrapper* cur_child;
 int args_count;
 
+int proc_call_error;
+
+extern int line_number;
 
 void proc_call_setproc(char* p)
 {
@@ -21,26 +24,37 @@ void proc_call_setproc(char* p)
 
 	if (proc_symbol == NULL)
 	{
-		printf("no such symbol: %s\n", p);
+		printf("no such symbol: %s - line %d\n", p, line_number );
+		proc_call_error = 1;
 		return;
 	}
 
 	if (!proc_symbol->is_proc)
 	{
-		printf("symbol %s is not a proc\n", p);
+		printf("symbol %s is not a proc - line %d\n", p, line_number);
+		proc_call_error = 1;
 		return;
 	}
 
+	proc_call_error = 0;
 	args_count = 0;
 	cur_child = proc_symbol->list;
 }
 
 
+int proc_call_valid()
+{
+	return !proc_call_error;
+}
+
+
 void proc_call_finish()
 {
-	if (proc_symbol->child_count!=args_count)
-		printf("argument count missmatch - expacted: %d recieved: %d \n", proc_symbol->child_count, args_count);
-
+	if (proc_symbol!=NULL && proc_symbol->child_count != args_count)
+	{
+		printf("argument count missmatch: expacted: %d recieved: %d  - line %d\n", proc_symbol->child_count, args_count, line_number);
+		proc_call_error = 1;
+	}
 	proc_symbol = NULL;
 	cur_child = NULL;
 
@@ -51,7 +65,10 @@ void proc_call_finish()
 void proc_call_validate_arg(int type)
 {
 	Symbol* s;
-	
+
+	if (proc_call_error)
+		return;
+
 	args_count++;
 
 	if (cur_child == NULL)
@@ -61,11 +78,13 @@ void proc_call_validate_arg(int type)
 
 	if (type != cur_child->Symbol->type)
 	{
-		printf("parameter type missmatch; argument %d : expacted %s, recieved %s \n",
+		printf("parameter type missmatch; argument %d : expacted %s, recieved %s  - line %d\n",
 			args_count,
 			print_op(cur_child->Symbol->type),
-			print_op(type)
+			print_op(type),
+			line_number
 			);
+		proc_call_error = 1;
 	}
 
 	cur_child = cur_child->next;

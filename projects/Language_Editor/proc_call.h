@@ -3,6 +3,7 @@
 #define _PROC_CALL_H__
 
 
+int proc_call_valid();
 void proc_call_setproc(char* p);
 void proc_call_finish();
 
