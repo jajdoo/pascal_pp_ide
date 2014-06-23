@@ -139,6 +139,9 @@ char *print_op(int op)
 	case PROC_CALL:
 		return ("PROC_CALL");
 		break;
+	case STRUCT_ACC:
+		return "STRUCT_ACC";
+		break;
 	default:
 		fprintf(txt, "Error at line %d: Unknown Token %d\n", line_number, op );
 		return ("UNKNOWN");

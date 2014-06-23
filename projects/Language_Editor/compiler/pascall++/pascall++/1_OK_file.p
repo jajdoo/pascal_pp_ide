@@ -8,4 +8,5 @@ PROGRAM progtato
 	};
 
 	STRUCT s: e;
+	c = e.a;
 }

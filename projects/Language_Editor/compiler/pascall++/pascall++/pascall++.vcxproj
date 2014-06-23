@@ -35,6 +35,7 @@
     <ClCompile Include="..\..\..\parse_tree.c" />
     <ClCompile Include="..\..\..\proc_call.c" />
     <ClCompile Include="..\..\..\stack.c" />
+    <ClCompile Include="..\..\..\struct_acc.c" />
     <ClCompile Include="..\..\..\symbol.c" />
     <ClCompile Include="..\..\..\symbol_table.c" />
   </ItemGroup>
@@ -45,6 +46,7 @@
     <ClInclude Include="..\..\..\parse_tree.h" />
     <ClInclude Include="..\..\..\proc_call.h" />
     <ClInclude Include="..\..\..\stack.h" />
+    <ClInclude Include="..\..\..\struct_acc.h" />
     <ClInclude Include="..\..\..\symbol.h" />
     <ClInclude Include="..\..\..\symbol_table.h" />
     <ClInclude Include="..\..\..\typedef.h" />

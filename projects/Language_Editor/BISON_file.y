@@ -12,6 +12,7 @@
 #include "symbol_table.h"
 #include "symbol.h"
 #include "proc_call.h"
+#include "struct_acc.h"
 
 int line_number = 1;
 
@@ -23,7 +24,7 @@ int line_number = 1;
 %token MOD LES LEQ EQU NEQ GRE GEQ AND OR
 %token AND OR NOT CASE FOR FIN IDENTICAL FROM BY TO CONST TYPE VAR RECORD
 
-%token STRUCT CAST STATEMENT DECLARATION BLOCK_BODY PROC_CALL ARGUMENT_LIST
+%token STRUCT CAST STATEMENT DECLARATION BLOCK_BODY PROC_CALL ARGUMENT_LIST STRUCT_ACC
 
 %token<code> INTCONST 
 %token<string> IDE 
@@ -36,7 +37,7 @@ int line_number = 1;
 
 %type<node> var assign program procedure stat_seq loop_stat case_stat bracket 
 %type<node> expr atom block stat nonlable_stat cond_stat case case_list 
-%type<node> declaration dec_or_stat struct_decl proc_call args args_tail
+%type<node> declaration dec_or_stat struct_decl proc_call args args_tail struct_acc struct_acc_tail
 %type<integer> type_list
 
 %nonassoc LES LEQ EQU NEQ GRE GEQ
@@ -75,11 +76,12 @@ struct_decl:
 
 
 member_decl :
-			VAR												
-				{  symbol_new();
-				   symbol_set_isstructmember(1);
-				}
-			type_list ':' member_id_list ';' member_decl_tail	{ }
+	VAR												
+	{  
+		symbol_new();
+		symbol_set_isstructmember(1);
+	}
+	type_list ':' member_id_list ';' member_decl_tail	{ }
 ;
 
 member_decl_tail	:
@@ -282,8 +284,8 @@ case :  INTCONST ':' stat_seq  {$$=makenode(CASE,NULL,$3,NULL,$1,NULL);}
 
 
 var:
-	IDE '.' struct_acc_tail			{ printf("struct_acc->"); }					
-	| IDE							{ $$ = genLeaf(IDE,0,0,$1);}
+	struct_acc						{ $$ = $1; }			
+	| IDE							{ $$ = genLeaf(IDE,0,0,$1); }
 	| POINTER						{$$ = genLeaf(POINTER,0,0,$1);}
     | IDE '[' expr ']'				{s=0; /*lst=findSymbol($1)->lst;*/} 
     bracket  
@@ -309,9 +311,51 @@ var:
 /*                             STRUCT access                             */
 /*-----------------------------------------------------------------------*/
 
-struct_acc_tail:  IDE 										{printf("struct_tail->");}
-				| IDE '.' struct_acc_tail					{printf("\n");}
-		; 
+struct_acc: 
+	IDE
+	{
+		struct_acc_start($1);
+	}
+	'.' struct_acc_tail
+	{
+		if( struct_acc_valid() )
+		{
+			NODE left = makenode(IDE, NULL, NULL, NULL, 0, $1);
+			$$ = makenode(STRUCT_ACC, left, $4, NULL, 0, NULL);
+		}
+		else 
+			$$ = $4;
+	}
+;
+
+struct_acc_tail: 
+	IDE 
+	{
+		struct_acc_next($1);
+		
+		if( struct_acc_valid() )
+			$$ = makenode(IDE, NULL, NULL, NULL, 0, $1);
+		else 
+			$$ = NULL;
+
+		struct_acc_finish();
+	}
+|	
+	IDE
+	{
+		struct_acc_next($1);
+	} 
+	'.' struct_acc_tail 
+	{
+		if( struct_acc_valid() )
+		{
+			NODE left = makenode(IDE, NULL, NULL, NULL, 0, $1);
+			$$ = makenode(STRUCT_ACC, left, $4, NULL, 0, NULL);
+		}
+		else 
+			$$ = $4;
+	}
+; 
 
 /*-----------------------------------------------------------------------*/
 /************************************************************************/
