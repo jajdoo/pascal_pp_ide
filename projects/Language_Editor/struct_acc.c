@@ -19,7 +19,7 @@ void struct_acc_start(char* ide)
 
 	if (cur == NULL)
 	{
-		printf("not such struct %s - line %d\n", ide, line_number);
+		printf("no such symbol '%s' - line %d\n", ide, line_number);
 		struct_acc_error = 1;
 		return;
 	}
@@ -44,7 +44,7 @@ void struct_acc_next(char* ide)
 	struct_type = cur->struct_type;
 	if (struct_type == NULL)
 	{
-		printf("left side if '.' must be a struct (namely, %s) - line %d\n", cur->symb, line_number);
+		printf("left side if '.' must be a struct (namely, '%s') - line %d\n", cur->symb, line_number);
 		struct_acc_error = 1;
 		return;
 	}
@@ -60,7 +60,7 @@ void struct_acc_next(char* ide)
 		w = w->next;
 	}
 
-	printf("no such member %s in struct %s - line %d\n", ide, cur->symb, line_number);
+	printf("no such member '%s' in struct '%s' - line %d\n", ide, cur->symb, line_number);
 	struct_acc_error = 1;
 	cur = NULL;
 }

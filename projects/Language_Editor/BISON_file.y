@@ -82,7 +82,21 @@ member_decl :
 		symbol_set_isstructmember(1);
 	}
 	type_list ':' member_id_list ';' member_decl_tail	{ }
+|
+	STRUCT IDE ':' IDE ';'
+	{
+		symbol_new();
+		symbol_set_isstructmember(1);
+		if(symbol_set_struct_type($2))
+		{
+			symbol_set_name($4);
+			symbol_finish();
+		}
+		else
+			symbol_cancel();
+	}
 ;
+
 
 member_decl_tail	:
 						member_decl	{}

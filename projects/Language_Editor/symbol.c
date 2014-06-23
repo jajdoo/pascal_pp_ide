@@ -7,7 +7,7 @@
 #include "symbol_table.h"
 
 Symbol* cur;
-
+extern int line_number;
 
 void symbol_new()
 {
@@ -65,15 +65,15 @@ void symbol_finish()
 	switch (table_ret_code)
 	{
 	case HASH_ADD_FAILED_NO_CONTEXT:
-		printf("could not add symbol %s - no context\n", cur->symb);
+		printf("could not add symbol %s: no context - line %d \n", cur->symb, line_number);
 		symbol_free(cur);
 		break;
 	case HASH_ADD_FAILED_ALREADY_EXIST:
-		printf("could not add symbol %s - redifinition\n", cur->symb);
+		printf("could not add symbol %s, redifinition - line %d \n", cur->symb, line_number);
 		symbol_free(cur);
 		break;
 	case HASH_ADD_SUCCESS:
-		printf("successfuly added symbol %s \n", cur->symb);
+		printf("successfuly added symbol %s - line %d \n", cur->symb, line_number);
 		break;
 	}
 
@@ -148,13 +148,13 @@ int symbol_set_struct_type(char* struct_name)
 
 	if (struct_symbol == NULL)
 	{
-		printf("no such struct %s \n", struct_name );
+		printf("no such struct %s - line %d \n", struct_name, line_number);
 		return 0;
 	}
 
 	if (!struct_symbol->is_struct)
 	{
-		printf("symbol %s is not a struct \n", struct_name);
+		printf("symbol %s is not a struct - line %d \n", struct_name, line_number);
 		return 0;
 	}
 
