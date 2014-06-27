@@ -22,9 +22,9 @@ int line_number = 1;
 %token BOOLEAN ARRAY OF ASSIGN LC RC IF THEN ELSE FI THEN WHILE REPEAT DO OD 
 %token READ WRITE TRUE FALSE ADD MMIN MUL DIV GOTO
 %token MOD LES LEQ EQU NEQ GRE GEQ AND OR
-%token AND OR NOT CASE FOR FIN IDENTICAL FROM BY TO CONST TYPE VAR RECORD
+%token AND OR NOT CASE FOR FIN IDENTICAL FROM BY TO CONST TYPE VAR VAL RECORD
 
-%token STRUCT CAST STATEMENT DECLARATION BLOCK_BODY PROC_CALL ARGUMENT_LIST STRUCT_ACC
+%token STRUCT CAST STATEMENT DECLARATION BLOCK_BODY PROC_CALL ARGUMENT_LIST STRUCT_ACC 
 
 %token<code> INTCONST 
 %token<string> IDE 
@@ -205,10 +205,17 @@ param_decl :
 ;
 
 param: 
-	VAR											
+	VAL
 	{ 
 		symbol_new();
-		symbol_set_isparam(1);
+		symbol_set_isvalparam(1);
+	}
+	type_list ':' param_id_list
+|
+	VAR
+	{ 
+		symbol_new();
+		symbol_set_isvarparam(1);
 	}
 	type_list ':' param_id_list
 ;
@@ -239,13 +246,12 @@ param_id_list:
 proc_call : 
 	IDE 
 	{
-		
 		proc_call_setproc($1);
 	}
 	'(' args ')' ';'
 	{ 
 		proc_call_finish();
-		if( proc_call_valid())
+		if( proc_call_valid() )
 			$$ = makenode(PROC_CALL,$4,NULL,NULL,0,NULL);
 		else
 			$$ = NULL;
@@ -254,13 +260,13 @@ proc_call :
 
 
 args : 
-		expr		{ proc_call_validate_arg($1->type); }
+		expr		{ proc_call_validate_arg($1->type, $1->op==IDE ? 1:0 ); }
 		args_tail	{ $$ = makenode(ARGUMENT_LIST,$1,$3,NULL,0,NULL); }
 	|				{ $$ = NULL;}
 ;
 
 args_tail :
-		',' expr	{ proc_call_validate_arg($2->type); }
+		',' expr	{ proc_call_validate_arg($2->type, $2->op==IDE ? 1:0 ); }
 		args_tail	{ $$ = makenode(ARGUMENT_LIST,$2,$4,NULL,0,NULL); }
 	|				{ $$ = NULL; }
 ;

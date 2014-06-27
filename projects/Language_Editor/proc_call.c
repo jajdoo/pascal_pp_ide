@@ -62,7 +62,7 @@ void proc_call_finish()
 }
 
 
-void proc_call_validate_arg(int type)
+void proc_call_validate_arg(int type, int is_ide)
 {
 	Symbol* s;
 
@@ -76,7 +76,16 @@ void proc_call_validate_arg(int type)
 
 	s = cur_child->Symbol;
 
-	if (type != cur_child->Symbol->type)
+	if ( cur_child->Symbol->is_var_param==1 && is_ide!=1 )
+	{
+		printf("argument %d : expacted identifier (parameter %s declated as VAR) - line %d\n",
+			args_count,
+			cur_child->Symbol->symb,
+			line_number
+			); 
+		proc_call_error = 1;
+	}
+	else if (type != cur_child->Symbol->type)
 	{
 		printf("parameter type missmatch; argument %d : expacted %s, recieved %s  - line %d\n",
 			args_count,

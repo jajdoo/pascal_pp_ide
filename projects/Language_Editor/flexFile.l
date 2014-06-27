@@ -38,6 +38,7 @@ ADDRESS			   @{IDE}
 CONST        {return(CONST);    }
 TYPE         {return(TYPE);     }
 VAR          {return(VAR);      }
+VAL			 {return(VAL);      }
 AND          {return(AND);      }
 OR           {return(OR);       }
 ARRAY        {return(ARRAY);    }

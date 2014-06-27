@@ -15,12 +15,12 @@ PROGRAM progtato
 		STRUCT s2: mm;
 	};
 
-	PROCEDURE p( VAR INTEGER: a )
+	PROCEDURE p( VAR INTEGER: a, VAL INTEGER: b )
 	{
 	};
 
 	STRUCT s2: e;
 
-	p(1);
+	p(c, 1+2);
 	c = e.mm.a;
 }

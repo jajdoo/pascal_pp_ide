@@ -18,7 +18,8 @@ void symbol_new()
 	cur->is_proc = 0;
 	cur->IS_ARRAY = 0;
 	cur->IS_POINTER = 0;
-	cur->is_param = 0;
+	cur->is_var_param = 0;
+	cur->is_val_param = 0;
 	cur->is_struct = 0;
 	cur->is_struct_member = 0;
 	cur->struct_type = NULL;
@@ -39,7 +40,7 @@ void symbol_finish()
 	SymbolWrapper* w, *prev;
 	Symbol* context_symbol;
 
-	if (cur->is_param || cur->is_struct_member)
+	if (cur->is_val_param || cur->is_var_param || cur->is_struct_member)
 	{
 		context_symbol = (Symbol*)symbol_table_getcontext();
 		w = (SymbolWrapper*)malloc(sizeof(SymbolWrapper));
@@ -81,9 +82,15 @@ void symbol_finish()
 }
 
 
-void symbol_set_isparam(int param) 
+void symbol_set_isvalparam(int is_val_param) 
 {
-	cur->is_param = param;
+	cur->is_val_param = is_val_param;
+}
+
+
+void symbol_set_isvarparam(int is_var_param)
+{
+	cur->is_var_param = is_var_param;
 }
 
 
@@ -91,6 +98,8 @@ void symbol_set_type(int type)
 {
 	cur->type = type;
 }
+
+
 void symbol_set_isstructmember(int struc_member)
 {
 	cur->is_struct_member = struc_member;
@@ -170,7 +179,7 @@ void symbol_free(void *a)
 	SymbolWrapper* w,* p;
 	Symbol* s = (Symbol*)a;
 
-	if (s->is_param)
+	if (s->is_var_param || s->is_val_param)
 		return;
 	if (s->is_struct_member)
 		return;
@@ -181,7 +190,8 @@ void symbol_free(void *a)
 	w = s->list;
 	while (w != NULL)
 	{
-		w->Symbol->is_param = 0;
+		w->Symbol->is_val_param = 0;
+		w->Symbol->is_var_param = 0;
 		symbol_free(w->Symbol);
 
 		p = w;
@@ -207,18 +217,22 @@ void symbol_print(struct Symbol* symbol)
 		"proc?		%d\n"
 		"array?		%d\n"
 		"pointer?	%d\n"
-		"parameter?	%d\n"
+		"var param?	%d\n"
+		"val param? %d\n"
 		"struct_member?	%d\n"
-		"struct?		%d\n\n\n",
+		"struct?		%d\n"
+		"struct type?	%s\n\n\n",
 		symbol->symb,
 		symbol->type,
 		symbol->address,
 		symbol->is_proc,
 		symbol->IS_ARRAY,
 		symbol->IS_POINTER,
-		symbol->is_param,
+		symbol->is_var_param,
+		symbol->is_val_param,
 		symbol->is_struct_member,
-		symbol->is_struct
+		symbol->is_struct,
+		( (symbol->struct_type==NULL) ? ("not a struct"):(symbol->struct_type) )
 		);
 
 	n = 0;

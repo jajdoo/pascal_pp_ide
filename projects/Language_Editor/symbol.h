@@ -17,7 +17,8 @@ typedef struct Symbol
 	int size;					// size of variable in bytes
 	int IS_ARRAY;				// if variable is array 1 for [] , x for [][x], 0 for non array
 	int IS_POINTER;				// if variable is a pointer
-	int is_param;				//
+	int is_val_param;			// param passed by value
+	int is_var_param;			// param passed by reference
 	int is_struct;				// is this symbol a struct?
 	int is_struct_member;		// is this a struct member?
 	struct Symbol* struct_type;	// pointer to struct type
@@ -50,7 +51,8 @@ void symbol_set_isarray(int is_array);
 void symbol_set_ispointer(int is_pointer);
 void symbol_set_isprocedure(int is_procedure);
 void symbol_set_isstruct(int is_struct);
-void symbol_set_isparameter(int is_param);
+void symbol_set_isvalparam(int is_val_param);
+void symbol_set_isvarparam(int is_var_param);
 void symbol_set_isstructmember(int struc_member);
 int  symbol_set_struct_type(char* struct_name);
 
