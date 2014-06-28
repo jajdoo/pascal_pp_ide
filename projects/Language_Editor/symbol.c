@@ -5,6 +5,8 @@
 #include <string.h>
 #include "symbol.h"
 #include "symbol_table.h"
+#include "typedef.h"
+#include "bison_file_tab.h"
 
 Symbol* cur;
 extern int line_number;
@@ -15,6 +17,7 @@ void symbol_new()
 	cur->symb = NULL;
 	cur->type = -1;
 	cur->address = -1;
+	cur->size = 0;
 	cur->is_proc = 0;
 	cur->IS_ARRAY = 0;
 	cur->IS_POINTER = 0;
@@ -40,6 +43,12 @@ void symbol_finish()
 	SymbolWrapper* w, *prev;
 	Symbol* context_symbol;
 
+
+	// if this a struct instance, its size is copied from its parent
+	if (cur->struct_type != NULL)
+		cur->size = cur->struct_type->size;
+
+	// if this is a struct member or procedure param insert it as a child of its parent 
 	if (cur->is_val_param || cur->is_var_param || cur->is_struct_member)
 	{
 		context_symbol = (Symbol*)symbol_table_getcontext();
@@ -48,7 +57,6 @@ void symbol_finish()
 		w->next = NULL;
 
 		prev = context_symbol->list;
-
 		if ( prev != NULL )
 		{
 			while ( prev->next != NULL )
@@ -59,8 +67,11 @@ void symbol_finish()
 			context_symbol->list = w;
 
 		context_symbol->child_count++;
+
+		if (cur->is_struct_member)
+			context_symbol->size += cur->size;
 	}
-	
+
 	table_ret_code = addToSymbolTable(cur->symb, (void*)cur);
 
 	switch (table_ret_code)
@@ -97,6 +108,17 @@ void symbol_set_isvarparam(int is_var_param)
 void symbol_set_type(int type)
 {
 	cur->type = type;
+
+	switch (type)
+	{
+	case INTEGER:
+	case FLOAT:
+	case BOOLEAN:
+		cur->size = 1;
+		break;
+	default:
+		break;
+	}
 }
 
 
@@ -118,11 +140,12 @@ void symbol_set_address(int address)
 	cur->address = address;
 }
 
-
+/*
 void symbol_set_size(int size)
 {
 	cur->size = size;
 }
+*/
 
 
 void symbol_set_isarray(int is_array)
@@ -214,17 +237,19 @@ void symbol_print(struct Symbol* symbol)
 	printf("symbol:		%s\n"
 		"type:		%d\n"
 		"add:		%d\n"
+		"size:		%d\n"
 		"proc?		%d\n"
 		"array?		%d\n"
 		"pointer?	%d\n"
 		"var param?	%d\n"
-		"val param? %d\n"
+		"val param?	%d\n"
 		"struct_member?	%d\n"
-		"struct?		%d\n"
-		"struct type?	%s\n\n\n",
+		"struct decl?	%d\n"
+		"struct intance?	%s\n\n\n",
 		symbol->symb,
 		symbol->type,
 		symbol->address,
+		symbol->size,
 		symbol->is_proc,
 		symbol->IS_ARRAY,
 		symbol->IS_POINTER,
@@ -232,7 +257,7 @@ void symbol_print(struct Symbol* symbol)
 		symbol->is_val_param,
 		symbol->is_struct_member,
 		symbol->is_struct,
-		( (symbol->struct_type==NULL) ? ("not a struct"):(symbol->struct_type) )
+		( (symbol->struct_type==NULL) ? ("no"):(symbol->struct_type->symb) )
 		);
 
 	n = 0;

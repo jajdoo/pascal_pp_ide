@@ -29,7 +29,7 @@ typedef struct Symbol
 } Symbol;
 
 
-/* start a new symbol */
+// start a new symbol 
 void symbol_new();
 
 // destroy the symbol currently being defined
@@ -39,14 +39,14 @@ void symbol_free(void *a);
 
 void symbol_print(struct Symbol* symbol);
 
-/* move this symbol to the symbol table */
+// move this symbol to the symbol table 
 void symbol_finish();
 
-/*setters*/
+//setters
 void symbol_set_type(int type);
 void symbol_set_name(char* name);
 void symbol_set_address(int address);
-void symbol_set_size(int size);
+//void symbol_set_size(int size);
 void symbol_set_isarray(int is_array);
 void symbol_set_ispointer(int is_pointer);
 void symbol_set_isprocedure(int is_procedure);

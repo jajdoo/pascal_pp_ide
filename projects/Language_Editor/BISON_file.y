@@ -187,14 +187,10 @@ procedure :
 				symbol_set_isprocedure(1);
 				symbol_finish();
 				enter_block($2);
-				//printf("entering context %s\n", $2);
 			} 
 			'(' param_decl ')' block ';'
 			{
-				//printSymbolTable();
 				exit_block();
-
-				//printf("exiting context\n"); 
 				$$ = makenode(PROCEDURE, $7, NULL, NULL, 0, NULL);
 			}
 ;
@@ -204,25 +200,38 @@ param_decl :
 			|					  { }
 ;
 
+param_decl_tail	:
+	',' param param_decl_tail	{}
+	|							{}
+;
+
 param: 
+	var_or_val type_list ':' param_id_list
+|
+	var_or_val STRUCT IDE ':' IDE
+	{
+		if(symbol_set_struct_type($3))
+		{
+			symbol_set_name($5);
+			symbol_finish();
+		}
+		else
+			symbol_cancel();
+	}
+;
+
+var_or_val:
+	VAR 
+	{ 
+		symbol_new();
+		symbol_set_isvalparam(1);
+	}
+|
 	VAL
 	{ 
 		symbol_new();
 		symbol_set_isvalparam(1);
 	}
-	type_list ':' param_id_list
-|
-	VAR
-	{ 
-		symbol_new();
-		symbol_set_isvarparam(1);
-	}
-	type_list ':' param_id_list
-;
-
-param_decl_tail	:
-	',' param param_decl_tail	{}
-				|				{}
 ;
 
 param_id_list: 
