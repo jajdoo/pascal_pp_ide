@@ -7,11 +7,16 @@
 /** 
 	Author : Ofek Ron
 **/
-
+typedef struct Address_t {
+	int relativeAddress;
+	int size;
+	int nestingDepth;
+} *Address;
 typedef struct Symbol_t {
 	void *data;
 	struct Context_t *context;
 	struct Symbol_t *next,*prev;
+	Address address;
 } *Symbol;
 typedef struct SymbolInContext_t {
 	struct Symbol_t *symbol;
@@ -27,6 +32,8 @@ typedef struct Context_t {
 	char *symbol;
 	struct Context_t *next,*prev;
 	struct SymbolInContext_t *head;
+	int nestingDepth;
+	int currRelativeAddress;
 } *Context;
 typedef int (*Comparator)(void*,void*); 
 typedef void (*FreeFunc)(void*); 
@@ -48,6 +55,13 @@ typedef struct Node_t {
 	void *data;
 	struct Node_t *prev,*next;
 } *Node;
+
+
+int currNestingDepth = 0;
+
+HashTable hashTable;
+Context contextStackHead;
+FreeFunc freeFunc;
 
 Node newNode(void *data) {
 	Node n = (Node)malloc(sizeof(struct Node_t));
@@ -161,13 +175,21 @@ void* deq(Queue q) {
 void enq(Queue q,void *e) {
 	addToTail(q,e);
 }
-
-Symbol newSymbol(void *data) {
+Address newAddress(int size) {
+	Address a = (Address)malloc(sizeof(struct Address_t));
+	a->relativeAddress = contextStackHead->currRelativeAddress;
+	a->size = size;
+	a->nestingDepth = currNestingDepth;
+	contextStackHead->currRelativeAddress=contextStackHead->currRelativeAddress+size;
+	return a;
+}
+Symbol newSymbol(void *data,int size) {
 	Symbol s = (Symbol)malloc(sizeof(struct Symbol_t));
 
 	s->data = data;
 	s->prev=s->next=NULL;
 	s->context = NULL;
+	s->address = newAddress(size);
 	return s;
 }
 SymbolList newSymbolList(char *symbol) {
@@ -189,6 +211,8 @@ Context newContext(char *name) {
 	c->next = c->prev = NULL;
 	c->head = NULL;
 	c->symbol = name;
+	c->currRelativeAddress = 0;
+	c->nestingDepth = currNestingDepth;
 	return c;
 }
 HashTable newHashTable() {
@@ -260,7 +284,7 @@ Symbol getSentinel(char *symbol) {
 	Symbol sentinel = NULL;
 	if (s==NULL) {
 		s = newSymbolList(strcpy((char *)malloc((strlen(symbol)+1)*sizeof(char)),symbol));
-		s->head = sentinel = newSymbol(NULL);
+		s->head = sentinel = newSymbol(NULL,0);
 		hash_put(hashTable,s);
 	} else {
 		sentinel = s->head;
@@ -274,7 +298,7 @@ void insert(Symbol prev,Symbol x,Symbol next) {
 	x->prev = prev;
 }
 //enter data corresponds to a symbol, returns HASH_ADD_SUCCESS if succeded, HASH_ADD_FAILED_NO_CONTEXT if no context is ever entered,HASH_ADD_FAILED_ALREADY_EXIST if the current context already defined the given symbol
-int addToSymbolTable(char *symbol, void *data) {
+int addToSymbolTable(char *symbol, void *data, int size) {
 	Symbol sentinel,first,next = NULL,news;
 	SymbolInContext newhead,oldhead;
 	if ( contextStackHead == NULL ) {
@@ -287,7 +311,7 @@ int addToSymbolTable(char *symbol, void *data) {
 		if (first->context == contextStackHead)
 			return HASH_ADD_FAILED_ALREADY_EXIST;
 	}
-	news = newSymbol(data);
+	news = newSymbol(data,size);
 	newhead = newSymbolInContext(strcpy((char *)malloc((strlen(symbol)+1)*sizeof(char)),symbol),news);
 	insert(sentinel,news,first);
 	oldhead = contextStackHead -> head;
@@ -313,12 +337,24 @@ void* getFromSymbolTable(char *symbol) {
 	return (s!=NULL) ? s->data : NULL;
 }
 
+//free the struct when you are done
+Address getAddress(char *symbol) {
+	SymbolList sl;
+	Symbol s=NULL;
+	if ( symbol==NULL ) 
+		return NULL;
+	sl = hash_find(symbol,hashTable);
+	if ( sl!=NULL ) 
+		s = sl->head->next;
+	return (s!=NULL) ? s->address : NULL;
+}
 void enter_block( char *block_name ) {
 	Context oldhead = contextStackHead;
 	contextStackHead=newContext(strcpy((char *)malloc((strlen(block_name)+1)*sizeof(char)),block_name));
 	contextStackHead->next=oldhead;
 	if ( oldhead!=NULL ) 
 		oldhead->prev= contextStackHead;
+	currNestingDepth++;
 }
 
 void exit_block(  ) {
@@ -347,6 +383,7 @@ void exit_block(  ) {
 	}
 	free(oldhead->symbol);
 	free(oldhead);
+	currNestingDepth--;
 }
 
 void printSymbolTable() {

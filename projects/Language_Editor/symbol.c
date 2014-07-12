@@ -72,7 +72,7 @@ void symbol_finish()
 			context_symbol->size += cur->size;
 	}
 
-	table_ret_code = addToSymbolTable(cur->symb, (void*)cur);
+	table_ret_code = addToSymbolTable(cur->symb, (void*)cur, cur->size);
 
 	switch (table_ret_code)
 	{
@@ -234,18 +234,18 @@ void symbol_print(struct Symbol* symbol)
 		return;
 
 	//printf("\n--------------------------------------\n");
-	printf("symbol:		%s\n"
-		"type:		%d\n"
-		"add:		%d\n"
-		"size:		%d\n"
-		"proc?		%d\n"
-		"array?		%d\n"
-		"pointer?	%d\n"
-		"var param?	%d\n"
-		"val param?	%d\n"
-		"struct_member?	%d\n"
-		"struct decl?	%d\n"
-		"struct intance?	%s\n\n\n",
+	printf("symbol:			%s\n"
+		"type:			%d\n"
+		"add:			%d\n"
+		"size:			%d\n"
+		"proc?			%d\n"
+		"array?			%d\n"
+		"pointer?		%d\n"
+		"var param?		%d\n"
+		"val param?		%d\n"
+		"struct_member?		%d\n"
+		"struct decl?		%d\n"
+		"struct instance?	%s\n\n\n",
 		symbol->symb,
 		symbol->type,
 		symbol->address,

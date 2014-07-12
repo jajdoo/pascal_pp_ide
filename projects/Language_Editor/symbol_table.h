@@ -10,7 +10,7 @@ typedef void(*FreeFunc)(void*);
 typedef void(*PrintFunc)(struct Symbol*);
 
 void init(FreeFunc howToFreeYourData, PrintFunc print);
-int addToSymbolTable(char *symbol, void *data);
+int addToSymbolTable(char *symbol, void *data, int size);
 void* getFromSymbolTable(char *symbol);
 void enter_block(char *block_name);
 void exit_block();
