@@ -63,7 +63,6 @@ struct_decl:
 				symbol_new();
 				symbol_set_isstruct(1);
 				symbol_set_name($2);
-				symbol_set_address(-1);
 				symbol_set_type(0); 
 				symbol_finish();
 				enter_block($2);

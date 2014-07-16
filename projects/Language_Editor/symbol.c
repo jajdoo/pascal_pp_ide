@@ -16,7 +16,6 @@ void symbol_new()
 	cur = (Symbol*)malloc(sizeof(Symbol));
 	cur->symb = NULL;
 	cur->type = -1;
-	cur->address = -1;
 	cur->size = 0;
 	cur->is_proc = 0;
 	cur->IS_ARRAY = 0;
@@ -135,19 +134,6 @@ void symbol_set_name(char* name)
 }
 
 
-void symbol_set_address(int address)
-{
-	cur->address = address;
-}
-
-/*
-void symbol_set_size(int size)
-{
-	cur->size = size;
-}
-*/
-
-
 void symbol_set_isarray(int is_array)
 {
 	cur->IS_ARRAY = is_array;
@@ -236,7 +222,6 @@ void symbol_print(struct Symbol* symbol)
 	//printf("\n--------------------------------------\n");
 	printf("symbol:			%s\n"
 		"type:			%d\n"
-		"add:			%d\n"
 		"size:			%d\n"
 		"proc?			%d\n"
 		"array?			%d\n"
@@ -248,7 +233,6 @@ void symbol_print(struct Symbol* symbol)
 		"struct instance?	%s\n\n\n",
 		symbol->symb,
 		symbol->type,
-		symbol->address,
 		symbol->size,
 		symbol->is_proc,
 		symbol->IS_ARRAY,
