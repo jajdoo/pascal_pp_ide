@@ -13,6 +13,7 @@ extern int line_number;
 Symbol* cur;
 int struct_acc_error;
 
+
 void struct_acc_start(char* ide)
 {
 	cur = (Symbol*)getFromSymbolTable(ide);
@@ -26,6 +27,7 @@ void struct_acc_start(char* ide)
 
 	struct_acc_error = 0;
 }
+
 
 int struct_acc_valid()
 {
@@ -64,7 +66,6 @@ void struct_acc_next(char* ide)
 	struct_acc_error = 1;
 	cur = NULL;
 }
-
 
 
 void struct_acc_finish()

@@ -55,7 +55,9 @@ program:	PROGRAM IDE block				{$$=makenode(PROGRAM,$3,NULL,NULL,0,$2); root=$$;}
 
 /*************************************************************************/
 /*                          STRUCT DECLARATION                           */
-/*-----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+
+// syntax for struct declarations. 
 
 struct_decl:  
 			STRUCT IDE				
@@ -118,6 +120,11 @@ block :	  LC dec_or_stat RC				{$$=makenode(BBEGIN,$2,NULL,NULL,0,NULL);}
 ;
 
 
+// blocks may be composed of these parts, in any order:
+// - procedure declarations
+// - statements
+// - procedure calls
+// - variable declerations
 dec_or_stat : 
 				procedure	dec_or_stat	{$$=makenode(BLOCK_BODY,$1,$2,NULL,0,NULL);}
 			|	stat		dec_or_stat	{$$=makenode(BLOCK_BODY,$1,$2,NULL,0,NULL);}
@@ -127,12 +134,22 @@ dec_or_stat :
 ;
 
 
+// may declare:
+// - a local primitive	(var_decl)
+// - a new struct type	(struct_decl)
+// - a struct instance  (struct_def)
 declaration:    
 				struct_decl		{ $$ = NULL; }
 			 |  struct_def		{ $$ = NULL; }
 			 |  var_decl		{ $$ = NULL; }
 ;
 
+
+/* declare an instance of struct of type $2. 
+
+ ex.
+ STRUCT stype: sTypeInstance;
+ */
 struct_def:
 			STRUCT IDE ':' IDE ';'
 			{
@@ -147,6 +164,13 @@ struct_def:
 			}
 ;
 
+
+/*
+	declare a new primitive variable instance.
+	ex.
+	VAR INTEGER: a;
+	VAR FLOAT: b;
+*/
 var_decl :
 			VAR							{ symbol_new(); }
 			type_list ':' id_list ';'	{ }
@@ -177,7 +201,22 @@ id_list:
 
 /*************************************************************************/
 /*                          PROCEDURE DECLARATION                        */
-/*-----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+
+/* 
+	declare a new procedure.
+	
+	ex. 
+	PROCEDURE p( VAR STRUCT s2: struct_passed_by_ref , 
+				 VAL STRUCT s1: struct_passed_by_value, 
+				 VAL INTEGER: primitive_passed_by_value,
+				 VAR FLOAT: primitive_passed_by_ref )
+	{
+		// valid code here (block)
+	};
+
+
+*/
 procedure : 
 			PROCEDURE IDE  	
 			{
@@ -249,7 +288,11 @@ param_id_list:
 /*                          PROCEDURE CALL                               */
 /*----------------------------------------------------------------------*/
 
-
+/*
+	generate a procedure call to an existing procedure.
+	ex.
+	p(a,1+4);
+*/
 
 proc_call : 
 	IDE 
@@ -342,6 +385,29 @@ var:
 /*************************************************************************/
 /*                             STRUCT access                             */
 /*-----------------------------------------------------------------------*/
+
+/* 
+	parse and check attempt to access struct member.
+	ex.
+
+	if these are declared:
+
+	STRUCT s1
+	{
+		VAR INTEGER: a;
+	};
+
+	STRUCT s2
+	{
+		STRUCT s1: s1instance;
+	};
+
+	STRUCT s2: s2instance;
+
+	this will be a valid access:
+	s2.s1.a
+
+*/
 
 struct_acc: 
 	IDE

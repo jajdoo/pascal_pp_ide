@@ -12,22 +12,45 @@ typedef struct Address_t {
 	int size;
 	int nestingDepth;
 } *Address;
+
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	The type of struct that presents any symbol in the symbol table
+**/
 typedef struct Symbol_t {
 	void *data;
 	struct Context_t *context;
 	struct Symbol_t *next,*prev;
 	Address address;
 } *Symbol;
+
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	a wrapper for the symbol object to maintain symbols in a list per context
+**/
 typedef struct SymbolInContext_t {
 	struct Symbol_t *symbol;
 	char *name;
 	struct SymbolInContext_t *next,*prev;
 } *SymbolInContext;
+
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	a wrapper for the symbol object to maintain symbols in a list
+**/
 typedef struct SymbolList_t {
 	char *symbol;
 	struct Symbol_t *head;
 } *SymbolList;
 
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	The type of struct that presents a context (block)
+**/
 typedef struct Context_t {
 	char *symbol;
 	struct Context_t *next,*prev;
@@ -41,6 +64,13 @@ typedef void (*FreeFunc)(void*);
 int str_cmp(void*a,void*b) {
 	return strcmp((char *)a,(char *)b);
 }
+
+
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	The type of struct that presents list of objects
+**/
 typedef struct List_t {
 	struct Node_t *head;
 	struct Node_t *tail;
@@ -51,18 +81,58 @@ typedef struct List_t {
 
 typedef List * HashTable;
 
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	The type of struct that presents a node in a list of object
+**/
 typedef struct Node_t {
 	void *data;
 	struct Node_t *prev,*next;
 } *Node;
 
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	our hash table is an array of lists
+**/
+typedef List * HashTable;
 
+
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	maintain nesting depth
+**/
 int currNestingDepth = 0;
 
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	our hash table is an array of lists - for each "bucket" we maintain a list of objects that hash function maps them to this bucket
+**/
 HashTable hashTable;
+
+
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	we maintain our context (block) list in a stack
+**/
 Context contextStackHead;
 FreeFunc freeFunc;
 
+/***************************************************************** 
+	Author : Ofek Ron
+	PRIVATE 
+	managing a linked list
+*******************************************************************/
+
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	creates new node containing data
+**/
 Node newNode(void *data) {
 	Node n = (Node)malloc(sizeof(struct Node_t));
 	n->data = data;
@@ -70,6 +140,11 @@ Node newNode(void *data) {
 	return n;
 }
 
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	creates new list with cmp as its comparator and freeFunc as the function that frees the data
+**/
 List newList(Comparator cmp,FreeFunc freeFunc) {
 	List l = (List)malloc(sizeof(struct List_t));
 	l->head = l->tail = NULL;
@@ -79,6 +154,12 @@ List newList(Comparator cmp,FreeFunc freeFunc) {
 	return l;
 }
 
+
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	add a node containing data to the head of list l
+**/
 void addToHead(List l,void *data) {
 	Node prevHead;
 	if (l->count==0) {
@@ -92,6 +173,11 @@ void addToHead(List l,void *data) {
 	return;
 }
 
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	add a node containing data to the tail of list l
+**/
 void addToTail(List l,void *data) {
 	Node newTail;
 	if (l->count==0) {
@@ -105,7 +191,11 @@ void addToTail(List l,void *data) {
 	return;
 }
 
-
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	remove the tail of list l
+**/
 void * removeTail(List l) {
 	Node prevTail;
 	void *data;
@@ -124,6 +214,11 @@ void * removeTail(List l) {
 	return data; 
 }
 
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	free whole list l
+**/
 void freeList(List l) {
 	Node n = l->head;
 	while (n!=NULL) {
@@ -132,6 +227,11 @@ void freeList(List l) {
 		n=n->next;
 	}
 }
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	removes head of list l
+**/
 void * removeHead(List l) {
 	Node prevHead;
 	void *data;
@@ -149,6 +249,12 @@ void * removeHead(List l) {
 	l->count--;
 	return data; 
 }
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	removes a node n from list l
+	assumes n is in l
+**/
 void *removeNode(List l,Node n) {
 	void *data;
 	if ( n == l->head ) 
@@ -163,6 +269,12 @@ void *removeNode(List l,Node n) {
 	return data;
 }
 
+/***************************************************************** 
+	Author : Ofek Ron
+	PRIVATE 
+	managing a stack and a queue using linked list
+*******************************************************************/
+
 void* pop(Stack s) {
 	return removeHead(s);
 }
@@ -175,6 +287,13 @@ void* deq(Queue q) {
 void enq(Queue q,void *e) {
 	addToTail(q,e);
 }
+
+/***************************************************************** 
+	Author : Ofek Ron
+	PRIVATE 
+	constructors for the symbol table structures
+*******************************************************************/
+
 Address newAddress(int size) {
 	Address a = (Address)malloc(sizeof(struct Address_t));
 	a->relativeAddress = contextStackHead->currRelativeAddress;
@@ -215,6 +334,19 @@ Context newContext(char *name) {
 	c->nestingDepth = currNestingDepth;
 	return c;
 }
+
+/***************************************************************** 
+	Author : Ofek Ron
+	PRIVATE 
+	managing the hash table
+*******************************************************************/
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	the hash function 
+	contructs a new hash table
+	O(HASH_SIZE)=O(1)
+**/
 HashTable newHashTable() {
 	int i = 0;
 	List *hash = (List *)malloc(sizeof(List)*HASH_SIZE);
@@ -222,6 +354,13 @@ HashTable newHashTable() {
 		hash[i]=NULL;
 	return hash;
 }
+
+
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	the hash function 
+**/
 int hash(char *name) {
 	int hashVal,i;
 	hashVal = 0;
@@ -229,6 +368,12 @@ int hash(char *name) {
 		hashVal+=(int)name[i]+i;
 	return hashVal % HASH_SIZE;
 }
+
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	finds the "bucket" that symbol is mapped to and returns the coresponding list of objects (that wither or not contains symbol itself)
+**/
 SymbolList hash_find(char *symbol,HashTable hashTable) {
 	List bucket = hashTable[hash(symbol)];
 	Node n;
@@ -244,6 +389,12 @@ SymbolList hash_find(char *symbol,HashTable hashTable) {
 	}
 	return NULL;
 }
+
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	removes symbol from the hash table, if found returns the data that node held else returns null
+**/
 void *hash_remove(char *symbol,HashTable hashTable) {
 	List bucket = hashTable[hash(symbol)];
 	Node n;
@@ -257,6 +408,12 @@ void *hash_remove(char *symbol,HashTable hashTable) {
 	}
 	return NULL;
 }
+
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	inits a "bucket" in the hash table with a symbol list
+**/
 void hash_put(HashTable hashTable,SymbolList s) {
 	int i = hash(s->symbol);
 	List bucket = hashTable[i];
@@ -270,6 +427,17 @@ Context contextStackHead;
 FreeFunc freeFunc;
 PrintFunc printFunc;
 
+/***************************************************************** 
+	Author : Ofek Ron
+	PUBLIC INTERFACE
+	using the symbol table
+*******************************************************************/
+/** 
+	Author : Ofek Ron
+	PUBLIC 
+	inits the symbol table
+	O(HASH_SIZE)=O(1)
+**/
 void init(FreeFunc howToFreeYourData, PrintFunc print ) {
 
 	freeFunc = howToFreeYourData;
@@ -277,8 +445,11 @@ void init(FreeFunc howToFreeYourData, PrintFunc print ) {
 	contextStackHead = NULL;
 	hashTable = newHashTable();
 }
-
-
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	each bucket's symbol list is maintained using a sentinel for easier managing
+**/
 Symbol getSentinel(char *symbol) {
 	SymbolList s = hash_find(symbol,hashTable);
 	Symbol sentinel = NULL;
@@ -291,6 +462,12 @@ Symbol getSentinel(char *symbol) {
 	}
 	return sentinel;
 }
+
+/** 
+	Author : Ofek Ron
+	PRIVATE 
+	helper function that shove a node between two consecutive nodes
+**/
 void insert(Symbol prev,Symbol x,Symbol next) {
 	if ( prev!=NULL ) prev->next = x;
 	if ( next!=NULL ) next->prev = x;
@@ -298,6 +475,15 @@ void insert(Symbol prev,Symbol x,Symbol next) {
 	x->prev = prev;
 }
 //enter data corresponds to a symbol, returns HASH_ADD_SUCCESS if succeded, HASH_ADD_FAILED_NO_CONTEXT if no context is ever entered,HASH_ADD_FAILED_ALREADY_EXIST if the current context already defined the given symbol
+/** 
+	Author : Ofek Ron
+	PUBLIC 
+	enter data corresponds to a symbol, returns :
+	HASH_ADD_SUCCESS if succeded, 
+	HASH_ADD_FAILED_NO_CONTEXT if no context is ever entered,
+	HASH_ADD_FAILED_ALREADY_EXIST if the current context already defined the given symbol
+	O(1) in avarage
+**/
 int addToSymbolTable(char *symbol, void *data, int size) {
 	Symbol sentinel,first,next = NULL,news;
 	SymbolInContext newhead,oldhead;
@@ -326,6 +512,12 @@ int addToSymbolTable(char *symbol, void *data, int size) {
 
 
 //returns - the data corresponds to the symbol, null if not exists in the current context
+/** 
+	Author : Ofek Ron
+	PUBLIC 
+	returns - the data corresponds to the symbol, null if not exists in the current context
+	O(1) in avarage
+**/
 void* getFromSymbolTable(char *symbol) {
 	SymbolList sl;
 	Symbol s=NULL;
@@ -338,6 +530,13 @@ void* getFromSymbolTable(char *symbol) {
 }
 
 //free the struct when you are done
+/** 
+	Author : Ofek Ron
+	PUBLIC 
+	get the adress structure of the symbol
+	NOTE : the struct returned need to be freed after done with by the caller!
+	O(1) in avarage
+**/
 Address getAddress(char *symbol) {
 	SymbolList sl;
 	Symbol s=NULL;
@@ -348,6 +547,13 @@ Address getAddress(char *symbol) {
 		s = sl->head->next;
 	return (s!=NULL) ? s->address : NULL;
 }
+
+/** 
+	Author : Ofek Ron
+	PUBLIC 
+	enter a block (context), pushing a context to the context stack
+	O(1)
+**/
 void enter_block( char *block_name ) {
 	Context oldhead = contextStackHead;
 	contextStackHead=newContext(strcpy((char *)malloc((strlen(block_name)+1)*sizeof(char)),block_name));
@@ -356,7 +562,13 @@ void enter_block( char *block_name ) {
 		oldhead->prev= contextStackHead;
 	currNestingDepth++;
 }
-
+/** 
+	Author : Ofek Ron
+	PUBLIC 
+	exit a block (context), removing head of the context stack and the next context is the current context, 
+	current nesting depth is decreased and all symbols and data on the context is freed. 
+	O(n)
+**/
 void exit_block(  ) {
 	Context oldhead = contextStackHead;
 	SymbolInContext s = oldhead->head;
@@ -386,6 +598,13 @@ void exit_block(  ) {
 	currNestingDepth--;
 }
 
+
+/** 
+	Author : Ofek Ron
+	PUBLIC 
+	prints the symbol table with all relevant data
+	for debuging purposes
+**/
 void printSymbolTable() {
 	
 	int i = 0;
