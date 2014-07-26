@@ -419,6 +419,7 @@ struct_acc:
 		if( struct_acc_valid() )
 		{
 			NODE left = makenode(IDE, NULL, NULL, NULL, 0, $1);
+			//NODE left = genLeaf(IDE, 0, 0, $1);
 			$$ = makenode(STRUCT_ACC, left, $4, NULL, 0, NULL);
 		}
 		else 
@@ -432,7 +433,10 @@ struct_acc_tail:
 		struct_acc_next($1);
 		
 		if( struct_acc_valid() )
-			$$ = makenode(IDE, NULL, NULL, NULL, 0, $1);
+		{
+			$$= genLeaf(IDE, 0, 0, $1);
+			//$$ = makenode(IDE, NULL, NULL, NULL, 0, $1);
+		}
 		else 
 			$$ = NULL;
 

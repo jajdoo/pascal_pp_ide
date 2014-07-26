@@ -19,9 +19,11 @@ PROGRAM progtato
 		};
 	};
 
-	STRUCT s2: a;
-	STRUCT s1: b;
+	STRUCT s2: aaa;
+	STRUCT s1: bbb;
 	VAR INTEGER: c;
 
-	p(a,b,c);
+	c = aaa.a;
+
+	p(aaa,bbb,c);
 }

@@ -8,6 +8,7 @@
 #include "globals.h"
 #include "symbol.h"
 #include "symbol_table.h"
+#include "struct_acc.h"
 
 
 
@@ -318,13 +319,15 @@ NODE makenode(int op, NODE s1, NODE s2, NODE s3, int val, char *id)
 
 	case PROCEDURE:
 		break;
+
+	case STRUCT_ACC:
+		t->type = t->s2->type;
+		t->num_val = t->s2->num_val;
+		break;
 	}
 
 	return(t);
 }
-
-
-
 
 
 NODE genLeaf(int op, int val, double rval, char *id)
@@ -360,7 +363,9 @@ NODE genLeaf(int op, int val, double rval, char *id)
 	switch (op)
 	{
 	case IDE:
-		s = (Symbol *) getFromSymbolTable(id);/*find symbol */
+		s = struct_acc_cur_symbol();
+		if (s==NULL)
+			s = (Symbol *) getFromSymbolTable(id);/*find symbol */
 		 t->type =  s->type;
 
 		break;

@@ -7,7 +7,6 @@
 	used by 'struct_acc' bison rules.
 */
 
-
 /*
 	is this struct access valid?
 	struct access will be considered invalid :
@@ -42,5 +41,14 @@ void struct_acc_next(char* ide);
 	finishes the struct access (reinit)
 */
 void struct_acc_finish();
+
+// predec
+typedef struct Symbol Symbol;
+
+/*
+	returns the current symbol
+	used by parse tree to generate leaf.
+*/
+Symbol* struct_acc_cur_symbol();
 
 #endif

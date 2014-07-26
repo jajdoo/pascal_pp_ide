@@ -74,3 +74,7 @@ void struct_acc_finish()
 	struct_acc_error = 0;
 }
 
+Symbol* struct_acc_cur_symbol()
+{
+	return cur;
+}
