@@ -2,14 +2,13 @@
 #ifndef _SYMBOL_H__
 #define _SYMBOL_H__
 
-// this file exposes all procedures associated with declaring
-// a new symbol prior to sending it to the symbol table
-// use:
-// symbol_new => symbol_set_* => symbol_finish (or symbol_cancel if something went wrong)
+/*	This file is an interface for all procedures associated with declarations of
+	a new symbol prior to sending it to the symbol table.
+	Usage: symbol_new => symbol_set_* => symbol_finish (or symbol_cancel if something went wrong)
+*/
 
 
-
-// list object
+// list object defenition
 typedef struct SymbolWrapper
 {
 	struct Symbol*			Symbol;
@@ -35,8 +34,7 @@ typedef struct Symbol
 } Symbol;
 
 
-// start a new symbol
-// called whenever a new symbol (of any type) is declared 
+// Initialize a new symbol. Called whenever a new symbol (of any type) is declared 
 void symbol_new();
 
 
@@ -49,7 +47,7 @@ void symbol_cancel();
 // dealloc symbol
 void symbol_free(void *a);
 
-// prints the symbol to printf
+// prints the symbol 
 void symbol_print(struct Symbol* symbol);
 
 // called when the symbol configuration is complete.
