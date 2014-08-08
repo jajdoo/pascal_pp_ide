@@ -4,7 +4,10 @@
 
 /*	This file is an interface for all procedures associated with declarations of
 	a new symbol prior to sending it to the symbol table.
-	Usage: symbol_new => symbol_set_* => symbol_finish (or symbol_cancel if something went wrong)
+	Usage: 
+	symbol_new => 
+	symbol_set_* => 
+	symbol_finish (or symbol_cancel if something went wrong)
 */
 
 

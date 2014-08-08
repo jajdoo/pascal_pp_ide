@@ -16,6 +16,8 @@ int proc_call_error;
 
 extern int line_number;
 
+
+// Set the proc being called.
 void proc_call_setproc(char* p)
 {
 	printf("starting proc call validation for %s\n", p);
@@ -42,12 +44,22 @@ void proc_call_setproc(char* p)
 }
 
 
+/*
+Is this proc call valid?
+Proc call will be considred invalid if:
+- after proc_call_setproc		: if no such symbol 'p'
+- after proc_call_setproc		: if symbol 'p' is not a procedure
+- after proc_call_validate_arg	: if the parameter is declared VAR but the argument was not an identifer (may not send expr as VAR)
+- after proc_call_validate_arg	: if the type of the current parameter is different from the type of the argument
+- after proc_call_finish         : if number of arguments != number of parameters
+*/
 int proc_call_valid()
 {
 	return !proc_call_error;
 }
 
 
+// called when no more arguments are available at this proc call.
 void proc_call_finish()
 {
 	if (proc_symbol!=NULL && proc_symbol->child_count != args_count)
@@ -62,6 +74,7 @@ void proc_call_finish()
 }
 
 
+// validate next argument against declared proc parameter list.
 void proc_call_validate_arg(int type, int is_ide)
 {
 	Symbol* s;

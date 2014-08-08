@@ -529,11 +529,11 @@ void* getFromSymbolTable(char *symbol) {
 	return (s!=NULL) ? s->data : NULL;
 }
 
-//free the struct when you are done
+//
 /** 
 	Author : Ofek Ron
 	PUBLIC 
-	get the adress structure of the symbol
+	get the adress structure of the symbol, free the struct when you are done
 	NOTE : the struct returned need to be freed after done with by the caller!
 	O(1) in avarage
 **/
@@ -640,6 +640,11 @@ void printSymbolTable() {
 
 
 
+/**
+Author: nir
+PUBLIC
+wrote a hack to get the current context
+**/
 void* symbol_table_getcontext()
 {
 	return getFromSymbolTable(contextStackHead->symbol);

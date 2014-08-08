@@ -62,16 +62,16 @@ program:	PROGRAM IDE block				{$$=makenode(PROGRAM,$3,NULL,NULL,0,$2); root=$$;}
 struct_decl:  
 			STRUCT IDE				
 			{
-				symbol_new();
-				symbol_set_isstruct(1);
-				symbol_set_name($2);
-				symbol_set_type(0); 
-				symbol_finish();
-				enter_block($2);
+				symbol_new();				// symbol.h/.c
+				symbol_set_isstruct(1);		// symbol.h/.c
+				symbol_set_name($2);		// symbol.h/.c
+				symbol_set_type(0);			// symbol.h/.c
+				symbol_finish();			// symbol.h/.c
+				enter_block($2);			// symbol_table.h/.c
 			} 
 			LC member_decl RC ';'	
 			{
-				exit_block();
+				exit_block();				// symbol_table.h/.c
 			} 
 ;
 
@@ -79,22 +79,22 @@ struct_decl:
 member_decl :
 	VAR												
 	{  
-		symbol_new();
-		symbol_set_isstructmember(1);
+		symbol_new();						// symbol.h/.c
+		symbol_set_isstructmember(1);		// symbol.h/.c
 	}
 	type_list ':' member_id_list ';' member_decl_tail	{ }
 |
 	STRUCT IDE ':' IDE ';'
 	{
-		symbol_new();
-		symbol_set_isstructmember(1);
-		if(symbol_set_struct_type($2))
+		symbol_new();						// symbol.h/.c
+		symbol_set_isstructmember(1);		// symbol.h/.c
+		if(symbol_set_struct_type($2))		// symbol.h/.c
 		{
-			symbol_set_name($4);
-			symbol_finish();
+			symbol_set_name($4);			// symbol.h/.c
+			symbol_finish();				// symbol.h/.c
 		}
 		else
-			symbol_cancel();
+			symbol_cancel();				// symbol.h/.c
 	}
 ;
 
@@ -107,8 +107,8 @@ member_decl_tail	:
 member_id_list: 
 		IDE
 		{
-			symbol_set_name($1); 
-			symbol_finish();
+			symbol_set_name($1);		// symbol.h/.c 
+			symbol_finish();			// symbol.h/.c
 		}
 ;
 
@@ -153,14 +153,14 @@ declaration:
 struct_def:
 			STRUCT IDE ':' IDE ';'
 			{
-				symbol_new();
-				if(symbol_set_struct_type($2))
+				symbol_new();					// symbol.h/.c
+				if(symbol_set_struct_type($2))	// symbol.h/.c
 				{
-					symbol_set_name($4);
-					symbol_finish();
+					symbol_set_name($4);		// symbol.h/.c
+					symbol_finish();			// symbol.h/.c
 				}
 				else
-					symbol_cancel();
+					symbol_cancel();			// symbol.h/.c
 			}
 ;
 
@@ -172,30 +172,23 @@ struct_def:
 	VAR FLOAT: b;
 */
 var_decl :
-			VAR							{ symbol_new(); }
+			VAR							{ symbol_new(); }	// symbol.h/.c
 			type_list ':' id_list ';'	{ }
 ;
  
 
 type_list:
-		BOOLEAN		{ symbol_set_type(BOOLEAN); }
-	|	INTEGER		{ symbol_set_type(INTEGER); }
-	|	FLOAT		{ symbol_set_type(FLOAT); }
+		BOOLEAN		{ symbol_set_type(BOOLEAN); }		// symbol.h/.c
+	|	INTEGER		{ symbol_set_type(INTEGER); }		// symbol.h/.c
+	|	FLOAT		{ symbol_set_type(FLOAT); }			// symbol.h/.c
 ;
 
 
 id_list: 
 		IDE 		
 		{
-			symbol_set_name($1); 
-			symbol_finish();
-		} 
-     |	
-		POINTER 	
-		{
-			//symbol_stack_set_ispointer(1);
-			//symbol_stack_set_name($1);
-			//symbol_stack_pop();
+			symbol_set_name($1);		// symbol.h/.c
+			symbol_finish();			// symbol.h/.c
 		} 
 ;
 
@@ -220,15 +213,15 @@ id_list:
 procedure : 
 			PROCEDURE IDE  	
 			{
-				symbol_new();
-				symbol_set_name($2);
-				symbol_set_isprocedure(1);
-				symbol_finish();
-				enter_block($2);
+				symbol_new();					// symbol.h/.c
+				symbol_set_name($2);			// symbol.h/.c
+				symbol_set_isprocedure(1);		// symbol.h/.c
+				symbol_finish();				// symbol.h/.c
+				enter_block($2);				// symbol_table.h/.c
 			} 
 			'(' param_decl ')' block ';'
 			{
-				exit_block();
+				exit_block();					// symbol_table.h/.c
 				$$ = makenode(PROCEDURE, $7, NULL, NULL, 0, NULL);
 			}
 ;
@@ -248,35 +241,35 @@ param:
 |
 	var_or_val STRUCT IDE ':' IDE
 	{
-		if(symbol_set_struct_type($3))
+		if(symbol_set_struct_type($3))		// symbol.h/.c
 		{
-			symbol_set_name($5);
-			symbol_finish();
+			symbol_set_name($5);			// symbol.h/.c
+			symbol_finish();				// symbol.h/.c
 		}
 		else
-			symbol_cancel();
+			symbol_cancel();				// symbol.h/.c
 	}
 ;
 
 var_or_val:
 	VAR 
 	{ 
-		symbol_new();
-		symbol_set_isvalparam(1);
+		symbol_new();						// symbol.h/.c
+		symbol_set_isvalparam(1);			// symbol.h/.c
 	}
 |
 	VAL
 	{ 
-		symbol_new();
-		symbol_set_isvalparam(1);
+		symbol_new();						// symbol.h/.c
+		symbol_set_isvalparam(1);			// symbol.h/.c
 	}
 ;
 
 param_id_list: 
 	IDE
 	{
-		symbol_set_name($1);
-		symbol_finish();
+		symbol_set_name($1);				// symbol.h/.c
+		symbol_finish();					// symbol.h/.c
 	}
 ;
 
@@ -297,12 +290,12 @@ param_id_list:
 proc_call : 
 	IDE 
 	{
-		proc_call_setproc($1);
+		proc_call_setproc($1);			// proc_call.h/.c
 	}
 	'(' args ')' ';'
 	{ 
-		proc_call_finish();
-		if( proc_call_valid() )
+		proc_call_finish();				// proc_call.h/.c
+		if( proc_call_valid() )			// proc_call.h/.c
 			$$ = makenode(PROC_CALL,$4,NULL,NULL,0,NULL);
 		else
 			$$ = NULL;
@@ -311,13 +304,13 @@ proc_call :
 
 
 args : 
-		expr		{ proc_call_validate_arg($1->type, $1->op==IDE ? 1:0 ); }
+		expr		{ proc_call_validate_arg($1->type, $1->op==IDE ? 1:0 ); }	// proc_call.h/.c
 		args_tail	{ $$ = makenode(ARGUMENT_LIST,$1,$3,NULL,0,NULL); }
 	|				{ $$ = NULL;}
 ;
 
 args_tail :
-		',' expr	{ proc_call_validate_arg($2->type, $2->op==IDE ? 1:0 ); }
+		',' expr	{ proc_call_validate_arg($2->type, $2->op==IDE ? 1:0 ); }	// proc_call.h/.c
 		args_tail	{ $$ = makenode(ARGUMENT_LIST,$2,$4,NULL,0,NULL); }
 	|				{ $$ = NULL; }
 ;
@@ -412,11 +405,11 @@ var:
 struct_acc: 
 	IDE
 	{
-		struct_acc_start($1);
+		struct_acc_start($1);			// struct_acc.h/.c
 	}
 	'.' struct_acc_tail
 	{
-		if( struct_acc_valid() )
+		if( struct_acc_valid() )		// struct_acc.h/.c
 		{
 			NODE left = makenode(IDE, NULL, NULL, NULL, 0, $1);
 			//NODE left = genLeaf(IDE, 0, 0, $1);
@@ -430,9 +423,9 @@ struct_acc:
 struct_acc_tail: 
 	IDE 
 	{
-		struct_acc_next($1);
+		struct_acc_next($1);		// struct_acc.h/.c
 		
-		if( struct_acc_valid() )
+		if( struct_acc_valid() )	// struct_acc.h/.c
 		{
 			$$= genLeaf(IDE, 0, 0, $1);
 			//$$ = makenode(IDE, NULL, NULL, NULL, 0, $1);
@@ -440,16 +433,16 @@ struct_acc_tail:
 		else 
 			$$ = NULL;
 
-		struct_acc_finish();
+		struct_acc_finish();		// struct_acc.h/.c
 	}
 |	
 	IDE
 	{
-		struct_acc_next($1);
+		struct_acc_next($1);		// struct_acc.h/.c
 	} 
 	'.' struct_acc_tail 
 	{
-		if( struct_acc_valid() )
+		if( struct_acc_valid() )	// struct_acc.h/.c
 		{
 			NODE left = makenode(IDE, NULL, NULL, NULL, 0, $1);
 			$$ = makenode(STRUCT_ACC, left, $4, NULL, 0, NULL);

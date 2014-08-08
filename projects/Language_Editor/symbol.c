@@ -11,6 +11,7 @@
 Symbol* cur;
 extern int line_number;
 
+// Initialize a new symbol. Called whenever a new symbol (of any type) is declared 
 void symbol_new()
 {
 	cur = (Symbol*)malloc(sizeof(Symbol));
@@ -29,6 +30,10 @@ void symbol_new()
 	cur->list = NULL;
 }
 
+
+// destroy the symbol currently being defined.
+// if something went wrong while preparing the symbol, this proc is called.
+// currently, this proc is only used when 'symbol_set_struct_type' failed.
 void symbol_cancel()
 {
 	symbol_free(cur);
@@ -36,6 +41,8 @@ void symbol_cancel()
 }
 
 
+// called when the symbol configuration is complete.
+// this proc will move the symbol to the symbol table
 void symbol_finish()
 {
 	int table_ret_code;
@@ -182,7 +189,7 @@ int symbol_set_struct_type(char* struct_name)
 }
 
 
-/* later use */
+// dealloc symbol
 void symbol_free(void *a)
 {
 	SymbolWrapper* w,* p;
@@ -211,6 +218,7 @@ void symbol_free(void *a)
 	free(s);
 }
 
+// prints the symbol 
 void symbol_print(struct Symbol* symbol)
 {
 	int n;

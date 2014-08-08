@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
 	TreeToIL(root);						// Converts the program tree to an intermediate-language representation
 	PrintCommandsToFile("out1.txt");	// Prints the output IL file
 	PrintTree();
-	printSymbolTable();
+	//printSymbolTable();
 	_getch();
 	return (0);
 }

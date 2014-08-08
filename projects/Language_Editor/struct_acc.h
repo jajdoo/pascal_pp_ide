@@ -48,6 +48,7 @@ typedef struct Symbol Symbol;
 /*
 	returns the current symbol
 	used by parse tree to generate leaf.
+	(hack)
 */
 Symbol* struct_acc_cur_symbol();
 

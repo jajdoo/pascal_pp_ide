@@ -5,7 +5,7 @@
 #define CASELIST 3
 #define BRACKETS 1024
 
-
+// WHY THE FUCK DID THEY REDEFINE INT_MAX???
 #define INT_MAX 32000
 
 /************/
