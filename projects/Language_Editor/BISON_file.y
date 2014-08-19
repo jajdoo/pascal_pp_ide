@@ -255,7 +255,7 @@ var_or_val:
 	VAR 
 	{ 
 		symbol_new();						// symbol.h/.c
-		symbol_set_isvalparam(1);			// symbol.h/.c
+		symbol_set_isvarparam(1);			// symbol.h/.c
 	}
 |
 	VAL
@@ -398,7 +398,7 @@ var:
 	STRUCT s2: s2instance;
 
 	this will be a valid access:
-	s2.s1.a
+	s2instance.s1instance.a
 
 */
 

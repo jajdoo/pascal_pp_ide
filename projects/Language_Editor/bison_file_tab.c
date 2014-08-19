@@ -1086,7 +1086,7 @@ case 34:
 #line 256 "bison_file.y"
 { 
 		symbol_new();						// symbol.h/.c
-		symbol_set_isvalparam(1);			// symbol.h/.c
+		symbol_set_isvarparam(1);			// symbol.h/.c
 	;
     break;}
 case 35:
